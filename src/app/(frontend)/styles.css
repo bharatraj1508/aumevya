@@ -1,0 +1,105 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Palette — calm, warm, grounded */
+  --color-background: #f7f3ec;
+  --color-foreground: #26241f;
+  --color-card: #fffdf9;
+  --color-muted: #ece4d6;
+  --color-muted-foreground: #6f6858;
+  --color-border: #e2d9c9;
+  --color-input: #e2d9c9;
+  --color-ring: #6b7a5a;
+
+  --color-primary: #5f6f4e; /* sage */
+  --color-primary-foreground: #f7f3ec;
+  --color-accent: #bd7a5e; /* clay */
+  --color-accent-foreground: #fffdf9;
+
+  /* Type */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
+    'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia,
+    ui-serif, serif;
+
+  --radius: 0.75rem;
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.08;
+  }
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  }
+  /* Lenis */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  .container-page {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .prose-content p {
+    margin-block: 0.75em;
+    color: var(--color-muted-foreground);
+    line-height: 1.7;
+  }
+  .prose-content a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+  .prose-content strong {
+    color: var(--color-foreground);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

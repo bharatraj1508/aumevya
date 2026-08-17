@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0.00" stop-color="#33402f"/><stop offset="0.50" stop-color="#6f8560"/><stop offset="1.00" stop-color="#c2cfa8"/>
+  </linearGradient>
+<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope="0.05"/></feComponentTransfer><feComposite operator="over" in2="SourceGraphic"/></filter></defs>
+  <rect width="1000" height="1000" fill="url(#g)"/>
+  <g><ellipse cx="516.0" cy="460.0" rx="35.2" ry="160.0" fill="#ffffff" opacity="0.5" transform="rotate(0 516.0 460.0)"/><ellipse cx="511.3" cy="471.3" rx="35.2" ry="160.0" fill="#ffffff" opacity="0.5" transform="rotate(45 511.3 471.3)"/><ellipse cx="500.0" cy="476.0" rx="35.2" ry="160.0" fill="#ffffff" opacity="0.5" transform="rotate(90 500.0 476.0)"/><ellipse cx="488.7" cy="471.3" rx="35.2" ry="160.0" fill="#ffffff" opacity="0.5" transform="rotate(135 488.7 471.3)"/><ellipse cx="484.0" cy="460.0" rx="35.2" ry="160.0" fill="#ffffff" opacity="0.5" transform="rotate(180 484.0 460.0)"/><ellipse cx="488.7" cy="448.7" rx="35.2" ry="160.0" fill="#ffffff" opacity="0.5" transform="rotate(225 488.7 448.7)"/><ellipse cx="500.0" cy="444.0" rx="35.2" ry="160.0" fill="#ffffff" opacity="0.5" transform="rotate(270 500.0 444.0)"/><ellipse cx="511.3" cy="448.7" rx="35.2" ry="160.0" fill="#ffffff" opacity="0.5" transform="rotate(315 511.3 448.7)"/></g>
+  <circle cx="500" cy="460" r="50" fill="#ffffff" opacity="0.8"/>
+  
+  <rect width="1000" height="1000" filter="url(#grain)" opacity="0.5"/>
+</svg>
