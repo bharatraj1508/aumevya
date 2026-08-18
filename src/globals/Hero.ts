@@ -48,7 +48,19 @@ export const Hero: GlobalConfig = {
       name: 'backgroundImage',
       type: 'upload',
       relationTo: 'media',
-      admin: { description: 'Full-bleed hero background image.' },
+      admin: {
+        description:
+          'Full-bleed hero background image. Used when no background video is set, and as the poster while a video loads.',
+      },
+    },
+    {
+      name: 'heroVideo',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description:
+          'Optional. A looping background video (MP4/WebM). If set, it plays behind the hero and takes precedence over the background image. Leave empty to use the image.',
+      },
     },
   ],
 }

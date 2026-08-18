@@ -10,7 +10,7 @@ export function Footer({ siteName, contact }: { siteName: string; contact: Conta
   const socials = contact?.socials
   const year = 2026
   return (
-    <footer className="border-t border-border bg-muted/40">
+    <footer className="border-t border-border bg-muted">
       <div className="container-page grid gap-10 py-14 md:grid-cols-4">
         <div className="md:col-span-1">
           <div className="font-serif text-2xl">{siteName}</div>

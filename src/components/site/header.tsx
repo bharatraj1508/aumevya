@@ -28,20 +28,14 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-all duration-500',
+        'fixed inset-x-0 top-0 z-50 transition-all duration-300',
         scrolled
-          ? 'bg-background/85 backdrop-blur-md border-b border-border/60'
-          : 'bg-transparent',
+          ? 'border-b border-border bg-background/90 backdrop-blur-md shadow-sm'
+          : 'border-b border-transparent bg-background',
       )}
     >
       <div className="container-page flex h-16 items-center justify-between md:h-20">
-        <Link
-          href="/"
-          className={cn(
-            'font-serif text-xl tracking-tight transition-colors',
-            scrolled ? 'text-foreground' : 'text-primary-foreground',
-          )}
-        >
+        <Link href="/" className="text-xl font-extrabold tracking-tight text-foreground">
           {siteName}
         </Link>
 
@@ -51,11 +45,8 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
               key={l.href}
               href={l.href}
               className={cn(
-                'text-sm transition-colors',
-                scrolled
-                  ? 'text-foreground/70 hover:text-foreground'
-                  : 'text-primary-foreground/80 hover:text-primary-foreground',
-                pathname === l.href && (scrolled ? 'text-foreground' : 'text-primary-foreground'),
+                'text-sm font-medium text-foreground/70 transition-colors hover:text-primary',
+                pathname === l.href && 'text-primary',
               )}
             >
               {l.label}
@@ -64,13 +55,13 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
         </nav>
 
         <div className="hidden md:block">
-          <Button asChild variant="accent" size="sm">
+          <Button asChild size="sm">
             <Link href="/contact">{bookLabel}</Link>
           </Button>
         </div>
 
         <button
-          className={cn('md:hidden', scrolled || open ? 'text-foreground' : 'text-primary-foreground')}
+          className="text-foreground md:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -97,7 +88,7 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
                   {l.label}
                 </Link>
               ))}
-              <Button asChild variant="accent" className="mt-2 w-full">
+              <Button asChild className="mt-2 w-full">
                 <Link href="/contact">{bookLabel}</Link>
               </Button>
             </nav>

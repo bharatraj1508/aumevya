@@ -1,6 +1,21 @@
 import React from 'react'
 import type { Metadata } from 'next'
+import { Poppins, JetBrains_Mono } from 'next/font/google'
 import './styles.css'
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-poppins',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
+})
 import { SmoothScroll } from '@/components/motion/smooth-scroll'
 import { Header } from '@/components/site/header'
 import { Footer } from '@/components/site/footer'
@@ -37,7 +52,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
   const siteName = seo?.siteName || 'Aumevya Yoga'
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${poppins.variable} ${jetbrainsMono.variable}`}>
       <body>
         <SmoothScroll>
           <Header siteName={siteName} bookLabel="Book Now" />

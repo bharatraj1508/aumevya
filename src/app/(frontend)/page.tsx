@@ -31,6 +31,8 @@ export default async function HomePage() {
         secondaryCtaLabel={hero?.secondaryCtaLabel}
         secondaryCtaHref={hero?.secondaryCtaHref}
         backgroundImage={hero?.backgroundImage}
+        heroVideo={hero?.heroVideo}
+        images={gallery.slice(0, 5).map((g) => g.image)}
       />
       <ValueProps />
       <AboutPreview about={about} />

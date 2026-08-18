@@ -586,9 +586,13 @@ export interface Hero {
   secondaryCtaLabel?: string | null;
   secondaryCtaHref?: string | null;
   /**
-   * Full-bleed hero background image.
+   * Full-bleed hero background image. Used when no background video is set, and as the poster while a video loads.
    */
   backgroundImage?: (string | null) | Media;
+  /**
+   * Optional. A looping background video (MP4/WebM). If set, it plays behind the hero and takes precedence over the background image. Leave empty to use the image.
+   */
+  heroVideo?: (string | null) | Media;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -715,6 +719,7 @@ export interface HeroSelect<T extends boolean = true> {
   secondaryCtaLabel?: T;
   secondaryCtaHref?: T;
   backgroundImage?: T;
+  heroVideo?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

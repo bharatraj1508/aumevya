@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 export function ServicesPreview({ services }: { services: Service[] }) {
   if (services.length === 0) return null
   return (
-    <section className="bg-muted/40 py-24 md:py-32">
+    <section className="border-b border-border bg-background py-24 md:py-28">
       <div className="container-page">
         <SectionHeading
           eyebrow="Handpicked for you"

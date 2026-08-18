@@ -21,18 +21,19 @@ const PROPS = [
 
 export function ValueProps() {
   return (
-    <section className="border-y border-border bg-card/60 py-16 md:py-20">
+    <section className="border-b border-border bg-background py-16 md:py-20">
       <div className="container-page">
-        <StaggerGroup className="grid gap-8 md:grid-cols-3 md:gap-10">
+        <StaggerGroup className="grid gap-6 md:grid-cols-3">
           {PROPS.map(({ icon: Icon, title, body }) => (
-            <StaggerItem key={title} className="flex gap-4">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <StaggerItem
+              key={title}
+              className="rounded-2xl border border-border bg-card p-7 shadow-sm transition-shadow hover:shadow-md"
+            >
+              <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                 <Icon className="size-5" />
               </span>
-              <div>
-                <h3 className="text-lg leading-snug">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
-              </div>
+              <h3 className="mt-5 text-lg font-semibold leading-snug">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
             </StaggerItem>
           ))}
         </StaggerGroup>

@@ -1,10 +1,13 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react'
-import type { ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
+import { gsap, prefersReducedMotion } from '@/lib/gsap'
 
-/** Vertical parallax tied to the element's scroll progress through the viewport. */
+/**
+ * Vertical parallax tied to the element's scroll progress through the viewport.
+ * GSAP scrub, synced to Lenis via the shared ticker (see SmoothScroll), so the
+ * movement tracks the smooth-scroll position instead of drifting behind it.
+ */
 export function Parallax({
   children,
   className,
@@ -15,20 +18,36 @@ export function Parallax({
   speed?: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const reduce = useReducedMotion()
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  })
-  const y = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reduce ? ['0%', '0%'] : [`${-speed * 100}%`, `${speed * 100}%`],
-  )
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || prefersReducedMotion()) return
+
+    const shift = speed * 100
+    const anim = gsap.fromTo(
+      el,
+      { yPercent: -shift },
+      {
+        yPercent: shift,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+        },
+      },
+    )
+
+    return () => {
+      anim.scrollTrigger?.kill()
+      anim.kill()
+    }
+  }, [speed])
 
   return (
-    <motion.div ref={ref} style={{ y }} className={className}>
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   )
 }

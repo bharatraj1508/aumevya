@@ -1,28 +1,31 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Palette — calm, warm, grounded */
-  --color-background: #f7f3ec;
-  --color-foreground: #26241f;
-  --color-card: #fffdf9;
-  --color-muted: #ece4d6;
-  --color-muted-foreground: #6f6858;
-  --color-border: #e2d9c9;
-  --color-input: #e2d9c9;
-  --color-ring: #6b7a5a;
+  /* Palette — BookRetreats marketplace: all-white, coral CTA, gold stars */
+  --color-background: #ffffff;
+  --color-foreground: #2b2b2b; /* charcoal */
+  --color-card: #ffffff;
+  --color-muted: #f6f7f9; /* very light gray for fields / faint bands */
+  --color-muted-foreground: #6b7280; /* neutral gray */
+  --color-border: #e7e8ec;
+  --color-input: #e7e8ec;
+  --color-ring: #ef6a45;
 
-  --color-primary: #5f6f4e; /* sage */
-  --color-primary-foreground: #f7f3ec;
-  --color-accent: #bd7a5e; /* clay */
-  --color-accent-foreground: #fffdf9;
+  --color-primary: #ef6a45; /* coral/orange — CTAs & brand */
+  --color-primary-foreground: #ffffff;
+  --color-accent: #f5a623; /* warm gold — star ratings & small badges */
+  --color-accent-foreground: #2b2b2b;
 
-  /* Type */
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
-    'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
-  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia,
-    ui-serif, serif;
+  /* Type — Poppins (rounded geometric, BookRetreats feel), loaded via next/font.
+     --font-serif is aliased to it so existing `font-serif` usages render the
+     same display sans — no per-class churn. */
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-serif: var(--font-poppins), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  --radius: 0.75rem;
+  --radius: 0.875rem;
 
   /* Motion */
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
@@ -43,9 +46,9 @@
     text-rendering: optimizeLegibility;
   }
   h1, h2, h3, h4 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: -0.025em;
     line-height: 1.08;
   }
   ::selection {
