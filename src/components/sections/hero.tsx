@@ -145,7 +145,7 @@ export function Hero({
           <div className="group/bar relative mx-auto max-w-5xl">
             <span
               aria-hidden
-              className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-r from-primary via-accent to-primary opacity-0 blur-md transition-all duration-500 group-hover/bar:-inset-2 group-hover/bar:opacity-70 group-hover/bar:blur-xl sm:rounded-full"
+              className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-r from-primary via-blue-400 to-primary opacity-0 blur-md transition-all duration-500 group-hover/bar:-inset-2 group-hover/bar:opacity-70 group-hover/bar:blur-xl sm:rounded-full"
             />
             <div className="relative flex flex-col gap-1.5 rounded-2xl border border-border bg-card p-2 text-left shadow-[0_16px_50px_-20px_rgba(0,0,0,0.2)] transition-shadow duration-300 group-hover/bar:shadow-[0_24px_70px_-24px_rgba(0,0,0,0.28)] sm:flex-row sm:items-center sm:gap-0 sm:rounded-full sm:p-2 sm:pl-3">
               <div className="flex flex-1 flex-col sm:flex-row sm:items-center">
@@ -174,7 +174,7 @@ export function Hero({
               <div className="group relative mt-1.5 w-full sm:mt-0 sm:w-auto">
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute -inset-px rounded-xl bg-gradient-to-r from-primary via-accent to-primary opacity-0 blur-sm transition-all duration-500 group-hover:-inset-2.5 group-hover:opacity-90 group-hover:blur-lg sm:rounded-full"
+                  className="pointer-events-none absolute -inset-px rounded-xl bg-gradient-to-r from-primary via-blue-400 to-primary opacity-0 blur-sm transition-all duration-500 group-hover:-inset-2.5 group-hover:opacity-90 group-hover:blur-lg sm:rounded-full"
                 />
                 <Button asChild size="lg" className="relative w-full sm:w-auto sm:rounded-full">
                   <Link href="/services" aria-label="Search retreats">

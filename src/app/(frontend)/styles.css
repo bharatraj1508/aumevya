@@ -9,9 +9,9 @@
   --color-muted-foreground: #6b7280; /* neutral gray */
   --color-border: #e7e8ec;
   --color-input: #e7e8ec;
-  --color-ring: #ef6a45;
+  --color-ring: #3a86ff;
 
-  --color-primary: #ef6a45; /* coral/orange — CTAs & brand */
+  --color-primary: #3a86ff; /* blue — CTAs & brand */
   --color-primary-foreground: #ffffff;
   --color-accent: #f5a623; /* warm gold — star ratings & small badges */
   --color-accent-foreground: #2b2b2b;

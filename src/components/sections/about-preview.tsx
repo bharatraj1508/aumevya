@@ -4,6 +4,7 @@ import type { Config } from '@/payload-types'
 import { RichText } from '@/components/RichText'
 import { MediaImage } from '@/components/site/media-image'
 import { Reveal } from '@/components/motion/reveal'
+import { CountUp } from '@/components/motion/count-up'
 import { Parallax } from '@/components/motion/parallax'
 import { Button } from '@/components/ui/button'
 import { Eyebrow } from '@/components/site/eyebrow'
@@ -47,9 +48,11 @@ export function AboutPreview({ about }: { about: About }) {
               <div className="mt-8 grid grid-cols-3 gap-6 border-t border-border pt-8">
                 {about.highlights.map((h) => (
                   <div key={h.id}>
-                    <div className="text-3xl font-bold tracking-tight text-primary md:text-4xl">
-                      {h.value}
-                    </div>
+                    <CountUp
+                      value={String(h.value ?? '')}
+                      className="block text-3xl font-bold tracking-tight text-primary md:text-4xl"
+                    />
+
                     <div className="mt-1 text-xs uppercase tracking-[0.1em] text-muted-foreground">
                       {h.label}
                     </div>
