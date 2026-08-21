@@ -61,9 +61,9 @@ export const Inquiries: CollectionConfig = {
     {
       name: 'service',
       type: 'relationship',
-      relationTo: 'services',
+      relationTo: 'retreats',
       admin: {
-        description: 'Service of interest (booking inquiries).',
+        description: 'Retreat of interest (booking inquiries).',
         condition: (data) => data?.type === 'booking',
       },
     },

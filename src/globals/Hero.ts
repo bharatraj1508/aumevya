@@ -42,7 +42,7 @@ export const Hero: GlobalConfig = {
     {
       name: 'secondaryCtaHref',
       type: 'text',
-      defaultValue: '/services',
+      defaultValue: '/retreats',
     },
     {
       name: 'backgroundImage',

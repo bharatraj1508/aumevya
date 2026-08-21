@@ -8,7 +8,7 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
-import { Services } from './collections/Services'
+import { Retreats } from './collections/Retreats'
 import { Testimonials } from './collections/Testimonials'
 import { Gallery } from './collections/Gallery'
 import { Videos } from './collections/Videos'
@@ -57,7 +57,7 @@ export default buildConfig({
       titleSuffix: '· Aumevya Yoga',
     },
   },
-  collections: [Users, Media, Services, Testimonials, Gallery, Videos, Inquiries],
+  collections: [Users, Media, Retreats, Testimonials, Gallery, Videos, Inquiries],
   globals: [Hero, About, ContactInfo, SeoDefaults, Cta],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

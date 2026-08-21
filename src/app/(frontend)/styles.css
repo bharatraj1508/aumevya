@@ -93,6 +93,40 @@
   }
   .prose-content strong {
     color: var(--color-foreground);
+    font-weight: 600;
+  }
+  .prose-content em {
+    font-style: italic;
+  }
+  .prose-content h2 {
+    margin-block: 1.25em 0.5em;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  .prose-content h3 {
+    margin-block: 1.1em 0.4em;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+  .prose-content ul,
+  .prose-content ol {
+    margin-block: 0.75em;
+    padding-left: 1.35em;
+    color: var(--color-muted-foreground);
+    line-height: 1.7;
+  }
+  .prose-content ul {
+    list-style: disc;
+  }
+  .prose-content ol {
+    list-style: decimal;
+  }
+  .prose-content li {
+    margin-block: 0.3em;
+    padding-left: 0.25em;
+  }
+  .prose-content li::marker {
+    color: var(--color-primary);
   }
 
   @media (prefers-reduced-motion: reduce) {
