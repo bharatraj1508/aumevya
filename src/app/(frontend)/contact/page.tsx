@@ -8,12 +8,12 @@ import { Reveal } from '@/components/motion/reveal'
 export const metadata: Metadata = { title: 'Contact' }
 
 export default async function ContactPage() {
-  const [contact, services] = await Promise.all([
+  const [contact, retreats] = await Promise.all([
     getGlobal('contact-info'),
-    getDocs('services', { where: { published: { equals: true } }, sort: 'order' }),
+    getDocs('retreats', { where: { published: { equals: true } }, sort: 'order' }),
   ])
 
-  const serviceOptions = services.map((s) => ({ id: String(s.id), title: s.title }))
+  const serviceOptions = retreats.map((r) => ({ id: String(r.id), title: r.title }))
 
   return (
     <>

@@ -1,15 +1,16 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import type { Service } from '@/payload-types'
+import type { Retreat } from '@/payload-types'
 import { SectionHeading } from '@/components/site/section-heading'
-import { ServiceCard } from '@/components/site/service-card'
+import { RetreatCard } from '@/components/site/retreat-card'
 import { StaggerGroup, StaggerItem, Reveal } from '@/components/motion/reveal'
 import { Button } from '@/components/ui/button'
+import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card'
 
-export function ServicesPreview({ services }: { services: Service[] }) {
-  if (services.length === 0) return null
+export function RetreatsPreview({ retreats }: { retreats: Retreat[] }) {
+  if (retreats.length === 0) return null
   return (
-    <section className="bg-muted/40 py-24 md:py-32">
+    <section className="border-b border-border bg-background py-24 md:py-28">
       <div className="container-page">
         <SectionHeading
           eyebrow="Handpicked for you"
@@ -17,15 +18,21 @@ export function ServicesPreview({ services }: { services: Service[] }) {
           description="From grounding Hatha to flowing Vinyasa and quiet meditation — curated experiences that meet you where you are."
         />
         <StaggerGroup className="mt-14 grid gap-6 md:grid-cols-3">
-          {services.map((s) => (
-            <StaggerItem key={s.id} className="h-full">
-              <ServiceCard service={s} />
+          {retreats.map((r) => (
+            <StaggerItem key={r.id} className="h-full">
+              <CardContainer containerClassName="block h-full p-0" className="h-full w-full">
+                <CardBody className="h-full w-full">
+                  <CardItem translateZ={50} className="h-full w-full">
+                    <RetreatCard retreat={r} />
+                  </CardItem>
+                </CardBody>
+              </CardContainer>
             </StaggerItem>
           ))}
         </StaggerGroup>
         <Reveal className="mt-12 text-center">
           <Button asChild variant="outline">
-            <Link href="/services">
+            <Link href="/retreats">
               View all retreats
               <ArrowRight />
             </Link>

@@ -1,0 +1,15 @@
+# Production compose for the VPS. MongoDB is external (Atlas or self-hosted),
+# configured via MONGO_URI in .env. Values are read from .env in this directory.
+services:
+  web:
+    build: .
+    image: aumevya
+    container_name: aumevya
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - '${PORT:-3000}:${PORT:-3000}'
+    volumes:
+      # Bind-mount host media so existing uploads show and new uploads persist
+      # on the VPS filesystem. Put your image files in ./media next to this file.
+      - ./media:/app/media

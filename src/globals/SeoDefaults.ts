@@ -11,12 +11,12 @@ export const SeoDefaults: GlobalConfig = {
       name: 'siteName',
       type: 'text',
       required: true,
-      defaultValue: 'Aumevya Yoga',
+      defaultValue: 'Aumevya',
     },
     {
       name: 'titleTemplate',
       type: 'text',
-      defaultValue: '%s · Aumevya Yoga',
+      defaultValue: '%s · Aumevya',
       admin: { description: 'Use %s as a placeholder for the page title.' },
     },
     {

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
@@ -28,21 +29,22 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-all duration-500',
+        'fixed inset-x-0 top-0 z-50 transition-all duration-300',
         scrolled
-          ? 'bg-background/85 backdrop-blur-md border-b border-border/60'
-          : 'bg-transparent',
+          ? 'bg-background/90 backdrop-blur-md shadow-sm'
+          : 'bg-background',
       )}
     >
       <div className="container-page flex h-16 items-center justify-between md:h-20">
-        <Link
-          href="/"
-          className={cn(
-            'font-serif text-xl tracking-tight transition-colors',
-            scrolled ? 'text-foreground' : 'text-primary-foreground',
-          )}
-        >
-          {siteName}
+        <Link href="/" aria-label={siteName} className="inline-flex items-center">
+          <Image
+            src="/logo.png"
+            alt={siteName}
+            width={2105}
+            height={710}
+            priority
+            className="h-9 w-auto md:h-11"
+          />
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -51,11 +53,8 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
               key={l.href}
               href={l.href}
               className={cn(
-                'text-sm transition-colors',
-                scrolled
-                  ? 'text-foreground/70 hover:text-foreground'
-                  : 'text-primary-foreground/80 hover:text-primary-foreground',
-                pathname === l.href && (scrolled ? 'text-foreground' : 'text-primary-foreground'),
+                'text-sm font-medium text-foreground/70 transition-colors hover:text-primary',
+                pathname === l.href && 'text-primary',
               )}
             >
               {l.label}
@@ -64,13 +63,13 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
         </nav>
 
         <div className="hidden md:block">
-          <Button asChild variant="accent" size="sm">
+          <Button asChild size="sm">
             <Link href="/contact">{bookLabel}</Link>
           </Button>
         </div>
 
         <button
-          className={cn('md:hidden', scrolled || open ? 'text-foreground' : 'text-primary-foreground')}
+          className="text-foreground md:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -97,7 +96,7 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
                   {l.label}
                 </Link>
               ))}
-              <Button asChild variant="accent" className="mt-2 w-full">
+              <Button asChild className="mt-2 w-full">
                 <Link href="/contact">{bookLabel}</Link>
               </Button>
             </nav>

@@ -2,16 +2,15 @@ import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  // Emit a self-contained server bundle for a small production Docker image.
+  output: 'standalone',
   images: {
     localPatterns: [
       {
         pathname: '/api/media/file/**',
       },
-    ],
-    remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
+        pathname: '/logo.png',
       },
     ],
     // Our placeholder assets are SVG and all uploads are admin-only (trusted).

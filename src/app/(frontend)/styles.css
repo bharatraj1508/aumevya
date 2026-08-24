@@ -1,28 +1,31 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Palette — calm, warm, grounded */
-  --color-background: #f7f3ec;
-  --color-foreground: #26241f;
-  --color-card: #fffdf9;
-  --color-muted: #ece4d6;
-  --color-muted-foreground: #6f6858;
-  --color-border: #e2d9c9;
-  --color-input: #e2d9c9;
-  --color-ring: #6b7a5a;
+  /* Palette — BookRetreats marketplace: all-white, coral CTA, gold stars */
+  --color-background: #ffffff;
+  --color-foreground: #2b2b2b; /* charcoal */
+  --color-card: #ffffff;
+  --color-muted: #f6f7f9; /* very light gray for fields / faint bands */
+  --color-muted-foreground: #6b7280; /* neutral gray */
+  --color-border: #e7e8ec;
+  --color-input: #e7e8ec;
+  --color-ring: #3a86ff;
 
-  --color-primary: #5f6f4e; /* sage */
-  --color-primary-foreground: #f7f3ec;
-  --color-accent: #bd7a5e; /* clay */
-  --color-accent-foreground: #fffdf9;
+  --color-primary: #3a86ff; /* blue — CTAs & brand */
+  --color-primary-foreground: #ffffff;
+  --color-accent: #f5a623; /* warm gold — star ratings & small badges */
+  --color-accent-foreground: #2b2b2b;
 
-  /* Type */
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
-    'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
-  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia,
-    ui-serif, serif;
+  /* Type — Poppins (rounded geometric, BookRetreats feel), loaded via next/font.
+     --font-serif is aliased to it so existing `font-serif` usages render the
+     same display sans — no per-class churn. */
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-serif: var(--font-poppins), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  --radius: 0.75rem;
+  --radius: 0.875rem;
 
   /* Motion */
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
@@ -43,9 +46,9 @@
     text-rendering: optimizeLegibility;
   }
   h1, h2, h3, h4 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: -0.025em;
     line-height: 1.08;
   }
   ::selection {
@@ -79,6 +82,14 @@
   .text-balance {
     text-wrap: balance;
   }
+  /* Hide the scrollbar track while keeping scroll functional */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
   .prose-content p {
     margin-block: 0.75em;
     color: var(--color-muted-foreground);
@@ -90,6 +101,40 @@
   }
   .prose-content strong {
     color: var(--color-foreground);
+    font-weight: 600;
+  }
+  .prose-content em {
+    font-style: italic;
+  }
+  .prose-content h2 {
+    margin-block: 1.25em 0.5em;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  .prose-content h3 {
+    margin-block: 1.1em 0.4em;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+  .prose-content ul,
+  .prose-content ol {
+    margin-block: 0.75em;
+    padding-left: 1.35em;
+    color: var(--color-muted-foreground);
+    line-height: 1.7;
+  }
+  .prose-content ul {
+    list-style: disc;
+  }
+  .prose-content ol {
+    list-style: decimal;
+  }
+  .prose-content li {
+    margin-block: 0.3em;
+    padding-left: 0.25em;
+  }
+  .prose-content li::marker {
+    color: var(--color-primary);
   }
 
   @media (prefers-reduced-motion: reduce) {

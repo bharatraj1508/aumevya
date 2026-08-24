@@ -1,4 +1,5 @@
 import { Reveal } from '@/components/motion/reveal'
+import { Eyebrow } from '@/components/site/eyebrow'
 import { cn } from '@/lib/utils'
 
 export function SectionHeading({
@@ -22,11 +23,7 @@ export function SectionHeading({
         className,
       )}
     >
-      {eyebrow && (
-        <span className="text-xs font-medium uppercase tracking-[0.2em] text-accent">
-          {eyebrow}
-        </span>
-      )}
+      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
       <h2 className="mt-3 text-3xl text-balance md:text-4xl">{title}</h2>
       {description && (
         <p className="mt-4 text-base leading-relaxed text-muted-foreground">{description}</p>

@@ -1,94 +1,57 @@
-'use client'
-
-import { useEffect, useRef } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import type { Gallery } from '@/payload-types'
 import { MediaImage } from '@/components/site/media-image'
 import { SectionHeading } from '@/components/site/section-heading'
+import { StaggerGroup, StaggerItem } from '@/components/motion/reveal'
+import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card'
 
 export function GalleryShowcase({ items }: { items: Gallery[] }) {
-  const pinRef = useRef<HTMLDivElement>(null)
-  const trackRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!pinRef.current || !trackRef.current) return
-    const track = trackRef.current
-    const pin = pinRef.current
-
-    const mm = gsap.matchMedia()
-    // Cinematic pinned horizontal scroll — desktop + motion-safe only.
-    mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
-      gsap.registerPlugin(ScrollTrigger)
-      const getScrollLen = () => track.scrollWidth - (track.parentElement?.clientWidth ?? 0)
-
-      const tween = gsap.to(track, {
-        x: () => -getScrollLen(),
-        ease: 'none',
-        scrollTrigger: {
-          trigger: pin,
-          start: 'top top',
-          end: () => `+=${getScrollLen()}`,
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      })
-
-      return () => {
-        tween.scrollTrigger?.kill()
-        tween.kill()
-      }
-    })
-
-    return () => mm.revert()
-  }, [])
-
   if (items.length === 0) return null
 
   return (
-    <section className="py-24 md:py-32">
+    <section className="border-b border-border bg-background py-24 md:py-28">
       <div className="container-page">
         <SectionHeading
           eyebrow="Life at the studio"
           title="A glimpse into our space"
-          description="Scroll through moments from our retreats, community and calm corners."
+          description="Moments from our retreats, community and calm corners."
         />
-      </div>
 
-      <div ref={pinRef} className="mt-14">
-        <div className="flex h-svh items-center overflow-hidden max-md:h-auto max-md:snap-x max-md:snap-mandatory max-md:overflow-x-auto max-md:py-4 motion-reduce:h-auto motion-reduce:overflow-x-auto motion-reduce:py-4">
-          <div
-            ref={trackRef}
-            className="flex w-max gap-5 px-5 will-change-transform md:px-[8vw]"
-          >
-            {items.map((item, i) => (
-              <figure
-                key={item.id}
-                className="group relative h-[62vh] w-[78vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-border sm:w-[58vw] md:h-[70vh] md:w-[42vw] lg:w-[34vw]"
-              >
-                <MediaImage
-                  media={item.image}
-                  fill
-                  sizes="(min-width: 768px) 42vw, 80vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                {item.caption && (
-                  <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent p-6 text-sm text-primary-foreground">
-                    <span className="text-xs uppercase tracking-widest text-primary-foreground/70">
-                      {item.category}
-                    </span>
-                    <div className="mt-1">{item.caption}</div>
-                  </figcaption>
-                )}
-                <span className="absolute right-4 top-4 text-xs text-primary-foreground/60">
-                  {String(i + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
-                </span>
-              </figure>
-            ))}
-          </div>
-        </div>
+        <StaggerGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item) => (
+            <StaggerItem key={item.id}>
+              <CardContainer containerClassName="block p-0" className="h-full w-full">
+                <CardBody className="aspect-[4/5] h-auto w-full">
+                  <CardItem translateZ={60} className="h-full w-full">
+                    <figure className="group relative h-full w-full overflow-hidden rounded-2xl border border-border bg-muted shadow-sm">
+                      <MediaImage
+                        media={item.image}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      {(item.caption || item.category) && (
+                        <CardItem
+                          as="figcaption"
+                          translateZ={40}
+                          className="absolute inset-x-0 bottom-0 w-full bg-gradient-to-t from-black/75 to-transparent p-5 text-primary-foreground"
+                        >
+                          {item.category && (
+                            <span className="inline-block rounded-full bg-primary px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.1em] text-primary-foreground">
+                              {item.category}
+                            </span>
+                          )}
+                          {item.caption && (
+                            <div className="mt-2 text-sm font-medium">{item.caption}</div>
+                          )}
+                        </CardItem>
+                      )}
+                    </figure>
+                  </CardItem>
+                </CardBody>
+              </CardContainer>
+            </StaggerItem>
+          ))}
+        </StaggerGroup>
       </div>
     </section>
   )

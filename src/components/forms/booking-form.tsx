@@ -11,12 +11,26 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 
-export function BookingForm({ services }: { services: { id: string; title: string }[] }) {
+export function BookingForm({
+  services,
+  defaultServiceId,
+  lockService = false,
+}: {
+  services: { id: string; title: string }[]
+  /** Preselect a retreat (used by the retreat detail booking card). */
+  defaultServiceId?: string
+  /** Hide the picker and lock the inquiry to `defaultServiceId`. */
+  lockService?: boolean
+}) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<BookingInput>({ resolver: zodResolver(bookingSchema) })
+  } = useForm<BookingInput>({
+    resolver: zodResolver(bookingSchema),
+    defaultValues: defaultServiceId ? { service: defaultServiceId } : undefined,
+  })
+  const lockedTitle = services.find((s) => s.id === defaultServiceId)?.title
   const { submit, status, error } = useInquirySubmit('/api/forms/booking')
 
   if (status === 'success') {
@@ -43,16 +57,28 @@ export function BookingForm({ services }: { services: { id: string; title: strin
         <Field label="Phone" htmlFor="b-phone" error={errors.phone?.message}>
           <Input id="b-phone" {...register('phone')} placeholder="Optional" />
         </Field>
-        <Field label="Retreat of interest" htmlFor="b-service">
-          <select id="b-service" className={selectClass} {...register('service')}>
-            <option value="">Any / not sure yet</option>
-            {services.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.title}
-              </option>
-            ))}
-          </select>
-        </Field>
+        {lockService && lockedTitle ? (
+          <Field label="Retreat of interest" htmlFor="b-service">
+            <input type="hidden" {...register('service')} />
+            <div
+              id="b-service"
+              className="flex h-11 items-center rounded-xl border border-border bg-muted px-3.5 text-sm font-medium text-foreground"
+            >
+              {lockedTitle}
+            </div>
+          </Field>
+        ) : (
+          <Field label="Retreat of interest" htmlFor="b-service">
+            <select id="b-service" className={selectClass} {...register('service')}>
+              <option value="">Any / not sure yet</option>
+              {services.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.title}
+                </option>
+              ))}
+            </select>
+          </Field>
+        )}
       </div>
       <Field label="Preferred date / time" htmlFor="b-date" error={errors.preferredDate?.message}>
         <Input id="b-date" {...register('preferredDate')} placeholder="e.g. Weekday mornings" />

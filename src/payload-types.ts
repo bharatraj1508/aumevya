@@ -69,7 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
-    services: Service;
+    retreats: Retreat;
     testimonials: Testimonial;
     gallery: Gallery;
     videos: Video;
@@ -83,7 +83,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    services: ServicesSelect<false> | ServicesSelect<true>;
+    retreats: RetreatsSelect<false> | RetreatsSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     gallery: GallerySelect<false> | GallerySelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
@@ -185,20 +185,51 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services".
+ * via the `definition` "retreats".
  */
-export interface Service {
+export interface Retreat {
   id: string;
   title: string;
   /**
-   * Auto-generated from the title if left blank.
+   * Photo gallery. The first image is used as the cover.
    */
-  slug?: string | null;
+  images: (string | Media)[];
   /**
-   * One-line summary shown on cards.
+   * e.g. "Khajuraho, India".
    */
-  summary: string;
-  description?: {
+  location: string;
+  /**
+   * Starting price per person (₹).
+   */
+  price: number;
+  fromDate: string;
+  toDate: string;
+  /**
+   * Out of 5.
+   */
+  ratings: number;
+  /**
+   * Main overview. Supports bold, italic, and bullet lists.
+   */
+  summary: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * What guests will experience day to day.
+   */
+  retreatExperience?: {
     root: {
       type: string;
       children: {
@@ -213,16 +244,134 @@ export interface Service {
     };
     [k: string]: unknown;
   } | null;
-  image?: (string | null) | Media;
   /**
-   * Where the retreat takes place, e.g. "Rishikesh, India".
+   * What makes this retreat special.
    */
-  location?: string | null;
+  specialities?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   /**
-   * e.g. 3 days / 60 min
+   * Food & dining details.
    */
-  duration?: string | null;
-  level?: ('All Levels' | 'Beginner' | 'Intermediate' | 'Advanced') | null;
+  food?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * About the facilitator(s) / hosts.
+   */
+  facilitation?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Key benefits, one per tag. e.g. "Reduced stress", "Better sleep".
+   */
+  benefits?: string[] | null;
+  /**
+   * Add a day, then add timeline entries within it.
+   */
+  programItinerary?:
+    | {
+        /**
+         * e.g. "Day 1 · Arrival & Grounding".
+         */
+        title?: string | null;
+        timeline?:
+          | {
+              /**
+               * e.g. "7:00 AM".
+               */
+              time: string;
+              /**
+               * What happens at this time.
+               */
+              description: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Select or type your own. Suggestions: Accommodation, All meals, Daily yoga, Airport transfer, Excursions, Welcome drink.
+   */
+  whatIncludes?: string[] | null;
+  /**
+   * Select or type your own. Suggestions: Flights, Travel insurance, Visa fees, Personal expenses, Spa treatments.
+   */
+  notIncluded?: string[] | null;
+  /**
+   * Select or type your own. Suggestions: Free Wifi, Swimming pool, Spa, Restaurant, Garden, Yoga shala, Parking.
+   */
+  availableFacilities?: string[] | null;
+  /**
+   * About the location and how to get there.
+   */
+  locationInformation?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  retreatReviews?:
+    | {
+        reviewerName: string;
+        /**
+         * Out of 5.
+         */
+        rating: number;
+        reviewDescription: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Auto-generated from the title if left blank.
+   */
+  slug?: string | null;
   /**
    * Lower numbers appear first.
    */
@@ -297,9 +446,9 @@ export interface Inquiry {
   email: string;
   phone?: string | null;
   /**
-   * Service of interest (booking inquiries).
+   * Retreat of interest (booking inquiries).
    */
-  service?: (string | null) | Service;
+  service?: (string | null) | Retreat;
   /**
    * Free-text preferred date/time (Phase 1 — no calendar yet).
    */
@@ -345,8 +494,8 @@ export interface PayloadLockedDocument {
         value: string | Media;
       } | null)
     | ({
-        relationTo: 'services';
-        value: string | Service;
+        relationTo: 'retreats';
+        value: string | Retreat;
       } | null)
     | ({
         relationTo: 'testimonials';
@@ -448,17 +597,48 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services_select".
+ * via the `definition` "retreats_select".
  */
-export interface ServicesSelect<T extends boolean = true> {
+export interface RetreatsSelect<T extends boolean = true> {
   title?: T;
-  slug?: T;
-  summary?: T;
-  description?: T;
-  image?: T;
+  images?: T;
   location?: T;
-  duration?: T;
-  level?: T;
+  price?: T;
+  fromDate?: T;
+  toDate?: T;
+  ratings?: T;
+  summary?: T;
+  retreatExperience?: T;
+  specialities?: T;
+  food?: T;
+  facilitation?: T;
+  benefits?: T;
+  programItinerary?:
+    | T
+    | {
+        title?: T;
+        timeline?:
+          | T
+          | {
+              time?: T;
+              description?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  whatIncludes?: T;
+  notIncluded?: T;
+  availableFacilities?: T;
+  locationInformation?: T;
+  retreatReviews?:
+    | T
+    | {
+        reviewerName?: T;
+        rating?: T;
+        reviewDescription?: T;
+        id?: T;
+      };
+  slug?: T;
   order?: T;
   featured?: T;
   published?: T;
@@ -586,9 +766,13 @@ export interface Hero {
   secondaryCtaLabel?: string | null;
   secondaryCtaHref?: string | null;
   /**
-   * Full-bleed hero background image.
+   * Full-bleed hero background image. Used when no background video is set, and as the poster while a video loads.
    */
   backgroundImage?: (string | null) | Media;
+  /**
+   * Optional. A looping background video (MP4/WebM). If set, it plays behind the hero and takes precedence over the background image. Leave empty to use the image.
+   */
+  heroVideo?: (string | null) | Media;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -715,6 +899,7 @@ export interface HeroSelect<T extends boolean = true> {
   secondaryCtaLabel?: T;
   secondaryCtaHref?: T;
   backgroundImage?: T;
+  heroVideo?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
