@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
       {
         pathname: '/api/media/file/**',
       },
+      {
+        pathname: '/logo.png',
+      },
     ],
     remotePatterns: [
       {

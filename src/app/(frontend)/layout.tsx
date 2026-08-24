@@ -30,7 +30,7 @@ const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getGlobal('seo-defaults')
-  const siteName = seo?.siteName || 'Aumevya Yoga'
+  const siteName = seo?.siteName || 'Aumevya'
   const ogImage = mediaURL(seo?.ogImage)
   return {
     metadataBase: new URL(SERVER_URL),
@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
   const [seo, contact] = await Promise.all([getGlobal('seo-defaults'), getGlobal('contact-info')])
-  const siteName = seo?.siteName || 'Aumevya Yoga'
+  const siteName = seo?.siteName || 'Aumevya'
 
   return (
     <html lang="en" className={`${poppins.variable} ${jetbrainsMono.variable}`}>

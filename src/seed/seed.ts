@@ -182,8 +182,8 @@ const run = async () => {
   await payload.updateGlobal({
     slug: 'seo-defaults',
     data: {
-      siteName: 'Aumevya Yoga',
-      titleTemplate: '%s · Aumevya Yoga',
+      siteName: 'Aumevya',
+      titleTemplate: '%s · Aumevya',
       description:
         'Aumevya Yoga — handpicked Hatha, Vinyasa, meditation and Ayurveda yoga retreats to unplug, de-stress and recharge, for every level.',
       ogImage: ogImg,

@@ -54,7 +54,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     meta: {
-      titleSuffix: '· Aumevya Yoga',
+      titleSuffix: '· Aumevya',
     },
   },
   collections: [Users, Media, Retreats, Testimonials, Gallery, Videos, Inquiries],

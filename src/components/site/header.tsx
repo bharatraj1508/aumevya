@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
@@ -35,8 +36,15 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
       )}
     >
       <div className="container-page flex h-16 items-center justify-between md:h-20">
-        <Link href="/" className="text-xl font-extrabold tracking-tight text-foreground">
-          {siteName}
+        <Link href="/" aria-label={siteName} className="inline-flex items-center">
+          <Image
+            src="/logo.png"
+            alt={siteName}
+            width={2105}
+            height={710}
+            priority
+            className="h-9 w-auto md:h-11"
+          />
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
