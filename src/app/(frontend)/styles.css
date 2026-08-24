@@ -82,6 +82,14 @@
   .text-balance {
     text-wrap: balance;
   }
+  /* Hide the scrollbar track while keeping scroll functional */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
   .prose-content p {
     margin-block: 0.75em;
     color: var(--color-muted-foreground);

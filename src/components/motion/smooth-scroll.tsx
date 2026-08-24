@@ -2,6 +2,7 @@
 
 import { ReactLenis, type LenisRef } from 'lenis/react'
 import { useEffect, useRef, type ReactNode } from 'react'
+import { usePathname } from 'next/navigation'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
 
 /**
@@ -43,11 +44,17 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   )
 }
 
-/** Thin gradient bar that tracks reading progress down the page. */
+/**
+ * Thin gradient bar that tracks reading progress down the page. Hidden on the
+ * landing page, where the TracingBeam already serves as the scroll indicator.
+ */
 function ScrollProgress() {
   const ref = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
+  const hidden = pathname === '/'
 
   useEffect(() => {
+    if (hidden) return
     const el = ref.current
     if (!el) return
     gsap.set(el, { scaleX: 0, transformOrigin: 'left center' })
@@ -57,7 +64,9 @@ function ScrollProgress() {
       onUpdate: (self) => gsap.set(el, { scaleX: self.progress }),
     })
     return () => st.kill()
-  }, [])
+  }, [hidden])
+
+  if (hidden) return null
 
   return (
     <div

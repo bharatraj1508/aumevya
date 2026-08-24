@@ -31,8 +31,8 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-all duration-300',
         scrolled
-          ? 'border-b border-border bg-background/90 backdrop-blur-md shadow-sm'
-          : 'border-b border-transparent bg-background',
+          ? 'bg-background/90 backdrop-blur-md shadow-sm'
+          : 'bg-background',
       )}
     >
       <div className="container-page flex h-16 items-center justify-between md:h-20">
