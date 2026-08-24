@@ -1,19 +1,16 @@
 import type { CollectionConfig } from 'payload'
 import path from 'path'
-import { fileURLToPath } from 'url'
 
-const dirname = path.dirname(fileURLToPath(import.meta.url))
-
-// Local disk storage (Phase 1). Files live in <project-root>/media and are served
-// by Payload at /api/media/file/<filename>. When Cloudinary env vars are added later,
-// the plugin (payload.config.ts) takes over and sets disableLocalStorage automatically.
+// Local disk storage. Files live in <cwd>/media and are served by Payload at
+// /api/media/file/<filename>. Resolved from the working directory so it points at
+// /app/media inside the container — mount that path as a volume to persist uploads.
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
     read: () => true,
   },
   upload: {
-    staticDir: path.resolve(dirname, '../../media'),
+    staticDir: path.resolve(process.cwd(), 'media'),
   },
   fields: [
     {

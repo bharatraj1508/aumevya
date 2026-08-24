@@ -19,10 +19,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.0",
-    "@jhb.software/payload-cloudinary-plugin": "^0.4.0",
     "@payloadcms/db-mongodb": "3.88.0",
     "@payloadcms/next": "3.88.0",
-    "@payloadcms/plugin-cloud-storage": "^3.88.0",
     "@payloadcms/richtext-lexical": "3.88.0",
     "@payloadcms/ui": "3.88.0",
     "@radix-ui/react-label": "^2.1.15",
