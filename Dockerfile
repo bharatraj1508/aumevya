@@ -21,8 +21,12 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Placeholder env only for this build step so the Payload config loads. No DB
 # connection is made during `next build` (all frontend routes are force-dynamic),
 # and these values are not baked into any image layer.
+# Cap the heap to fit a small VPS (3.8GB box shared with other containers).
+# The 8000 in package.json's build script suits well-provisioned machines;
+# NODE_OPTIONS here overrides it for the in-container build only.
 RUN PAYLOAD_SECRET=build-only-placeholder \
     MONGO_URI=mongodb://localhost:27017/build \
+    NODE_OPTIONS="--no-deprecation --no-experimental-webstorage --max-old-space-size=2048" \
     npm run build
 
 # ---------- runner ----------
