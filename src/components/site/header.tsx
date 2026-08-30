@@ -40,10 +40,10 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
           <Image
             src="/logo.png"
             alt={siteName}
-            width={2105}
-            height={710}
+            width={306}
+            height={166}
             priority
-            className="h-9 w-auto md:h-11"
+            className="h-12 w-auto md:h-16"
           />
         </Link>
 
