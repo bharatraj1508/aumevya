@@ -133,7 +133,15 @@ const run = async () => {
       primaryCtaHref: '/retreats',
       secondaryCtaLabel: 'Explore Retreats',
       secondaryCtaHref: '/retreats',
-      backgroundImage: heroImg,
+      heroImages: gallery,
+    },
+  })
+
+  await payload.updateGlobal({
+    slug: 'theme',
+    data: {
+      primaryColor: '#d64500', // Cromix Orange
+      accentColor: '#f5a623',
     },
   })
 
