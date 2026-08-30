@@ -1,7 +1,9 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Palette — BookRetreats marketplace: all-white, coral CTA, gold stars */
+  /* Palette — all-white surfaces, Cromix Orange CTA, gold stars.
+     --color-primary / --color-accent are overridden per-request from the Theme
+     global (see layout.tsx), so these are just the defaults. */
   --color-background: #ffffff;
   --color-foreground: #2b2b2b; /* charcoal */
   --color-card: #ffffff;
@@ -9,9 +11,9 @@
   --color-muted-foreground: #6b7280; /* neutral gray */
   --color-border: #e7e8ec;
   --color-input: #e7e8ec;
-  --color-ring: #3a86ff;
+  --color-ring: #d64500;
 
-  --color-primary: #3a86ff; /* blue — CTAs & brand */
+  --color-primary: #d64500; /* Cromix Orange — CTAs & brand */
   --color-primary-foreground: #ffffff;
   --color-accent: #f5a623; /* warm gold — star ratings & small badges */
   --color-accent-foreground: #2b2b2b;
@@ -81,14 +83,6 @@
   }
   .text-balance {
     text-wrap: balance;
-  }
-  /* Hide the scrollbar track while keeping scroll functional */
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
   }
   .prose-content p {
     margin-block: 0.75em;

@@ -45,21 +45,15 @@ export const Hero: GlobalConfig = {
       defaultValue: '/retreats',
     },
     {
-      name: 'backgroundImage',
+      name: 'heroImages',
       type: 'upload',
       relationTo: 'media',
+      hasMany: true,
+      minRows: 6,
+      maxRows: 6,
       admin: {
         description:
-          'Full-bleed hero background image. Used when no background video is set, and as the poster while a video loads.',
-      },
-    },
-    {
-      name: 'heroVideo',
-      type: 'upload',
-      relationTo: 'media',
-      admin: {
-        description:
-          'Optional. A looping background video (MP4/WebM). If set, it plays behind the hero and takes precedence over the background image. Leave empty to use the image.',
+          'Exactly 6 images shown floating in the hero. Order matters — they fill the layout clockwise from the top-left.',
       },
     },
   ],

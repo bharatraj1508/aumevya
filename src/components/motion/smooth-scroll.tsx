@@ -46,7 +46,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
 /**
  * Thin gradient bar that tracks reading progress down the page. Hidden on the
- * landing page, where the TracingBeam already serves as the scroll indicator.
+ * landing page, which is intentionally kept free of any scroll indicator.
  */
 function ScrollProgress() {
   const ref = useRef<HTMLDivElement>(null)
@@ -72,7 +72,7 @@ function ScrollProgress() {
     <div
       ref={ref}
       aria-hidden
-      className="fixed inset-x-0 top-0 z-[60] h-[3px] origin-left bg-gradient-to-r from-primary via-blue-400 to-primary"
+      className="fixed inset-x-0 top-0 z-[60] h-[3px] origin-left bg-gradient-to-r from-primary via-accent to-primary"
     />
   )
 }

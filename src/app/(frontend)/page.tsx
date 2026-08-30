@@ -6,8 +6,6 @@ import { RetreatsPreview } from '@/components/sections/retreats-preview'
 import { GalleryShowcase } from '@/components/sections/gallery-showcase'
 import { TestimonialsSection } from '@/components/sections/testimonials-section'
 import { CtaSection } from '@/components/sections/cta-section'
-import { TracingBeam } from '@/components/ui/tracing-beam'
-import { HideScrollbar } from '@/components/motion/hide-scrollbar'
 
 export default async function HomePage() {
   const [hero, about, cta, featured, allRetreats, testimonials, gallery] = await Promise.all([
@@ -28,29 +26,24 @@ export default async function HomePage() {
 
   return (
     <>
-      <HideScrollbar />
-      <TracingBeam className="max-w-none">
-        <Hero
-          eyebrow={hero?.eyebrow}
-          heading={hero?.heading || 'Find your balance'}
-          subheading={hero?.subheading}
-          primaryCtaLabel={hero?.primaryCtaLabel}
-          primaryCtaHref={hero?.primaryCtaHref}
-          secondaryCtaLabel={hero?.secondaryCtaLabel}
-          secondaryCtaHref={hero?.secondaryCtaHref}
-          backgroundImage={hero?.backgroundImage}
-          heroVideo={hero?.heroVideo}
-          images={gallery.slice(0, 8).map((g) => g.image)}
-          locations={locations}
-          retreats={retreatNames}
-        />
-        <ValueProps />
-        <AboutPreview about={about} />
-        <RetreatsPreview retreats={featured} />
-        <GalleryShowcase items={gallery} />
-        <TestimonialsSection testimonials={testimonials} />
-        <CtaSection cta={cta} />
-      </TracingBeam>
+      <Hero
+        eyebrow={hero?.eyebrow}
+        heading={hero?.heading || 'Find your balance'}
+        subheading={hero?.subheading}
+        primaryCtaLabel={hero?.primaryCtaLabel}
+        primaryCtaHref={hero?.primaryCtaHref}
+        secondaryCtaLabel={hero?.secondaryCtaLabel}
+        secondaryCtaHref={hero?.secondaryCtaHref}
+        images={hero?.heroImages ?? []}
+        locations={locations}
+        retreats={retreatNames}
+      />
+      <ValueProps />
+      <AboutPreview about={about} />
+      <RetreatsPreview retreats={featured} />
+      <GalleryShowcase items={gallery} />
+      <TestimonialsSection testimonials={testimonials} />
+      <CtaSection cta={cta} />
     </>
   )
 }

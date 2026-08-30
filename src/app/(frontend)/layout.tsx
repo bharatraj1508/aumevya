@@ -48,11 +48,30 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
-  const [seo, contact] = await Promise.all([getGlobal('seo-defaults'), getGlobal('contact-info')])
+  const [seo, contact, theme] = await Promise.all([
+    getGlobal('seo-defaults'),
+    getGlobal('contact-info'),
+    getGlobal('theme'),
+  ])
   const siteName = seo?.siteName || 'Aumevya'
 
+  // Inline CSS vars override the @theme defaults in styles.css, so the palette
+  // is controlled entirely from the Theme global in the CMS. Falls back to
+  // Cromix Orange if the global is empty.
+  const primary = theme?.primaryColor || '#d64500'
+  const accent = theme?.accentColor || '#f5a623'
+  const themeVars = {
+    '--color-primary': primary,
+    '--color-ring': primary,
+    '--color-accent': accent,
+  } as React.CSSProperties
+
   return (
-    <html lang="en" className={`${poppins.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="en"
+      className={`${poppins.variable} ${jetbrainsMono.variable}`}
+      style={themeVars}
+    >
       <body>
         <SmoothScroll>
           <Header siteName={siteName} bookLabel="Book Now" />

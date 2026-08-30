@@ -18,6 +18,7 @@ import { About } from './globals/About'
 import { ContactInfo } from './globals/ContactInfo'
 import { SeoDefaults } from './globals/SeoDefaults'
 import { Cta } from './globals/Cta'
+import { Theme } from './globals/Theme'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -33,7 +34,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Retreats, Testimonials, Gallery, Videos, Inquiries],
-  globals: [Hero, About, ContactInfo, SeoDefaults, Cta],
+  globals: [Hero, About, ContactInfo, SeoDefaults, Cta, Theme],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -41,6 +42,12 @@ export default buildConfig({
   },
   db: mongooseAdapter({
     url: process.env.MONGO_URI || '',
+    // Shared/free-tier Atlas clusters abort transactions on the slightest
+    // write contention, which surfaces as "illegal state transition
+    // [TRANSACTION_ABORTED] -> [TRANSACTION_COMMITTED]" on writes (e.g. media
+    // uploads). This CMS is single-writer and low-concurrency, so disabling
+    // transactions removes the fragility with no practical downside.
+    transactionOptions: false,
   }),
   sharp,
 })

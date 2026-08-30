@@ -103,6 +103,7 @@ export interface Config {
     'contact-info': ContactInfo;
     'seo-defaults': SeoDefault;
     cta: Cta;
+    theme: Theme;
   };
   globalsSelect: {
     hero: HeroSelect<false> | HeroSelect<true>;
@@ -110,6 +111,7 @@ export interface Config {
     'contact-info': ContactInfoSelect<false> | ContactInfoSelect<true>;
     'seo-defaults': SeoDefaultsSelect<false> | SeoDefaultsSelect<true>;
     cta: CtaSelect<false> | CtaSelect<true>;
+    theme: ThemeSelect<false> | ThemeSelect<true>;
   };
   locale: null;
   widgets: {
@@ -766,13 +768,9 @@ export interface Hero {
   secondaryCtaLabel?: string | null;
   secondaryCtaHref?: string | null;
   /**
-   * Full-bleed hero background image. Used when no background video is set, and as the poster while a video loads.
+   * Exactly 6 images shown floating in the hero. Order matters — they fill the layout clockwise from the top-left.
    */
-  backgroundImage?: (string | null) | Media;
-  /**
-   * Optional. A looping background video (MP4/WebM). If set, it plays behind the hero and takes precedence over the background image. Leave empty to use the image.
-   */
-  heroVideo?: (string | null) | Media;
+  heroImages?: (string | Media)[] | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -888,6 +886,23 @@ export interface Cta {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "theme".
+ */
+export interface Theme {
+  id: string;
+  /**
+   * Primary brand color. Drives buttons, links, gradients, focus rings and hover accents across the whole site. Default is Cromix Orange.
+   */
+  primaryColor: string;
+  /**
+   * Secondary accent. Used for star ratings, small badges and the highlight in gradients.
+   */
+  accentColor: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "hero_select".
  */
 export interface HeroSelect<T extends boolean = true> {
@@ -898,8 +913,7 @@ export interface HeroSelect<T extends boolean = true> {
   primaryCtaHref?: T;
   secondaryCtaLabel?: T;
   secondaryCtaHref?: T;
-  backgroundImage?: T;
-  heroVideo?: T;
+  heroImages?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -974,6 +988,17 @@ export interface CtaSelect<T extends boolean = true> {
   subheading?: T;
   buttonLabel?: T;
   buttonHref?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "theme_select".
+ */
+export interface ThemeSelect<T extends boolean = true> {
+  primaryColor?: T;
+  accentColor?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
