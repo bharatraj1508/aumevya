@@ -40,3 +40,43 @@ export function formatPrice(price?: number | null): string {
 export function coverImage(retreat: Pick<Retreat, 'images'>): Retreat['images'][number] | undefined {
   return retreat.images?.[0]
 }
+
+// ── Accommodation ──────────────────────────────────────────────────────────
+// Two fixed options (Shared / Private). Shared is the base price (or a custom
+// override); Private is the base price plus an add-on. Both need an image to
+// appear on the site.
+
+export type AccommodationId = 'shared' | 'private'
+
+export type AccommodationOption = {
+  id: AccommodationId
+  label: string
+  /** Payload media relationship (populated) or null. */
+  image: NonNullable<Retreat['accommodation']>['sharedImage'] | null
+  /** Full price per person for this option. */
+  total: number
+  /** Amount added on top of the base price (0 for Shared). */
+  addOn: number
+}
+
+/** The site only shows accommodation once both option images are uploaded. */
+export function hasAccommodation(retreat: Pick<Retreat, 'accommodation'>): boolean {
+  const a = retreat.accommodation
+  return Boolean(a?.sharedImage && a?.privateImage)
+}
+
+/** Build the two selectable options with computed pricing. */
+export function accommodationOptions(
+  retreat: Pick<Retreat, 'accommodation' | 'price'>,
+): AccommodationOption[] {
+  const a = retreat.accommodation
+  const shared =
+    a?.sharedPriceMode === 'custom' && typeof a.sharedPrice === 'number'
+      ? a.sharedPrice
+      : retreat.price
+  const addOn = a?.privateAddOn ?? 0
+  return [
+    { id: 'shared', label: 'Shared', image: a?.sharedImage ?? null, total: shared, addOn: 0 },
+    { id: 'private', label: 'Private', image: a?.privateImage ?? null, total: retreat.price + addOn, addOn },
+  ]
+}

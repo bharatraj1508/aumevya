@@ -341,6 +341,28 @@ export interface Retreat {
    * Select or type your own. Suggestions: Free Wifi, Swimming pool, Spa, Restaurant, Garden, Yoga shala, Parking.
    */
   availableFacilities?: string[] | null;
+  accommodation?: {
+    /**
+     * Photo for the Shared option.
+     */
+    sharedImage?: (string | null) | Media;
+    /**
+     * Photo for the Private option.
+     */
+    privateImage?: (string | null) | Media;
+    /**
+     * Shared is priced at the retreat base price unless you override it.
+     */
+    sharedPriceMode?: ('base' | 'custom') | null;
+    /**
+     * Custom price per person for Shared (₹).
+     */
+    sharedPrice?: number | null;
+    /**
+     * Add-on added on top of the base price for Private (₹).
+     */
+    privateAddOn?: number | null;
+  };
   /**
    * About the location and how to get there.
    */
@@ -455,6 +477,10 @@ export interface Inquiry {
    * Free-text preferred date/time (Phase 1 — no calendar yet).
    */
   preferredDate?: string | null;
+  /**
+   * Chosen accommodation and total price at time of inquiry.
+   */
+  accommodation?: string | null;
   message?: string | null;
   /**
    * Was the admin notification email sent successfully?
@@ -631,6 +657,15 @@ export interface RetreatsSelect<T extends boolean = true> {
   whatIncludes?: T;
   notIncluded?: T;
   availableFacilities?: T;
+  accommodation?:
+    | T
+    | {
+        sharedImage?: T;
+        privateImage?: T;
+        sharedPriceMode?: T;
+        sharedPrice?: T;
+        privateAddOn?: T;
+      };
   locationInformation?: T;
   retreatReviews?:
     | T
@@ -700,6 +735,7 @@ export interface InquiriesSelect<T extends boolean = true> {
   phone?: T;
   service?: T;
   preferredDate?: T;
+  accommodation?: T;
   message?: T;
   notified?: T;
   updatedAt?: T;

@@ -21,6 +21,7 @@ export async function createInquiry(input: InquiryEmail): Promise<{ id: string |
       message: input.message || undefined,
       service: input.service || undefined,
       preferredDate: input.preferredDate || undefined,
+      accommodation: input.accommodation || undefined,
       notified: false,
     },
   })

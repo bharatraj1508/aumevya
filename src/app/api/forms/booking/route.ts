@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { company, phone, message, name, email, service, preferredDate } = parsed.data
+  const { company, phone, message, name, email, service, preferredDate, accommodation } = parsed.data
   if (company) return NextResponse.json({ ok: true }) // honeypot tripped
 
   try {
@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
       message: message || undefined,
       service: service || undefined,
       preferredDate: preferredDate || undefined,
+      accommodation: accommodation || undefined,
     })
     return NextResponse.json({ ok: true })
   } catch (err) {

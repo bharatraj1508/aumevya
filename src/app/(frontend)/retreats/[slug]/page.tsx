@@ -3,13 +3,14 @@ import { notFound } from 'next/navigation'
 import { MapPin, Moon, Star } from 'lucide-react'
 import type { Retreat } from '@/payload-types'
 import { getDocs } from '@/lib/payload'
-import { durationLabel } from '@/lib/retreat'
+import { accommodationOptions, durationLabel, hasAccommodation } from '@/lib/retreat'
 import { RichText } from '@/components/RichText'
 import { CtaSection } from '@/components/sections/cta-section'
 import { getGlobal } from '@/lib/payload'
 import { Gallery } from '@/components/retreat/gallery'
 import { SectionNav, type NavItem } from '@/components/retreat/section-nav'
 import { BookingCard } from '@/components/retreat/booking-card'
+import { AccommodationCards, AccommodationProvider } from '@/components/retreat/accommodation'
 import {
   BenefitPills,
   Itinerary,
@@ -54,6 +55,7 @@ export default async function RetreatDetailPage({
   if (!retreat) notFound()
 
   const reviews = retreat.retreatReviews ?? []
+  const accommodation = hasAccommodation(retreat) ? accommodationOptions(retreat) : null
   const nav: NavItem[] = [
     { id: 'summary', label: 'Overview' },
     reviews.length > 0 && { id: 'reviews', label: 'Reviews' },
@@ -69,6 +71,7 @@ export default async function RetreatDetailPage({
       id: 'location',
       label: 'Location',
     },
+    accommodation && { id: 'accommodation', label: 'Accommodation' },
   ].filter(Boolean) as NavItem[]
 
   return (
@@ -110,6 +113,7 @@ export default async function RetreatDetailPage({
       <SectionNav items={nav} />
 
       <div className="container-page pb-4 pt-8">
+        <AccommodationProvider options={accommodation ?? []}>
         <div className="grid gap-10 lg:grid-cols-3 lg:gap-14">
           {/* Left — scrolling content */}
           <div className="lg:col-span-2">
@@ -200,6 +204,15 @@ export default async function RetreatDetailPage({
                 )}
               </Section>
             )}
+
+            {accommodation && (
+              <Section id="accommodation" title="Accommodation">
+                <p className="mb-4 text-[15px] leading-relaxed text-muted-foreground">
+                  Choose how you&apos;d like to stay. Your selection updates the total price.
+                </p>
+                <AccommodationCards />
+              </Section>
+            )}
           </div>
 
           {/* Right — sticky booking card */}
@@ -217,6 +230,7 @@ export default async function RetreatDetailPage({
             </div>
           </aside>
         </div>
+        </AccommodationProvider>
       </div>
 
       <CtaSection cta={cta} />

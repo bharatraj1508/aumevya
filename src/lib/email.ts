@@ -26,6 +26,7 @@ export type InquiryEmail = {
   message?: string
   service?: string
   preferredDate?: string
+  accommodation?: string
 }
 
 /**
@@ -48,6 +49,7 @@ export async function sendInquiryEmail(inquiry: InquiryEmail): Promise<boolean> 
     ['Email', inquiry.email],
     ['Phone', inquiry.phone],
     ['Interested in', inquiry.service],
+    ['Accommodation', inquiry.accommodation],
     ['Preferred date', inquiry.preferredDate],
     ['Message', inquiry.message],
   ]
