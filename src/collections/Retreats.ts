@@ -178,6 +178,73 @@ export const Retreats: CollectionConfig = {
           ],
         },
         {
+          label: 'Accommodation',
+          description:
+            'Two options are shown on the site: Shared and Private (labels are fixed). Add an image for each, and set pricing. The section only appears on the website once both images are uploaded.',
+          fields: [
+            {
+              name: 'accommodation',
+              type: 'group',
+              label: false,
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'sharedImage',
+                      type: 'upload',
+                      relationTo: 'media',
+                      admin: { width: '50%', description: 'Photo for the Shared option.' },
+                    },
+                    {
+                      name: 'privateImage',
+                      type: 'upload',
+                      relationTo: 'media',
+                      admin: { width: '50%', description: 'Photo for the Private option.' },
+                    },
+                  ],
+                },
+                {
+                  name: 'sharedPriceMode',
+                  type: 'radio',
+                  defaultValue: 'base',
+                  options: [
+                    { label: 'Use the base price', value: 'base' },
+                    { label: 'Enter a custom price', value: 'custom' },
+                  ],
+                  admin: {
+                    description: 'Shared is priced at the retreat base price unless you override it.',
+                  },
+                },
+                {
+                  name: 'sharedPrice',
+                  type: 'number',
+                  min: 0,
+                  validate: (value: number | null | undefined, { siblingData }: { siblingData: Partial<{ sharedPriceMode: string }> }) => {
+                    if (siblingData?.sharedPriceMode === 'custom' && value == null) {
+                      return 'Enter a custom price, or switch back to "Use the base price".'
+                    }
+                    return true
+                  },
+                  admin: {
+                    description: 'Custom price per person for Shared (₹).',
+                    condition: (_, sibling) => sibling?.sharedPriceMode === 'custom',
+                  },
+                },
+                {
+                  name: 'privateAddOn',
+                  type: 'number',
+                  min: 0,
+                  defaultValue: 0,
+                  admin: {
+                    description: 'Add-on added on top of the base price for Private (₹).',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
           label: 'Location',
           fields: [formatted('locationInformation', 'About the location and how to get there.')],
         },

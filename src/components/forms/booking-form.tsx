@@ -1,9 +1,11 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LoaderCircle, Send } from 'lucide-react'
 import { bookingSchema, type BookingInput } from '@/lib/schemas'
+import { formatPrice } from '@/lib/retreat'
 import { Field, HoneypotField } from './field'
 import { FormSuccess, selectClass } from './form-success'
 import { useInquirySubmit } from './use-inquiry-submit'
@@ -15,21 +17,37 @@ export function BookingForm({
   services,
   defaultServiceId,
   lockService = false,
+  accommodation,
 }: {
   services: { id: string; title: string }[]
   /** Preselect a retreat (used by the retreat detail booking card). */
   defaultServiceId?: string
   /** Hide the picker and lock the inquiry to `defaultServiceId`. */
   lockService?: boolean
+  /** Chosen accommodation, submitted with the inquiry (retreat pages only). */
+  accommodation?: { label: string; price: number }
 }) {
+  const accommodationSummary = accommodation
+    ? `${accommodation.label} — ${formatPrice(accommodation.price)}`
+    : undefined
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<BookingInput>({
     resolver: zodResolver(bookingSchema),
-    defaultValues: defaultServiceId ? { service: defaultServiceId } : undefined,
+    defaultValues: {
+      ...(defaultServiceId ? { service: defaultServiceId } : {}),
+      ...(accommodationSummary ? { accommodation: accommodationSummary } : {}),
+    },
   })
+
+  // Keep the hidden accommodation field in sync if the selection changes,
+  // independent of the modal's mount strategy.
+  useEffect(() => {
+    setValue('accommodation', accommodationSummary ?? '')
+  }, [accommodationSummary, setValue])
   const lockedTitle = services.find((s) => s.id === defaultServiceId)?.title
   const { submit, status, error } = useInquirySubmit('/api/forms/booking')
 
@@ -45,6 +63,13 @@ export function BookingForm({
   return (
     <form onSubmit={handleSubmit(async (data) => void (await submit(data)))} className="space-y-5" noValidate>
       <HoneypotField register={register('company')} />
+      {accommodationSummary && <input type="hidden" {...register('accommodation')} />}
+      {accommodationSummary && (
+        <div className="rounded-xl border border-border bg-muted px-4 py-3 text-sm">
+          <span className="text-muted-foreground">Accommodation: </span>
+          <span className="font-medium text-foreground">{accommodationSummary}</span>
+        </div>
+      )}
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Name" htmlFor="b-name" required error={errors.name?.message}>
           <Input id="b-name" {...register('name')} placeholder="Your name" />

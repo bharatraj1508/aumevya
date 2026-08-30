@@ -6,6 +6,7 @@ import { BadgeCheck, CalendarDays, ShieldCheck, Star, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BookingForm } from '@/components/forms/booking-form'
 import { dateRange, durationLabel, formatPrice } from '@/lib/retreat'
+import { useAccommodation } from '@/components/retreat/accommodation'
 
 type Props = {
   id: string
@@ -19,6 +20,9 @@ type Props = {
 
 export function BookingCard({ id, title, price, fromDate, toDate, ratings, reviewCount }: Props) {
   const [open, setOpen] = useState(false)
+  const accommodation = useAccommodation()
+  const selected = accommodation?.selected ?? null
+  const displayPrice = accommodation?.finalPrice ?? price
 
   useEffect(() => {
     if (!open) return
@@ -38,9 +42,16 @@ export function BookingCard({ id, title, price, fromDate, toDate, ratings, revie
 
         <div className="mt-3 flex items-end justify-between gap-3">
           <div>
-            <span className="block text-xs uppercase tracking-wide text-muted-foreground">from</span>
-            <span className="text-3xl font-bold leading-none">{formatPrice(price)}</span>
+            <span className="block text-xs uppercase tracking-wide text-muted-foreground">
+              {selected ? `${selected.label} · from` : 'from'}
+            </span>
+            <span className="text-3xl font-bold leading-none">{formatPrice(displayPrice)}</span>
             <span className="text-sm text-muted-foreground"> / person</span>
+            {selected && selected.addOn > 0 && (
+              <span className="mt-1 block text-xs text-muted-foreground">
+                Includes +{formatPrice(selected.addOn)} accommodation add-on
+              </span>
+            )}
           </div>
           <span className="inline-flex items-center gap-1 rounded-lg bg-accent/15 px-2.5 py-1 text-sm font-semibold text-accent-foreground">
             <Star className="size-4 fill-accent text-accent" />
@@ -106,7 +117,14 @@ export function BookingCard({ id, title, price, fromDate, toDate, ratings, revie
               <span className="font-medium text-foreground">{title}</span>.
             </p>
             <div className="mt-6">
-              <BookingForm services={[{ id, title }]} defaultServiceId={id} lockService />
+              <BookingForm
+                services={[{ id, title }]}
+                defaultServiceId={id}
+                lockService
+                accommodation={
+                  selected ? { label: selected.label, price: displayPrice } : undefined
+                }
+              />
             </div>
           </div>
         </div>

@@ -75,6 +75,14 @@ export const Inquiries: CollectionConfig = {
         condition: (data) => data?.type === 'booking',
       },
     },
+    {
+      name: 'accommodation',
+      type: 'text',
+      admin: {
+        description: 'Chosen accommodation and total price at time of inquiry.',
+        condition: (data) => data?.type === 'booking',
+      },
+    },
     { name: 'message', type: 'textarea' },
     {
       name: 'notified',

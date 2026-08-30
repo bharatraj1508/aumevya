@@ -20,6 +20,8 @@ export const bookingSchema = z.object({
   ...base,
   service: z.string().trim().max(100).optional().or(z.literal('')),
   preferredDate: z.string().trim().max(100).optional().or(z.literal('')),
+  // Chosen accommodation summary, e.g. "Private — ₹2,53,145" (retreat pages only).
+  accommodation: z.string().trim().max(120).optional().or(z.literal('')),
 })
 
 export type ContactInput = z.infer<typeof contactSchema>
