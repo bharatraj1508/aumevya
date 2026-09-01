@@ -31,19 +31,31 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-all duration-300',
         scrolled
-          ? 'bg-background/90 backdrop-blur-md shadow-sm'
-          : 'bg-background',
+          ? 'bg-background shadow-sm'
+          : 'bg-transparent',
       )}
     >
-      <div className="container-page flex h-16 items-center justify-between md:h-20">
-        <Link href="/" aria-label={siteName} className="inline-flex items-center">
+      <div
+        className={cn(
+          'container-page flex items-center justify-between transition-all duration-300',
+          scrolled ? 'h-14 md:h-16' : 'h-20 md:h-24',
+        )}
+      >
+        <Link
+          href="/"
+          aria-label={siteName}
+          className={cn(
+            'inline-flex items-center transition-all duration-300',
+            scrolled && 'pointer-events-none w-0 -translate-x-2 overflow-hidden opacity-0',
+          )}
+        >
           <Image
             src="/logo.png"
             alt={siteName}
             width={306}
             height={166}
             priority
-            className="h-12 w-auto md:h-16"
+            className="h-14 w-auto md:h-[4.5rem]"
           />
         </Link>
 
