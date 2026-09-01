@@ -18,6 +18,7 @@ export function BookingForm({
   defaultServiceId,
   lockService = false,
   accommodation,
+  defaultPreferredDate,
 }: {
   services: { id: string; title: string }[]
   /** Preselect a retreat (used by the retreat detail booking card). */
@@ -26,6 +27,8 @@ export function BookingForm({
   lockService?: boolean
   /** Chosen accommodation, submitted with the inquiry (retreat pages only). */
   accommodation?: { label: string; price: number }
+  /** Prefill the preferred date / time (e.g. the retreat's scheduled dates). */
+  defaultPreferredDate?: string
 }) {
   const accommodationSummary = accommodation
     ? `${accommodation.label} — ${formatPrice(accommodation.price)}`
@@ -40,6 +43,7 @@ export function BookingForm({
     defaultValues: {
       ...(defaultServiceId ? { service: defaultServiceId } : {}),
       ...(accommodationSummary ? { accommodation: accommodationSummary } : {}),
+      ...(defaultPreferredDate ? { preferredDate: defaultPreferredDate } : {}),
     },
   })
 
@@ -87,7 +91,7 @@ export function BookingForm({
             <input type="hidden" {...register('service')} />
             <div
               id="b-service"
-              className="flex h-11 items-center rounded-xl border border-border bg-muted px-3.5 text-sm font-medium text-foreground"
+              className="flex min-h-11 items-center rounded-xl border border-border bg-muted px-3.5 py-2.5 text-sm font-medium leading-snug text-foreground"
             >
               {lockedTitle}
             </div>

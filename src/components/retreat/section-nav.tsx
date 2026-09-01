@@ -38,7 +38,7 @@ export function SectionNav({ items }: { items: NavItem[] }) {
   }
 
   return (
-    <nav className="sticky top-[64px] z-30 -mx-5 border-b border-border bg-background/90 px-5 backdrop-blur md:top-[72px] md:mx-0 md:px-0">
+    <nav className="sticky top-14 z-30 -mx-5 border-b border-border bg-background/90 px-5 backdrop-blur md:top-16 md:mx-0 md:px-0">
       <ul className="container-page flex gap-1 overflow-x-auto md:px-0 [&::-webkit-scrollbar]:hidden">
         {items.map(({ id, label }) => {
           const isActive = active === id

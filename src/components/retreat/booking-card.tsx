@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { useLenis } from 'lenis/react'
 import Link from 'next/link'
 import { BadgeCheck, CalendarDays, ShieldCheck, Star, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -20,20 +22,28 @@ type Props = {
 
 export function BookingCard({ id, title, price, fromDate, toDate, ratings, reviewCount }: Props) {
   const [open, setOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const lenis = useLenis()
   const accommodation = useAccommodation()
   const selected = accommodation?.selected ?? null
   const displayPrice = accommodation?.finalPrice ?? price
 
+  useEffect(() => setMounted(true), [])
+
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    // Lock the page: stop Lenis momentum scroll AND native scroll so the
+    // background stays put while the modal is open.
+    lenis?.stop()
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', onKey)
     return () => {
+      lenis?.start()
       document.body.style.overflow = ''
       window.removeEventListener('keydown', onKey)
     }
-  }, [open])
+  }, [open, lenis])
 
   return (
     <>
@@ -94,15 +104,15 @@ export function BookingCard({ id, title, price, fromDate, toDate, ratings, revie
         </ul>
       </div>
 
-      {open && (
+      {open && mounted && createPortal(
         <div
-          className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm sm:items-center"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           aria-label={`Book ${title}`}
           onClick={(e) => e.target === e.currentTarget && setOpen(false)}
         >
-          <div className="relative my-8 w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-2xl sm:p-8">
+          <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-2xl sm:p-8">
             <button
               type="button"
               onClick={() => setOpen(false)}
@@ -121,13 +131,15 @@ export function BookingCard({ id, title, price, fromDate, toDate, ratings, revie
                 services={[{ id, title }]}
                 defaultServiceId={id}
                 lockService
+                defaultPreferredDate={dateRange(fromDate, toDate)}
                 accommodation={
                   selected ? { label: selected.label, price: displayPrice } : undefined
                 }
               />
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   )
