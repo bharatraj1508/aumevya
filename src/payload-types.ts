@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     retreats: Retreat;
     testimonials: Testimonial;
+    'team-members': TeamMember;
     gallery: Gallery;
     videos: Video;
     inquiries: Inquiry;
@@ -85,6 +86,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     retreats: RetreatsSelect<false> | RetreatsSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     gallery: GallerySelect<false> | GallerySelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
@@ -428,6 +430,32 @@ export interface Testimonial {
   createdAt: string;
 }
 /**
+ * People shown in the "Meet your team" section on the home and about pages.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members".
+ */
+export interface TeamMember {
+  id: string;
+  name: string;
+  /**
+   * e.g. "Lead Yoga Teacher" or "Founder".
+   */
+  role?: string | null;
+  /**
+   * A portrait photo. A 4:5 (portrait) crop looks best.
+   */
+  image?: (string | null) | Media;
+  /**
+   * A short bio — one or two sentences.
+   */
+  about?: string | null;
+  order?: number | null;
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "gallery".
  */
@@ -528,6 +556,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'testimonials';
         value: string | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'team-members';
+        value: string | TeamMember;
       } | null)
     | ({
         relationTo: 'gallery';
@@ -699,6 +731,20 @@ export interface TestimonialsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members_select".
+ */
+export interface TeamMembersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  image?: T;
+  about?: T;
+  order?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "gallery_select".
  */
 export interface GallerySelect<T extends boolean = true> {
@@ -808,15 +854,15 @@ export interface Hero {
    */
   heroImages?: (string | Media)[] | null;
   /**
-   * How visible the background hero images are (0 = hidden, 100 = full strength).
+   * Tablet & mobile only. How visible the background hero images are (0 = hidden, 100 = full strength).
    */
   imageOpacity?: number | null;
   /**
-   * Strength of the soft white wash behind the title & subtitle that keeps them legible.
+   * Tablet & mobile only. Strength of the soft white wash behind the title & subtitle that keeps them legible.
    */
   overlayOpacity?: number | null;
   /**
-   * How long each background image shows before turning to the next.
+   * Tablet & mobile only. How long each background image shows before turning to the next.
    */
   slideInterval?: number | null;
   updatedAt?: string | null;

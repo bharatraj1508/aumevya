@@ -58,9 +58,10 @@ export const Hero: GlobalConfig = {
     },
     {
       type: 'collapsible',
-      label: 'Appearance',
+      label: 'Appearance (tablet & mobile only)',
       admin: {
-        description: 'Fine-tune how the background imagery and copy backdrop look.',
+        description:
+          'These settings only affect the tablet & mobile hero (the full-screen image slideshow). The desktop / laptop layout always uses its original design and is unaffected.',
       },
       fields: [
         {
@@ -72,7 +73,7 @@ export const Hero: GlobalConfig = {
           max: 100,
           admin: {
             description:
-              'How visible the background hero images are (0 = hidden, 100 = full strength).',
+              'Tablet & mobile only. How visible the background hero images are (0 = hidden, 100 = full strength).',
           },
         },
         {
@@ -84,7 +85,7 @@ export const Hero: GlobalConfig = {
           max: 100,
           admin: {
             description:
-              'Strength of the soft white wash behind the title & subtitle that keeps them legible.',
+              'Tablet & mobile only. Strength of the soft white wash behind the title & subtitle that keeps them legible.',
           },
         },
         {
@@ -95,7 +96,8 @@ export const Hero: GlobalConfig = {
           min: 1,
           max: 30,
           admin: {
-            description: 'How long each background image shows before turning to the next.',
+            description:
+              'Tablet & mobile only. How long each background image shows before turning to the next.',
           },
         },
       ],

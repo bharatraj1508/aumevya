@@ -4,11 +4,12 @@ import { ValueProps } from '@/components/sections/value-props'
 import { AboutPreview } from '@/components/sections/about-preview'
 import { RetreatsPreview } from '@/components/sections/retreats-preview'
 import { GalleryShowcase } from '@/components/sections/gallery-showcase'
+import { TeamSection } from '@/components/sections/team-section'
 import { TestimonialsSection } from '@/components/sections/testimonials-section'
 import { CtaSection } from '@/components/sections/cta-section'
 
 export default async function HomePage() {
-  const [hero, about, cta, featured, allRetreats, testimonials, gallery] = await Promise.all([
+  const [hero, about, cta, featured, allRetreats, testimonials, gallery, team] = await Promise.all([
     getGlobal('hero'),
     getGlobal('about'),
     getGlobal('cta'),
@@ -19,6 +20,7 @@ export default async function HomePage() {
     getDocs('retreats', { where: { published: { equals: true } }, sort: 'order' }),
     getDocs('testimonials', { where: { published: { equals: true } }, sort: 'order', limit: 6 }),
     getDocs('gallery', { sort: 'order' }),
+    getDocs('team-members', { where: { published: { equals: true } }, sort: 'order' }),
   ])
 
   const locations = Array.from(new Set(allRetreats.map((r) => r.location).filter(Boolean)))
@@ -45,6 +47,7 @@ export default async function HomePage() {
       <AboutPreview about={about} />
       <RetreatsPreview retreats={featured} />
       <GalleryShowcase items={gallery} />
+      <TeamSection members={team} />
       <TestimonialsSection testimonials={testimonials} />
       <CtaSection cta={cta} />
     </>
