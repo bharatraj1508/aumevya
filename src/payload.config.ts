@@ -13,6 +13,7 @@ import { TeamMembers } from './collections/TeamMembers'
 import { Gallery } from './collections/Gallery'
 import { Videos } from './collections/Videos'
 import { Inquiries } from './collections/Inquiries'
+import { Courses } from './collections/Courses'
 
 import { Hero } from './globals/Hero'
 import { About } from './globals/About'
@@ -20,6 +21,7 @@ import { ContactInfo } from './globals/ContactInfo'
 import { SeoDefaults } from './globals/SeoDefaults'
 import { Cta } from './globals/Cta'
 import { Theme } from './globals/Theme'
+import { CoursesPage } from './globals/CoursesPage'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -34,8 +36,8 @@ export default buildConfig({
       titleSuffix: '· Aumevya',
     },
   },
-  collections: [Users, Media, Retreats, Testimonials, TeamMembers, Gallery, Videos, Inquiries],
-  globals: [Hero, About, ContactInfo, SeoDefaults, Cta, Theme],
+  collections: [Users, Media, Retreats, Testimonials, TeamMembers, Gallery, Videos, Inquiries, Courses],
+  globals: [Hero, About, ContactInfo, SeoDefaults, Cta, Theme, CoursesPage],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

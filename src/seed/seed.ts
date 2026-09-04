@@ -92,7 +92,7 @@ const run = async () => {
   payload.logger.info('Seeding Aumevya content…')
 
   // 1. Clear existing content collections (keeps users + inquiries intact)
-  for (const collection of ['retreats', 'testimonials', 'gallery', 'videos', 'media'] as const) {
+  for (const collection of ['retreats', 'testimonials', 'gallery', 'videos', 'courses', 'media'] as const) {
     await payload.delete({ collection, where: { id: { exists: true } } })
   }
 
@@ -119,6 +119,14 @@ const run = async () => {
     a: await upload('avatar-1.svg', 'Ananya'),
     r: await upload('avatar-2.svg', 'Rahul'),
     m: await upload('avatar-3.svg', 'Meera'),
+  }
+  const coursesCover = await upload('courses-cover.svg', 'Aumevya courses cover')
+  const courseImages = {
+    hatha: await upload('course-hatha.svg', 'Foundations of Hatha Yoga course'),
+    vinyasa: await upload('course-vinyasa.svg', 'Vinyasa Flow Mastery course'),
+    meditation: await upload('course-meditation.svg', 'Meditation & Mindfulness course'),
+    pranayama: await upload('course-pranayama.svg', 'Pranayama & Breathwork course'),
+    ayurveda: await upload('course-ayurveda.svg', 'Ayurveda for Everyday Living course'),
   }
 
   // 3. Globals
@@ -205,6 +213,17 @@ const run = async () => {
       subheading: 'Your first retreat is the hardest step. We will guide the rest.',
       buttonLabel: 'Book Your First Retreat',
       buttonHref: '/contact',
+    },
+  })
+
+  await payload.updateGlobal({
+    slug: 'courses-page',
+    data: {
+      coverImage: coursesCover,
+      eyebrow: 'Learning journeys',
+      heading: 'Courses',
+      subheading:
+        'Structured, self-paced programs to deepen your practice — from your first sun salutation to teaching-level mastery.',
     },
   })
 
@@ -648,7 +667,167 @@ const run = async () => {
     await payload.create({ collection: 'retreats', data: { ...r, published: true } })
   }
 
-  // 5. Testimonials
+  // 5. Courses
+  const courses = [
+    {
+      name: 'Foundations of Hatha Yoga',
+      image: courseImages.hatha,
+      price: 6999,
+      ratings: 4.8,
+      featured: true,
+      order: 1,
+      bookNowLink: '/contact',
+      summary:
+        'An 8-week beginner course covering the classical asanas, alignment and breath that every practice is built on.',
+      about: doc(
+        p(
+          'This is where a lifelong practice begins. Over ',
+          b('eight guided weeks'),
+          ' you will build a calm, capable body and a steady mind — starting from the very first pose.',
+        ),
+        h('h3', 'What you will learn'),
+        ul(
+          ['The 20 foundational asanas, with detailed alignment cues'],
+          ['Safe entry, holding and exit for each posture'],
+          [b('Ujjayi breath'), ' and how to pair movement with breath'],
+          ['A short daily home practice you can actually keep'],
+        ),
+        p(
+          'Each week unlocks a new module of ',
+          i('pre-recorded lessons'),
+          ' you can follow at your own pace, plus a printable practice sheet. No prior experience needed — just a mat and a little curiosity.',
+        ),
+        h('h3', 'Who it is for'),
+        p('Complete beginners, and returning practitioners who want to rebuild a clean, injury-free foundation.'),
+      ),
+    },
+    {
+      name: 'Vinyasa Flow Mastery',
+      image: courseImages.vinyasa,
+      price: 9499,
+      ratings: 4.9,
+      featured: true,
+      order: 2,
+      bookNowLink: '/contact',
+      summary:
+        'Intermediate sequencing, transitions and strong dynamic flows to move with breath, grace and power.',
+      about: doc(
+        p(
+          'Take your practice off the ground and into ',
+          b('effortless, breath-led movement'),
+          '. This intermediate course teaches you not just the poses, but how to ',
+          i('link them intelligently'),
+          '.',
+        ),
+        h('h3', 'Inside the course'),
+        ul(
+          ['12 full-length flow classes, from 20 to 75 minutes'],
+          ['The art of sequencing: warm-ups, peak poses and cool-downs'],
+          ['Smooth transitions — chaturanga, jump-backs, arm balances'],
+          ['Building heat safely and modifying for your body'],
+        ),
+        p(
+          'By the end you will be able to ',
+          b('design and lead your own flows'),
+          ' — a genuine stepping-stone toward teacher training.',
+        ),
+      ),
+    },
+    {
+      name: 'Meditation & Mindfulness',
+      image: courseImages.meditation,
+      price: 0,
+      ratings: 4.7,
+      featured: false,
+      order: 3,
+      bookNowLink: '/contact',
+      summary:
+        'A free 21-day introduction to sitting practice — build calm, focus and a habit that lasts.',
+      about: doc(
+        p(
+          'You do not need an hour or a mountain-top. This ',
+          b('free 21-day course'),
+          ' shows you how just ten quiet minutes a day can change your relationship with a busy mind.',
+        ),
+        h('h3', 'The 21-day arc'),
+        ol(
+          ['Days 1–7 · Breath awareness and settling the body'],
+          ['Days 8–14 · Working skillfully with thoughts and restlessness'],
+          ['Days 15–21 · Loving-kindness and carrying calm into daily life'],
+        ),
+        p(
+          'Every day is a short ',
+          i('guided audio meditation'),
+          ' with a one-line reflection. Miss a day? Just pick up where you left off — this is a practice, not a test.',
+        ),
+      ),
+    },
+    {
+      name: 'Pranayama & Breathwork',
+      image: courseImages.pranayama,
+      price: 5499,
+      ratings: 4.6,
+      featured: false,
+      order: 4,
+      bookNowLink: '/contact',
+      summary:
+        'Master the classical breathing techniques that regulate energy, steady the nervous system and deepen focus.',
+      about: doc(
+        p(
+          'The breath is the bridge between body and mind. This course opens the ',
+          b('traditional science of pranayama'),
+          ' in a safe, progressive way.',
+        ),
+        h('h3', 'Techniques covered'),
+        ul(
+          [b('Nadi Shodhana'), ' — alternate-nostril breathing for balance'],
+          [b('Kapalabhati'), ' — the cleansing "skull-shining" breath'],
+          [b('Bhramari'), ' and extended exhalation to calm anxiety'],
+          ['Building a personal daily breathing ritual'],
+        ),
+        p(
+          'Includes guidance on ',
+          i('contraindications'),
+          ' and when to ease off — because breathwork is powerful, and respect for it matters.',
+        ),
+      ),
+    },
+    {
+      name: 'Ayurveda for Everyday Living',
+      image: courseImages.ayurveda,
+      price: 7999,
+      ratings: 4.8,
+      featured: false,
+      order: 5,
+      bookNowLink: '/contact',
+      summary:
+        'Discover your dosha and build daily food, sleep and movement routines that keep you balanced year-round.',
+      about: doc(
+        p(
+          'Ayurveda is the ',
+          b('sister science of yoga'),
+          ' — 5,000 years of practical wisdom for living in tune with your own nature and the seasons.',
+        ),
+        h('h3', 'What the course covers'),
+        ul(
+          ['Understanding the three doshas — Vata, Pitta and Kapha'],
+          ['A guided quiz to discover your unique constitution'],
+          [b('Dinacharya'), ' — designing a daily routine that fits your dosha'],
+          ['Simple, seasonal food principles and everyday recipes'],
+        ),
+        p(
+          'No supplements, no fads — just ',
+          i('sustainable, kitchen-table habits'),
+          ' you can start this week and keep for life.',
+        ),
+      ),
+    },
+  ]
+  for (const c of courses) {
+    await payload.create({ collection: 'courses', data: { ...c, published: true } })
+  }
+
+  // 6. Testimonials
   const testimonials = [
     {
       name: 'Ananya S.',
@@ -680,7 +859,7 @@ const run = async () => {
     await payload.create({ collection: 'testimonials', data: { ...t, published: true } })
   }
 
-  // 6. Gallery
+  // 7. Gallery
   const categories = ['Studio', 'Retreats', 'Community', 'Nature', 'Events', 'Studio'] as const
   for (let n = 0; n < gallery.length; n++) {
     await payload.create({

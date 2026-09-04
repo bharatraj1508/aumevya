@@ -75,6 +75,7 @@ export interface Config {
     gallery: Gallery;
     videos: Video;
     inquiries: Inquiry;
+    courses: Course;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -90,6 +91,7 @@ export interface Config {
     gallery: GallerySelect<false> | GallerySelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
+    courses: CoursesSelect<false> | CoursesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -106,6 +108,7 @@ export interface Config {
     'seo-defaults': SeoDefault;
     cta: Cta;
     theme: Theme;
+    'courses-page': CoursesPage;
   };
   globalsSelect: {
     hero: HeroSelect<false> | HeroSelect<true>;
@@ -114,6 +117,7 @@ export interface Config {
     'seo-defaults': SeoDefaultsSelect<false> | SeoDefaultsSelect<true>;
     cta: CtaSelect<false> | CtaSelect<true>;
     theme: ThemeSelect<false> | ThemeSelect<true>;
+    'courses-page': CoursesPageSelect<false> | CoursesPageSelect<true>;
   };
   locale: null;
   widgets: {
@@ -519,6 +523,67 @@ export interface Inquiry {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses".
+ */
+export interface Course {
+  id: string;
+  name: string;
+  /**
+   * Cover image shown on the course card.
+   */
+  image: string | Media;
+  /**
+   * Short one or two line excerpt shown on the card, before "Read more".
+   */
+  summary: string;
+  /**
+   * Full description shown in the "Read more" panel. Can be as long as you like.
+   */
+  about?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Price per person (₹). Enter 0 to show "Free".
+   */
+  price: number;
+  /**
+   * Out of 5.
+   */
+  ratings: number;
+  /**
+   * Where the Book Now button goes (full URL or path). Defaults to /contact if blank.
+   */
+  bookNowLink?: string | null;
+  /**
+   * Auto-generated from the name if left blank.
+   */
+  slug?: string | null;
+  /**
+   * Lower numbers appear first.
+   */
+  order?: number | null;
+  /**
+   * Highlight this course on the list.
+   */
+  featured?: boolean | null;
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -572,6 +637,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'inquiries';
         value: string | Inquiry;
+      } | null)
+    | ({
+        relationTo: 'courses';
+        value: string | Course;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -789,6 +858,25 @@ export interface InquiriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses_select".
+ */
+export interface CoursesSelect<T extends boolean = true> {
+  name?: T;
+  image?: T;
+  summary?: T;
+  about?: T;
+  price?: T;
+  ratings?: T;
+  bookNowLink?: T;
+  slug?: T;
+  order?: T;
+  featured?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -1001,6 +1089,31 @@ export interface Theme {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses-page".
+ */
+export interface CoursesPage {
+  id: string;
+  /**
+   * Wide cover photo across the top of the Courses page (like a Facebook / Notion cover).
+   */
+  coverImage?: (string | null) | Media;
+  /**
+   * Small text above the title.
+   */
+  eyebrow?: string | null;
+  /**
+   * The large title shown on the cover.
+   */
+  heading: string;
+  /**
+   * One or two supporting sentences shown under the title.
+   */
+  subheading?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "hero_select".
  */
 export interface HeroSelect<T extends boolean = true> {
@@ -1101,6 +1214,19 @@ export interface ThemeSelect<T extends boolean = true> {
   primaryColor?: T;
   accentColor?: T;
   heroBrushColor?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses-page_select".
+ */
+export interface CoursesPageSelect<T extends boolean = true> {
+  coverImage?: T;
+  eyebrow?: T;
+  heading?: T;
+  subheading?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
