@@ -78,7 +78,7 @@ export function Hero({
           <BackgroundSlideshow
             images={imageUrls}
             interval={3000}
-            className="opacity-45 xl:hidden"
+            className="opacity-60 xl:hidden"
           />
           <ParallaxHeroImages
             images={imageUrls}
@@ -115,11 +115,11 @@ export function Hero({
 
           <h1 className="mt-6 text-4xl font-extrabold leading-[1.04] text-balance text-foreground sm:text-6xl lg:text-7xl">
             {words.map((word, i) => (
-              <span key={i} className="inline-block overflow-hidden pb-1 align-top">
+              <span key={i} className="inline-block pb-1 align-top">
                 <motion.span
                   className="inline-block"
-                  initial={reduce ? { opacity: 0 } : { y: '110%' }}
-                  animate={reduce ? { opacity: 1 } : { y: '0%' }}
+                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: '0.4em' }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.1 + i * 0.06, ease: EASE }}
                 >
                   {word}&nbsp;
