@@ -1,15 +1,20 @@
 import type { Metadata } from 'next'
-import { getGlobal } from '@/lib/payload'
+import { getDocs, getGlobal } from '@/lib/payload'
 import { PageHeader } from '@/components/site/page-header'
 import { RichText } from '@/components/RichText'
 import { MediaImage } from '@/components/site/media-image'
 import { Reveal } from '@/components/motion/reveal'
+import { TeamSection } from '@/components/sections/team-section'
 import { CtaSection } from '@/components/sections/cta-section'
 
 export const metadata: Metadata = { title: 'About' }
 
 export default async function AboutPage() {
-  const [about, cta] = await Promise.all([getGlobal('about'), getGlobal('cta')])
+  const [about, cta, team] = await Promise.all([
+    getGlobal('about'),
+    getGlobal('cta'),
+    getDocs('team-members', { where: { published: { equals: true } }, sort: 'order' }),
+  ])
 
   return (
     <>
@@ -50,6 +55,8 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+
+      <TeamSection members={team} muted />
 
       <CtaSection cta={cta} />
     </>

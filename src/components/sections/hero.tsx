@@ -71,15 +71,26 @@ export function Hero({
   const intervalMs = (slideInterval ?? 3) * 1000
 
   // Glass ("liquid glass") treatment on the badge & primary CTA while at the very
-  // top of the page; solid UI once the user scrolls.
+  // top of the page — tablet & mobile only; desktop keeps the solid UI. Reverts to
+  // solid once the user scrolls.
   const [scrolled, setScrolled] = useState(false)
+  const [isCompact, setIsCompact] = useState(false)
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+
+    const mq = window.matchMedia('(max-width: 1279px)')
+    const onMatch = () => setIsCompact(mq.matches)
+    onMatch()
+    mq.addEventListener('change', onMatch)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      mq.removeEventListener('change', onMatch)
+    }
   }, [])
-  const glass = !scrolled
+  const glass = !scrolled && isCompact
 
   const [query, setQuery] = useState({ where: '', what: '', when: '' })
   const optionsFor = (key: 'where' | 'what' | 'when') =>
@@ -100,26 +111,32 @@ export function Hero({
           faded so the centered copy stays legible. Desktop: the parallax collage. */}
       {imageUrls.length > 0 && (
         <>
+          {/* Mobile/tablet slideshow — CMS-tunable opacity & interval */}
           <BackgroundSlideshow
             images={imageUrls}
             interval={intervalMs}
             style={{ opacity: imgOpacity }}
             className="xl:hidden"
           />
+          {/* Desktop parallax — always full strength (original design) */}
           <ParallaxHeroImages
             images={imageUrls}
-            style={{ opacity: imgOpacity }}
             className="hidden xl:block"
             variant="edge-focus"
           />
         </>
       )}
 
-      {/* Soft focus wash so the centered copy stays legible over the imagery */}
+      {/* Soft focus wash so the centered copy stays legible over the imagery.
+          Mobile/tablet strength is CMS-tunable; desktop keeps the original default. */}
       <div
         aria-hidden
         style={{ opacity: washOpacity }}
-        className="pointer-events-none absolute inset-0 z-[9] bg-[radial-gradient(ellipse_60%_55%_at_50%_45%,var(--color-background)_45%,color-mix(in_srgb,var(--color-background)_60%,transparent)_70%,transparent_100%)]"
+        className="pointer-events-none absolute inset-0 z-[9] bg-[radial-gradient(ellipse_60%_55%_at_50%_45%,var(--color-background)_45%,color-mix(in_srgb,var(--color-background)_60%,transparent)_70%,transparent_100%)] xl:hidden"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[9] hidden bg-[radial-gradient(ellipse_60%_55%_at_50%_45%,var(--color-background)_45%,color-mix(in_srgb,var(--color-background)_60%,transparent)_70%,transparent_100%)] xl:block"
       />
 
       {/* Clean scrim behind the fixed header so the logo never sits on a faded photo (mobile/tablet) */}
@@ -194,19 +211,19 @@ export function Hero({
           )}
         </div>
 
-        {/* Search bar with whole-component hover glow — desktop only (xl+) */}
+        {/* Search bar (desktop only) + trust badges (all sizes) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.55, ease: EASE }}
-          className="mt-12 hidden md:mt-14 xl:block"
+          className="mt-10 md:mt-14"
         >
           <form
             onSubmit={(e) => {
               e.preventDefault()
               search()
             }}
-            className="group/bar relative mx-auto max-w-4xl"
+            className="group/bar relative mx-auto hidden max-w-4xl xl:block"
           >
             <span
               aria-hidden
@@ -277,7 +294,7 @@ export function Hero({
             </div>
           </form>
 
-          <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-sm font-medium text-muted-foreground">
+          <ul className="flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-sm font-medium text-muted-foreground xl:mt-5">
             {TRUST.map((t) => (
               <li key={t} className="inline-flex items-center gap-1.5">
                 <Check className="size-4 text-primary" />

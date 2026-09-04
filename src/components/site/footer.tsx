@@ -112,29 +112,10 @@ export function Footer({ siteName, contact }: { siteName: string; contact: Conta
       </div>
 
       <div className="border-t border-border/60">
-        <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-xs text-muted-foreground md:flex-row">
+        <div className="container-page py-6 text-center text-xs text-muted-foreground">
           <span>
             © {year} {siteName}. All rights reserved.
           </span>
-          <a
-            href="https://www.linkedin.com/in/bharat-raj-verma/"
-            target="_blank"
-            rel="noreferrer"
-            className="group inline-flex items-center gap-2 transition-colors hover:text-foreground"
-          >
-            <span>
-              Crafted by <span className="font-medium text-foreground/80">Bharat Raj Verma</span>
-              <span className="text-muted-foreground/70"> · Full Stack Developer</span>
-            </span>
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              className="size-4 shrink-0 fill-current text-muted-foreground transition-colors group-hover:text-primary"
-            >
-              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 9.67H5.67V18h2.67V9.67zM7 6.34a1.55 1.55 0 1 0 0 3.1 1.55 1.55 0 0 0 0-3.1zM18.34 18v-4.57c0-2.45-1.31-3.59-3.06-3.59a2.64 2.64 0 0 0-2.39 1.31h-.04V9.67h-2.56V18h2.67v-4.12c0-1.09.2-2.14 1.55-2.14s1.35 1.24 1.35 2.21V18h2.93z" />
-            </svg>
-            <span className="sr-only">Bharat Raj Verma on LinkedIn</span>
-          </a>
         </div>
       </div>
     </footer>

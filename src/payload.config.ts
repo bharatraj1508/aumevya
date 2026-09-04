@@ -9,6 +9,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Retreats } from './collections/Retreats'
 import { Testimonials } from './collections/Testimonials'
+import { TeamMembers } from './collections/TeamMembers'
 import { Gallery } from './collections/Gallery'
 import { Videos } from './collections/Videos'
 import { Inquiries } from './collections/Inquiries'
@@ -33,7 +34,7 @@ export default buildConfig({
       titleSuffix: '· Aumevya',
     },
   },
-  collections: [Users, Media, Retreats, Testimonials, Gallery, Videos, Inquiries],
+  collections: [Users, Media, Retreats, Testimonials, TeamMembers, Gallery, Videos, Inquiries],
   globals: [Hero, About, ContactInfo, SeoDefaults, Cta, Theme],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

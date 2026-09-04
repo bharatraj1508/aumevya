@@ -21,14 +21,8 @@ const PROPS = [
 
 export function ValueProps() {
   return (
-    <section className="relative overflow-hidden border-b border-border bg-background py-16 md:py-20">
-      {/* Soft colour depth behind the cards so the glass has something to refract */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-24 left-[15%] size-72 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute -bottom-24 right-[15%] size-72 rounded-full bg-accent/15 blur-3xl" />
-      </div>
-
-      <div className="container-page relative">
+    <section className="border-b border-border bg-background py-16 md:py-20">
+      <div className="container-page">
         <StaggerGroup className="grid gap-6 md:grid-cols-3">
           {PROPS.map(({ icon: Icon, title, body }) => (
             <StaggerItem
