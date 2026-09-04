@@ -8,6 +8,7 @@ import { ArrowRight, CalendarDays, Check, Compass, MapPin, Search } from 'lucide
 import { Button } from '@/components/ui/button'
 import { Eyebrow } from '@/components/site/eyebrow'
 import { ParallaxHeroImages } from '@/components/ui/parallax-hero-images'
+import { BackgroundSlideshow } from '@/components/ui/background-slideshow'
 import { mediaURL } from '@/lib/media'
 import { cn } from '@/lib/utils'
 
@@ -70,15 +71,33 @@ export function Hero({
 
   return (
     <section className="relative flex min-h-[92vh] items-center overflow-hidden bg-background pt-32 pb-16 md:pt-36">
-      {/* Parallax floating imagery — hidden on the smallest screens to keep copy clean */}
+      {/* Mobile & tablet: a single full-bleed image that turns over to the next every 3s,
+          faded so the centered copy stays legible. Desktop: the parallax collage. */}
       {imageUrls.length > 0 && (
-        <ParallaxHeroImages images={imageUrls} className="hidden sm:block" variant="edge-focus" />
+        <>
+          <BackgroundSlideshow
+            images={imageUrls}
+            interval={3000}
+            className="opacity-45 xl:hidden"
+          />
+          <ParallaxHeroImages
+            images={imageUrls}
+            className="hidden xl:block"
+            variant="edge-focus"
+          />
+        </>
       )}
 
       {/* Soft focus wash so the centered copy stays legible over the imagery */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[9] bg-[radial-gradient(ellipse_60%_55%_at_50%_45%,var(--color-background)_45%,color-mix(in_srgb,var(--color-background)_60%,transparent)_70%,transparent_100%)]"
+      />
+
+      {/* Clean scrim behind the fixed header so the logo never sits on a faded photo (mobile/tablet) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-[9] h-40 bg-gradient-to-b from-background to-transparent xl:hidden"
       />
 
       <div className="relative z-10 container-page">

@@ -59,7 +59,7 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-8 xl:flex">
           {NAV_LINKS.map((l) => (
             <Link
               key={l.href}
@@ -74,14 +74,14 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden xl:block">
           <Button asChild size="sm">
             <Link href="/contact">{bookLabel}</Link>
           </Button>
         </div>
 
         <button
-          className="text-foreground md:hidden"
+          className="text-foreground xl:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -96,7 +96,7 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-b border-border bg-background/95 backdrop-blur-md md:hidden"
+            className="overflow-hidden border-b border-border bg-background/95 backdrop-blur-md xl:hidden"
           >
             <nav className="container-page flex flex-col gap-1 py-4">
               {NAV_LINKS.map((l) => (
