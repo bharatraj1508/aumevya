@@ -8,20 +8,25 @@ export function Eyebrow({
   children,
   highlight,
   tone = 'dark',
+  glass = false,
   className,
 }: {
   children: React.ReactNode
   highlight?: string
   tone?: 'dark' | 'light'
+  /** iOS-style translucent "liquid glass" pill — blurs whatever sits behind it. */
+  glass?: boolean
   className?: string
 }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[0.7rem] font-medium uppercase tracking-[0.16em]',
-        tone === 'light'
-          ? 'border-white/25 bg-white/10 text-primary-foreground/85'
-          : 'border-border bg-card text-foreground/65',
+        'inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[0.7rem] font-medium uppercase tracking-[0.16em] transition-all duration-300',
+        glass
+          ? 'border-white/50 bg-white/25 text-foreground/80 shadow-[0_8px_30px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.6)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/25'
+          : tone === 'light'
+            ? 'border-white/25 bg-white/10 text-primary-foreground/85'
+            : 'border-border bg-card text-foreground/65',
         className,
       )}
     >

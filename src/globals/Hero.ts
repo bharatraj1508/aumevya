@@ -56,5 +56,49 @@ export const Hero: GlobalConfig = {
           'Exactly 6 images shown floating in the hero. Order matters — they fill the layout clockwise from the top-left.',
       },
     },
+    {
+      type: 'collapsible',
+      label: 'Appearance',
+      admin: {
+        description: 'Fine-tune how the background imagery and copy backdrop look.',
+      },
+      fields: [
+        {
+          name: 'imageOpacity',
+          type: 'number',
+          label: 'Background image opacity (%)',
+          defaultValue: 60,
+          min: 0,
+          max: 100,
+          admin: {
+            description:
+              'How visible the background hero images are (0 = hidden, 100 = full strength).',
+          },
+        },
+        {
+          name: 'overlayOpacity',
+          type: 'number',
+          label: 'Copy backdrop opacity (%)',
+          defaultValue: 100,
+          min: 0,
+          max: 100,
+          admin: {
+            description:
+              'Strength of the soft white wash behind the title & subtitle that keeps them legible.',
+          },
+        },
+        {
+          name: 'slideInterval',
+          type: 'number',
+          label: 'Image change interval (seconds)',
+          defaultValue: 3,
+          min: 1,
+          max: 30,
+          admin: {
+            description: 'How long each background image shows before turning to the next.',
+          },
+        },
+      ],
+    },
   ],
 }
