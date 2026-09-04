@@ -10,6 +10,7 @@ import { Eyebrow } from '@/components/site/eyebrow'
 import { ParallaxHeroImages } from '@/components/ui/parallax-hero-images'
 import { BackgroundSlideshow } from '@/components/ui/background-slideshow'
 import { mediaURL } from '@/lib/media'
+import { useImageLuminance } from '@/lib/use-image-luminance'
 import { cn } from '@/lib/utils'
 
 type HeroProps = {
@@ -92,6 +93,17 @@ export function Hero({
   }, [])
   const glass = !scrolled && isCompact
 
+  // Adaptive copy contrast (mobile/tablet only): sample the luminance of the
+  // active background image, fold in the white wash on top of it, and flip the
+  // subheading + trust points to light text when the effective backdrop is dark.
+  const [activeImage, setActiveImage] = useState(0)
+  const luminances = useImageLuminance(imageUrls, isCompact)
+  const imgLum = luminances[activeImage]
+  // Background (--color-background) is white → luminance 1. Wash sits over the
+  // photo at ~washOpacity strength where the copy lives.
+  const effectiveLum = imgLum == null ? null : imgLum * (1 - washOpacity) + 1 * washOpacity
+  const onDark = isCompact && effectiveLum != null && effectiveLum < 0.5
+
   const [query, setQuery] = useState({ where: '', what: '', when: '' })
   const optionsFor = (key: 'where' | 'what' | 'when') =>
     key === 'where' ? locations : key === 'what' ? retreats : []
@@ -117,6 +129,7 @@ export function Hero({
             interval={intervalMs}
             style={{ opacity: imgOpacity }}
             className="xl:hidden"
+            onIndexChange={setActiveImage}
           />
           {/* Desktop parallax — always full strength (original design) */}
           <ParallaxHeroImages
@@ -180,7 +193,12 @@ export function Hero({
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.35, ease: EASE }}
-              className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground"
+              className={cn(
+                'mx-auto mt-5 max-w-xl text-lg leading-relaxed transition-colors duration-500',
+                onDark
+                  ? 'text-white [text-shadow:0_1px_12px_rgba(0,0,0,0.45)]'
+                  : 'text-muted-foreground',
+              )}
             >
               {subheading}
             </motion.p>
@@ -294,10 +312,17 @@ export function Hero({
             </div>
           </form>
 
-          <ul className="flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-sm font-medium text-muted-foreground xl:mt-5">
+          <ul
+            className={cn(
+              'flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-sm font-medium transition-colors duration-500 xl:mt-5',
+              onDark
+                ? 'text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.45)]'
+                : 'text-muted-foreground',
+            )}
+          >
             {TRUST.map((t) => (
               <li key={t} className="inline-flex items-center gap-1.5">
-                <Check className="size-4 text-primary" />
+                <Check className={cn('size-4', onDark ? 'text-white' : 'text-primary')} />
                 {t}
               </li>
             ))}
