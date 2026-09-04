@@ -6,6 +6,10 @@ const isHex = (value: unknown): true | string =>
     ? true
     : 'Enter a hex color, e.g. #d64500.'
 
+/** Like `isHex`, but an empty value is allowed (falls back to the primary color). */
+const isHexOptional = (value: unknown): true | string =>
+  value == null || value === '' ? true : isHex(value)
+
 export const Theme: GlobalConfig = {
   slug: 'theme',
   label: 'Theme',
@@ -39,6 +43,19 @@ export const Theme: GlobalConfig = {
         },
         description:
           'Secondary accent. Used for star ratings, small badges and the highlight in gradients.',
+      },
+    },
+    {
+      name: 'heroBrushColor',
+      type: 'text',
+      required: false,
+      validate: isHexOptional,
+      admin: {
+        components: {
+          Field: '/components/admin/ColorPickerField#ColorPickerField',
+        },
+        description:
+          'Color of the painted brush stroke behind the hero title (desktop only). Leave empty to use the Primary color.',
       },
     },
   ],

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Eyebrow } from '@/components/site/eyebrow'
 import { ParallaxHeroImages } from '@/components/ui/parallax-hero-images'
 import { BackgroundSlideshow } from '@/components/ui/background-slideshow'
+import { BrushBackdrop } from '@/components/ui/brush-backdrop'
 import { mediaURL } from '@/lib/media'
 import { useImageLuminance } from '@/lib/use-image-luminance'
 import { cn } from '@/lib/utils'
@@ -93,6 +94,14 @@ export function Hero({
   }, [])
   const glass = !scrolled && isCompact
 
+  // Mobile/tablet intro: the paint sprays on first, then (after the ~5s
+  // animation) the brush fades out and the background images fade in.
+  const [sprayDone, setSprayDone] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setSprayDone(true), 5000)
+    return () => clearTimeout(t)
+  }, [])
+
   // Adaptive copy contrast (mobile/tablet only): sample the luminance of the
   // active background image, fold in the white wash on top of it, and flip the
   // subheading + trust points to light text when the effective backdrop is dark.
@@ -102,7 +111,9 @@ export function Hero({
   // Background (--color-background) is white → luminance 1. Wash sits over the
   // photo at ~washOpacity strength where the copy lives.
   const effectiveLum = imgLum == null ? null : imgLum * (1 - washOpacity) + 1 * washOpacity
-  const onDark = isCompact && effectiveLum != null && effectiveLum < 0.5
+  // Only adapt once the images are actually showing (after the spray intro);
+  // during the spray the copy sits on the plain background, so keep it dark.
+  const onDark = isCompact && sprayDone && effectiveLum != null && effectiveLum < 0.5
 
   const [query, setQuery] = useState({ where: '', what: '', when: '' })
   const optionsFor = (key: 'where' | 'what' | 'when') =>
@@ -127,8 +138,8 @@ export function Hero({
           <BackgroundSlideshow
             images={imageUrls}
             interval={intervalMs}
-            style={{ opacity: imgOpacity }}
-            className="xl:hidden"
+            style={{ opacity: sprayDone ? imgOpacity : 0 }}
+            className="transition-opacity duration-700 xl:hidden"
             onIndexChange={setActiveImage}
           />
           {/* Desktop parallax — always full strength (original design) */}
@@ -173,20 +184,36 @@ export function Hero({
             </motion.div>
           )}
 
-          <h1 className="mt-6 text-4xl font-extrabold leading-[1.04] text-balance text-foreground [text-shadow:0_1px_0_rgba(255,255,255,0.7),0_3px_10px_rgba(0,0,0,0.14)] sm:text-6xl lg:text-7xl">
-            {words.map((word, i) => (
-              <span key={i} className="inline-block pb-1 align-top">
-                <motion.span
-                  className="inline-block"
-                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: '0.4em' }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.1 + i * 0.06, ease: EASE }}
-                >
-                  {word}&nbsp;
-                </motion.span>
-              </span>
-            ))}
-          </h1>
+          <div className="relative mt-6">
+            {/* Sprayed paint splatter behind the title (all breakpoints).
+                Color is CMS-controlled (Theme → hero brush, defaults to primary). */}
+            <div
+              aria-hidden
+              className={cn(
+                'pointer-events-none absolute -inset-x-[16%] -inset-y-[6%] transition-opacity duration-700',
+                // After the spray intro the paint clears on mobile/tablet to
+                // reveal the images; on desktop it stays.
+                sprayDone && 'opacity-0 xl:opacity-100',
+              )}
+            >
+              <BrushBackdrop />
+            </div>
+
+            <h1 className="relative text-4xl font-extrabold leading-[1.04] text-balance text-foreground [text-shadow:0_1px_0_rgba(255,255,255,0.7),0_3px_10px_rgba(0,0,0,0.14)] sm:text-6xl lg:text-7xl">
+              {words.map((word, i) => (
+                <span key={i} className="inline-block pb-1 align-top">
+                  <motion.span
+                    className="inline-block"
+                    initial={reduce ? { opacity: 0 } : { opacity: 0, y: '0.4em' }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.1 + i * 0.06, ease: EASE }}
+                  >
+                    {word}&nbsp;
+                  </motion.span>
+                </span>
+              ))}
+            </h1>
+          </div>
 
           {subheading && (
             <motion.p
