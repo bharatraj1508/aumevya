@@ -60,10 +60,13 @@ export default async function FrontendLayout({ children }: { children: React.Rea
   // Cromix Orange if the global is empty.
   const primary = theme?.primaryColor || '#d64500'
   const accent = theme?.accentColor || '#f5a623'
+  // Hero brush stroke defaults to the primary color unless explicitly set.
+  const heroBrush = theme?.heroBrushColor || primary
   const themeVars = {
     '--color-primary': primary,
     '--color-ring': primary,
     '--color-accent': accent,
+    '--color-hero-brush': heroBrush,
   } as React.CSSProperties
 
   return (
