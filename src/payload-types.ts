@@ -807,6 +807,18 @@ export interface Hero {
    * Exactly 6 images shown floating in the hero. Order matters — they fill the layout clockwise from the top-left.
    */
   heroImages?: (string | Media)[] | null;
+  /**
+   * How visible the background hero images are (0 = hidden, 100 = full strength).
+   */
+  imageOpacity?: number | null;
+  /**
+   * Strength of the soft white wash behind the title & subtitle that keeps them legible.
+   */
+  overlayOpacity?: number | null;
+  /**
+   * How long each background image shows before turning to the next.
+   */
+  slideInterval?: number | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -950,6 +962,9 @@ export interface HeroSelect<T extends boolean = true> {
   secondaryCtaLabel?: T;
   secondaryCtaHref?: T;
   heroImages?: T;
+  imageOpacity?: T;
+  overlayOpacity?: T;
+  slideInterval?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

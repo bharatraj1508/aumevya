@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion, useReducedMotion } from 'motion/react'
@@ -22,6 +22,12 @@ type HeroProps = {
   secondaryCtaHref?: string | null
   /** The 6 hero images picked in the CMS. */
   images?: unknown[]
+  /** Background image visibility, 0–100 (%). CMS-controlled. */
+  imageOpacity?: number | null
+  /** Strength of the white wash behind the copy, 0–100 (%). CMS-controlled. */
+  overlayOpacity?: number | null
+  /** Seconds each background image shows before turning over. CMS-controlled. */
+  slideInterval?: number | null
   /** Selectable destinations for the "Where" dropdown. */
   locations?: string[]
   /** Selectable retreat names for the "Retreat" dropdown. */
@@ -45,6 +51,9 @@ export function Hero({
   primaryCtaLabel,
   primaryCtaHref,
   images = [],
+  imageOpacity,
+  overlayOpacity,
+  slideInterval,
   locations = [],
   retreats = [],
 }: HeroProps) {
@@ -55,6 +64,22 @@ export function Hero({
     .map((m) => mediaURL(m))
     .filter((u): u is string => Boolean(u))
     .slice(0, 6)
+
+  // CMS-controlled appearance (percentages → 0–1, seconds → ms), with sensible fallbacks.
+  const imgOpacity = (imageOpacity ?? 60) / 100
+  const washOpacity = (overlayOpacity ?? 100) / 100
+  const intervalMs = (slideInterval ?? 3) * 1000
+
+  // Glass ("liquid glass") treatment on the badge & primary CTA while at the very
+  // top of the page; solid UI once the user scrolls.
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+  const glass = !scrolled
 
   const [query, setQuery] = useState({ where: '', what: '', when: '' })
   const optionsFor = (key: 'where' | 'what' | 'when') =>
@@ -77,11 +102,13 @@ export function Hero({
         <>
           <BackgroundSlideshow
             images={imageUrls}
-            interval={3000}
-            className="opacity-60 xl:hidden"
+            interval={intervalMs}
+            style={{ opacity: imgOpacity }}
+            className="xl:hidden"
           />
           <ParallaxHeroImages
             images={imageUrls}
+            style={{ opacity: imgOpacity }}
             className="hidden xl:block"
             variant="edge-focus"
           />
@@ -91,6 +118,7 @@ export function Hero({
       {/* Soft focus wash so the centered copy stays legible over the imagery */}
       <div
         aria-hidden
+        style={{ opacity: washOpacity }}
         className="pointer-events-none absolute inset-0 z-[9] bg-[radial-gradient(ellipse_60%_55%_at_50%_45%,var(--color-background)_45%,color-mix(in_srgb,var(--color-background)_60%,transparent)_70%,transparent_100%)]"
       />
 
@@ -109,11 +137,13 @@ export function Hero({
               transition={{ duration: 0.6, ease: EASE }}
               className="flex justify-center"
             >
-              <Eyebrow highlight="retreats">{eyebrow}</Eyebrow>
+              <Eyebrow highlight="retreats" glass={glass}>
+                {eyebrow}
+              </Eyebrow>
             </motion.div>
           )}
 
-          <h1 className="mt-6 text-4xl font-extrabold leading-[1.04] text-balance text-foreground sm:text-6xl lg:text-7xl">
+          <h1 className="mt-6 text-4xl font-extrabold leading-[1.04] text-balance text-foreground [text-shadow:0_1px_0_rgba(255,255,255,0.7),0_3px_10px_rgba(0,0,0,0.14)] sm:text-6xl lg:text-7xl">
             {words.map((word, i) => (
               <span key={i} className="inline-block pb-1 align-top">
                 <motion.span
@@ -146,7 +176,15 @@ export function Hero({
               transition={{ duration: 0.7, delay: 0.5, ease: EASE }}
               className="mt-8 flex justify-center"
             >
-              <Button asChild size="lg" className="rounded-full">
+              <Button
+                asChild
+                size="lg"
+                className={cn(
+                  'rounded-full',
+                  glass &&
+                    'border border-white/50 bg-white/25 text-foreground shadow-[0_8px_30px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.6)] backdrop-blur-xl hover:bg-white/35 supports-[backdrop-filter]:bg-white/25',
+                )}
+              >
                 <Link href={primaryCtaHref || '/contact'}>
                   {primaryCtaLabel}
                   <ArrowRight className="size-4" />
@@ -156,12 +194,12 @@ export function Hero({
           )}
         </div>
 
-        {/* Search bar with whole-component hover glow */}
+        {/* Search bar with whole-component hover glow — desktop only (xl+) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.55, ease: EASE }}
-          className="mt-12 md:mt-14"
+          className="mt-12 hidden md:mt-14 xl:block"
         >
           <form
             onSubmit={(e) => {

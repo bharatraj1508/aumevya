@@ -21,15 +21,21 @@ const PROPS = [
 
 export function ValueProps() {
   return (
-    <section className="border-b border-border bg-background py-16 md:py-20">
-      <div className="container-page">
+    <section className="relative overflow-hidden border-b border-border bg-background py-16 md:py-20">
+      {/* Soft colour depth behind the cards so the glass has something to refract */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-24 left-[15%] size-72 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute -bottom-24 right-[15%] size-72 rounded-full bg-accent/15 blur-3xl" />
+      </div>
+
+      <div className="container-page relative">
         <StaggerGroup className="grid gap-6 md:grid-cols-3">
           {PROPS.map(({ icon: Icon, title, body }) => (
             <StaggerItem
               key={title}
-              className="rounded-2xl border border-border bg-card p-7 shadow-sm transition-shadow hover:shadow-md"
+              className="group rounded-2xl border border-white/60 bg-white/55 p-7 backdrop-blur-xl transition-all duration-300 [box-shadow:0_1px_1px_rgba(0,0,0,0.03),0_12px_32px_-14px_rgba(0,0,0,0.22),inset_0_1px_0_rgba(255,255,255,0.75)] hover:-translate-y-1.5 hover:[box-shadow:0_1px_1px_rgba(0,0,0,0.04),0_26px_54px_-18px_rgba(0,0,0,0.30),inset_0_1px_0_rgba(255,255,255,0.9)] supports-[backdrop-filter]:bg-white/45"
             >
-              <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] ring-1 ring-white/50">
                 <Icon className="size-5" />
               </span>
               <h3 className="mt-5 text-lg font-semibold leading-snug">{title}</h3>

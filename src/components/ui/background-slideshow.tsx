@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 export interface BackgroundSlideshowProps {
   images: string[]
   className?: string
+  style?: React.CSSProperties
   /** Milliseconds each image stays before turning to the next. */
   interval?: number
 }
@@ -21,6 +22,7 @@ const EASE = [0.16, 1, 0.3, 1] as const
 export function BackgroundSlideshow({
   images,
   className,
+  style,
   interval = 3000,
 }: BackgroundSlideshowProps) {
   const reduce = useReducedMotion()
@@ -38,6 +40,7 @@ export function BackgroundSlideshow({
   return (
     <div
       aria-hidden
+      style={style}
       className={cn(
         'pointer-events-none absolute inset-0 overflow-hidden [perspective:1400px]',
         className,

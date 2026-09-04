@@ -55,6 +55,7 @@ const SPRING_CONFIG = { damping: 25, stiffness: 120 }
 export interface ParallaxHeroImagesProps {
   images: string[]
   className?: string
+  style?: React.CSSProperties
   imageClassName?: string
   variant?: DepthVariant
 }
@@ -62,6 +63,7 @@ export interface ParallaxHeroImagesProps {
 export const ParallaxHeroImages = ({
   images,
   className,
+  style,
   imageClassName,
   variant = 'default',
 }: ParallaxHeroImagesProps) => {
@@ -95,7 +97,10 @@ export const ParallaxHeroImages = ({
   }, [mouseX, mouseY])
 
   return (
-    <div className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)}>
+    <div
+      style={style}
+      className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)}
+    >
       {positions.map((pos, index) => (
         <ParallaxImage
           key={`${pos.src}-${index}`}

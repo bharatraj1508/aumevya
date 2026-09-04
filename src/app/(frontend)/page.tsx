@@ -35,6 +35,9 @@ export default async function HomePage() {
         secondaryCtaLabel={hero?.secondaryCtaLabel}
         secondaryCtaHref={hero?.secondaryCtaHref}
         images={hero?.heroImages ?? []}
+        imageOpacity={hero?.imageOpacity}
+        overlayOpacity={hero?.overlayOpacity}
+        slideInterval={hero?.slideInterval}
         locations={locations}
         retreats={retreatNames}
       />
