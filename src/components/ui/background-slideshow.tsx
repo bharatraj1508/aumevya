@@ -10,6 +10,8 @@ export interface BackgroundSlideshowProps {
   style?: React.CSSProperties
   /** Milliseconds each image stays before turning to the next. */
   interval?: number
+  /** Fired with the index of the image currently on screen. */
+  onIndexChange?: (index: number) => void
 }
 
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -24,6 +26,7 @@ export function BackgroundSlideshow({
   className,
   style,
   interval = 3000,
+  onIndexChange,
 }: BackgroundSlideshowProps) {
   const reduce = useReducedMotion()
   const slides = images.filter(Boolean)
@@ -34,6 +37,10 @@ export function BackgroundSlideshow({
     const id = setInterval(() => setIndex((i) => (i + 1) % slides.length), interval)
     return () => clearInterval(id)
   }, [slides.length, interval])
+
+  useEffect(() => {
+    onIndexChange?.(index)
+  }, [index, onIndexChange])
 
   if (slides.length === 0) return null
 
