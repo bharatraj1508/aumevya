@@ -37,17 +37,14 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
     >
       <div
         className={cn(
-          'container-page flex items-center justify-between transition-all duration-300',
+          'container-page flex items-center justify-between pb-3 transition-all duration-300',
           scrolled ? 'h-14 md:h-16' : 'h-20 md:h-24',
         )}
       >
         <Link
           href="/"
           aria-label={siteName}
-          className={cn(
-            'inline-flex items-center transition-all duration-300',
-            scrolled && 'pointer-events-none w-0 -translate-x-2 overflow-hidden opacity-0',
-          )}
+          className="inline-flex items-center transition-all duration-300"
         >
           <Image
             src="/logo.png"
