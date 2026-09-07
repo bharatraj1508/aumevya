@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - '3001:3001'
+      - "127.0.0.1:${PORT:-3001}:${PORT:-3001}"
     volumes:
       # Bind-mount host media so existing uploads show and new uploads persist
       # on the VPS filesystem. Put your image files in ./media next to this file.
