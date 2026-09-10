@@ -537,7 +537,7 @@ export interface Course {
    */
   summary: string;
   /**
-   * Full description shown in the "Read more" panel. Can be as long as you like.
+   * Overview shown in the "Read more" popup — appears as the first "Overview" tab. Can be as long as you like.
    */
   about?: {
     root: {
@@ -554,6 +554,106 @@ export interface Course {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Add tabs to the course popup. Click "Add Tab" and pick a type — a Normal text tab, an Itinerary (day-by-day), or a Gallery with prices (like retreat accommodation). Drag to reorder.
+   */
+  tabs?:
+    | (
+        | {
+            /**
+             * Tab name shown in the popup, e.g. "What’s Included".
+             */
+            label: string;
+            /**
+             * Formatted content shown when this tab is selected.
+             */
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'contentTab';
+          }
+        | {
+            /**
+             * Tab name shown in the popup.
+             */
+            label: string;
+            /**
+             * Optional line shown above the schedule.
+             */
+            intro?: string | null;
+            /**
+             * Each row is a step on the itinerary, shown as a timeline.
+             */
+            items?:
+              | {
+                  /**
+                   * e.g. "Day 1 · Arrival & Orientation".
+                   */
+                  heading: string;
+                  /**
+                   * What happens during this step.
+                   */
+                  description: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'itineraryTab';
+          }
+        | {
+            /**
+             * Tab name shown in the popup, e.g. "Accommodation".
+             */
+            label: string;
+            /**
+             * Optional line shown above the cards.
+             */
+            intro?: string | null;
+            /**
+             * Each card shows a photo, a name and an optional price.
+             */
+            items?:
+              | {
+                  /**
+                   * e.g. "Private Room".
+                   */
+                  name: string;
+                  /**
+                   * Price per person (₹). Leave blank to show no price.
+                   */
+                  price?: number | null;
+                  /**
+                   * Photo for this card.
+                   */
+                  image: string | Media;
+                  /**
+                   * Optional short line under the name.
+                   */
+                  description?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'galleryTab';
+          }
+      )[]
+    | null;
   /**
    * Price per person (₹). Enter 0 to show "Free".
    */
@@ -865,6 +965,50 @@ export interface CoursesSelect<T extends boolean = true> {
   image?: T;
   summary?: T;
   about?: T;
+  tabs?:
+    | T
+    | {
+        contentTab?:
+          | T
+          | {
+              label?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        itineraryTab?:
+          | T
+          | {
+              label?: T;
+              intro?: T;
+              items?:
+                | T
+                | {
+                    heading?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        galleryTab?:
+          | T
+          | {
+              label?: T;
+              intro?: T;
+              items?:
+                | T
+                | {
+                    name?: T;
+                    price?: T;
+                    image?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
   price?: T;
   ratings?: T;
   bookNowLink?: T;

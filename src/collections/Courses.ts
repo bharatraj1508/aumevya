@@ -33,8 +33,136 @@ export const Courses: CollectionConfig = {
       name: 'about',
       type: 'richText',
       admin: {
-        description: 'Full description shown in the "Read more" panel. Can be as long as you like.',
+        description:
+          'Overview shown in the "Read more" popup — appears as the first "Overview" tab. Can be as long as you like.',
       },
+    },
+    {
+      name: 'tabs',
+      type: 'blocks',
+      labels: { singular: 'Tab', plural: 'Tabs' },
+      admin: {
+        description:
+          'Add tabs to the course popup. Click "Add Tab" and pick a type — a Normal text tab, an Itinerary (day-by-day), or a Gallery with prices (like retreat accommodation). Drag to reorder.',
+      },
+      blocks: [
+        {
+          slug: 'contentTab',
+          labels: { singular: 'Normal Tab', plural: 'Normal Tabs' },
+          fields: [
+            {
+              name: 'label',
+              type: 'text',
+              required: true,
+              admin: { description: 'Tab name shown in the popup, e.g. "What’s Included".' },
+            },
+            {
+              name: 'content',
+              type: 'richText',
+              required: true,
+              admin: { description: 'Formatted content shown when this tab is selected.' },
+            },
+          ],
+        },
+        {
+          slug: 'itineraryTab',
+          labels: { singular: 'Itinerary Tab', plural: 'Itinerary Tabs' },
+          fields: [
+            {
+              name: 'label',
+              type: 'text',
+              required: true,
+              defaultValue: 'Itinerary',
+              admin: { description: 'Tab name shown in the popup.' },
+            },
+            {
+              name: 'intro',
+              type: 'textarea',
+              admin: { description: 'Optional line shown above the schedule.' },
+            },
+            {
+              name: 'items',
+              type: 'array',
+              minRows: 1,
+              labels: { singular: 'Day / Step', plural: 'Days / Steps' },
+              admin: { description: 'Each row is a step on the itinerary, shown as a timeline.' },
+              fields: [
+                {
+                  name: 'heading',
+                  type: 'text',
+                  required: true,
+                  admin: { description: 'e.g. "Day 1 · Arrival & Orientation".' },
+                },
+                {
+                  name: 'description',
+                  type: 'textarea',
+                  required: true,
+                  admin: { description: 'What happens during this step.' },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'galleryTab',
+          labels: { singular: 'Gallery + Price Tab', plural: 'Gallery + Price Tabs' },
+          fields: [
+            {
+              name: 'label',
+              type: 'text',
+              required: true,
+              defaultValue: 'Accommodation',
+              admin: { description: 'Tab name shown in the popup, e.g. "Accommodation".' },
+            },
+            {
+              name: 'intro',
+              type: 'textarea',
+              admin: { description: 'Optional line shown above the cards.' },
+            },
+            {
+              name: 'items',
+              type: 'array',
+              minRows: 1,
+              labels: { singular: 'Card', plural: 'Cards' },
+              admin: { description: 'Each card shows a photo, a name and an optional price.' },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'name',
+                      type: 'text',
+                      required: true,
+                      admin: { width: '60%', description: 'e.g. "Private Room".' },
+                    },
+                    {
+                      name: 'price',
+                      type: 'number',
+                      min: 0,
+                      admin: {
+                        width: '40%',
+                        description: 'Price per person (₹). Leave blank to show no price.',
+                      },
+                    },
+                  ],
+                },
+                {
+                  name: 'image',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: true,
+                  admin: { description: 'Photo for this card.' },
+                },
+                {
+                  name: 'description',
+                  type: 'textarea',
+                  admin: { description: 'Optional short line under the name.' },
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
       type: 'row',
