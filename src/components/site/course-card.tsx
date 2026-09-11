@@ -38,6 +38,21 @@ type DetailTab =
         description?: string | null
       }[]
     }
+  | {
+      kind: 'accommodation'
+      label: string
+      intro?: string | null
+      items: {
+        id?: string | null
+        name: string
+        image: string | Media
+        description?: string | null
+        /** Full price for this option (base price, plus any add-on). */
+        total: number
+        /** Extra added on top of the base price (0 when priced at base). */
+        addOn: number
+      }[]
+    }
 
 /** A rich-text document is only worth showing if it has real content —
  * a document of empty paragraphs would reveal blank space. */
@@ -69,6 +84,25 @@ function buildDetailTabs(course: Course): DetailTab[] {
     } else if (block.blockType === 'galleryTab') {
       if (block.items?.length) {
         tabs.push({ kind: 'gallery', label: block.label, intro: block.intro, items: block.items })
+      }
+    } else if (block.blockType === 'accommodationTab') {
+      if (block.options?.length) {
+        tabs.push({
+          kind: 'accommodation',
+          label: block.label,
+          intro: block.intro,
+          items: block.options.map((opt) => {
+            const addOn = opt.priceMode === 'addon' ? (opt.addOn ?? 0) : 0
+            return {
+              id: opt.id,
+              name: opt.name,
+              image: opt.image,
+              description: opt.description,
+              addOn,
+              total: course.price + addOn,
+            }
+          }),
+        })
       }
     }
   }
@@ -107,6 +141,50 @@ function CourseTabContent({ tab }: { tab: DetailTab }) {
     )
   }
 
+  if (tab.kind === 'gallery') {
+    return (
+      <div className="mt-5">
+        {tab.intro && (
+          <p className="text-[15px] leading-relaxed text-muted-foreground">{tab.intro}</p>
+        )}
+        <div className={cn('grid gap-4 sm:grid-cols-2', tab.intro && 'mt-4')}>
+          {tab.items.map((item, i) => (
+            <figure
+              key={item.id ?? i}
+              className="overflow-hidden rounded-2xl border border-border bg-card"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                <MediaImage
+                  media={item.image}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 320px"
+                  className="object-cover"
+                />
+              </div>
+              <figcaption className="flex items-center justify-between gap-3 px-4 py-3.5">
+                <div className="min-w-0">
+                  <p className="truncate font-semibold text-foreground">{item.name}</p>
+                  {item.description && (
+                    <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">
+                      {item.description}
+                    </p>
+                  )}
+                </div>
+                {typeof item.price === 'number' && item.price > 0 && (
+                  <span className="inline-flex shrink-0 items-center rounded-lg bg-accent/15 px-2.5 py-1 text-sm font-semibold text-accent-foreground">
+                    {formatPrice(item.price)}
+                  </span>
+                )}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  // Accommodation — like the retreat's stay options: each is priced at the
+  // course base price, plus an optional add-on shown as a "+₹…" note.
   return (
     <div className="mt-5">
       {tab.intro && (
@@ -135,11 +213,14 @@ function CourseTabContent({ tab }: { tab: DetailTab }) {
                   </p>
                 )}
               </div>
-              {typeof item.price === 'number' && item.price > 0 && (
-                <span className="inline-flex shrink-0 items-center rounded-lg bg-accent/15 px-2.5 py-1 text-sm font-semibold text-accent-foreground">
-                  {formatPrice(item.price)}
+              <span className="shrink-0 text-right leading-tight">
+                <span className="block font-bold text-foreground">
+                  {item.total > 0 ? formatPrice(item.total) : 'Free'}
                 </span>
-              )}
+                {item.addOn > 0 && (
+                  <span className="text-xs text-muted-foreground">+{formatPrice(item.addOn)} add-on</span>
+                )}
+              </span>
             </figcaption>
           </figure>
         ))}

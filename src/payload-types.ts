@@ -652,6 +652,47 @@ export interface Course {
             blockName?: string | null;
             blockType: 'galleryTab';
           }
+        | {
+            /**
+             * Tab name shown in the popup.
+             */
+            label: string;
+            /**
+             * Optional line shown above the options.
+             */
+            intro?: string | null;
+            /**
+             * Each option is a stay choice with a photo. It is priced at the course base price unless you add an add-on on top.
+             */
+            options?:
+              | {
+                  /**
+                   * e.g. "Private Room".
+                   */
+                  name: string;
+                  /**
+                   * Photo for this option.
+                   */
+                  image: string | Media;
+                  /**
+                   * Optional short line under the name.
+                   */
+                  description?: string | null;
+                  /**
+                   * How this option is priced.
+                   */
+                  priceMode?: ('base' | 'addon') | null;
+                  /**
+                   * Extra added on top of the course base price (₹).
+                   */
+                  addOn?: number | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'accommodationTab';
+          }
       )[]
     | null;
   /**
@@ -1003,6 +1044,24 @@ export interface CoursesSelect<T extends boolean = true> {
                     price?: T;
                     image?: T;
                     description?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        accommodationTab?:
+          | T
+          | {
+              label?: T;
+              intro?: T;
+              options?:
+                | T
+                | {
+                    name?: T;
+                    image?: T;
+                    description?: T;
+                    priceMode?: T;
+                    addOn?: T;
                     id?: T;
                   };
               id?: T;

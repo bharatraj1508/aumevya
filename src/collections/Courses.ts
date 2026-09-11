@@ -162,6 +162,74 @@ export const Courses: CollectionConfig = {
             },
           ],
         },
+        {
+          slug: 'accommodationTab',
+          labels: { singular: 'Accommodation Tab', plural: 'Accommodation Tabs' },
+          fields: [
+            {
+              name: 'label',
+              type: 'text',
+              required: true,
+              defaultValue: 'Accommodation',
+              admin: { description: 'Tab name shown in the popup.' },
+            },
+            {
+              name: 'intro',
+              type: 'textarea',
+              admin: { description: 'Optional line shown above the options.' },
+            },
+            {
+              name: 'options',
+              type: 'array',
+              minRows: 1,
+              labels: { singular: 'Accommodation Option', plural: 'Accommodation Options' },
+              admin: {
+                description:
+                  'Each option is a stay choice with a photo. It is priced at the course base price unless you add an add-on on top.',
+              },
+              fields: [
+                {
+                  name: 'name',
+                  type: 'text',
+                  required: true,
+                  admin: { description: 'e.g. "Private Room".' },
+                },
+                {
+                  name: 'image',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: true,
+                  admin: { description: 'Photo for this option.' },
+                },
+                {
+                  name: 'description',
+                  type: 'textarea',
+                  admin: { description: 'Optional short line under the name.' },
+                },
+                {
+                  name: 'priceMode',
+                  type: 'radio',
+                  defaultValue: 'base',
+                  options: [
+                    { label: 'Same as the course base price', value: 'base' },
+                    { label: 'Base price + an add-on', value: 'addon' },
+                  ],
+                  admin: { description: 'How this option is priced.' },
+                },
+                {
+                  name: 'addOn',
+                  type: 'number',
+                  min: 0,
+                  defaultValue: 0,
+                  admin: {
+                    description: 'Extra added on top of the course base price (₹).',
+                    condition: (_, sibling) => sibling?.priceMode === 'addon',
+                  },
+                },
+              ],
+            },
+          ],
+        },
       ],
     },
     {

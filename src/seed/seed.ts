@@ -716,13 +716,13 @@ const run = async () => {
           ],
         },
         {
-          blockType: 'galleryTab' as const,
+          blockType: 'accommodationTab' as const,
           label: 'Accommodation',
-          intro: 'Stay in our peaceful garden retreat — simple, clean rooms designed for rest and reflection.',
-          items: [
-            { name: 'Twin-Sharing Room', price: 0, image: gallery[0], description: 'Two single beds, shared en-suite bathroom.' },
-            { name: 'Private Room', price: 3500, image: gallery[1], description: 'Your own room with en-suite bathroom and garden view.' },
-            { name: 'Garden Cottage', price: 6000, image: gallery[2], description: 'A standalone cottage for complete quiet and privacy.' },
+          intro: 'Stay in our peaceful garden retreat — priced at the course base price, with optional upgrades.',
+          options: [
+            { name: 'Twin-Sharing Room', priceMode: 'base' as const, addOn: 0, image: gallery[0], description: 'Two single beds, shared en-suite bathroom.' },
+            { name: 'Private Room', priceMode: 'addon' as const, addOn: 3500, image: gallery[1], description: 'Your own room with en-suite bathroom and garden view.' },
+            { name: 'Garden Cottage', priceMode: 'addon' as const, addOn: 6000, image: gallery[2], description: 'A standalone cottage for complete quiet and privacy.' },
           ],
         },
         {
