@@ -13,3 +13,20 @@ services:
       # Bind-mount host media so existing uploads show and new uploads persist
       # on the VPS filesystem. Put your image files in ./media next to this file.
       - ./media:/app/media
+
+  # One-off seeder/maintenance runner. Behind the "tools" profile so it never
+  # starts with `docker compose up`. Runs the safe, idempotent courses seed:
+  #   docker compose build          # rebuild after deploying new code
+  #   docker compose --profile tools run --rm seeder
+  # Run a different script by appending it, e.g.:
+  #   docker compose --profile tools run --rm seeder npm run seed
+  seeder:
+    build:
+      context: .
+      target: seeder
+    image: aumevya-seeder
+    env_file: .env
+    profiles: ["tools"]
+    volumes:
+      # Same media mount as web, so any uploaded files land on the host volume.
+      - ./media:/app/media

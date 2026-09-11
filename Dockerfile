@@ -29,6 +29,19 @@ RUN PAYLOAD_SECRET=build-only-placeholder \
     NODE_OPTIONS="--no-deprecation --no-experimental-webstorage --max-old-space-size=2048" \
     npm run build
 
+# ---------- seeder ----------
+# Lightweight stage for one-off seed / maintenance scripts. It has the full
+# dependency tree (incl. tsx + cross-env) and the source, but skips `next build`,
+# so it builds fast and is never part of the runtime image. Point it at the
+# production DB via the same .env (MONGO_URI + PAYLOAD_SECRET) at run time.
+FROM base AS seeder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+# Default to the safe, idempotent courses seed. Override on the command line to
+# run a different script, e.g. `docker compose --profile tools run --rm seeder npm run seed`.
+CMD ["npm", "run", "seed:courses"]
+
 # ---------- runner ----------
 FROM base AS runner
 WORKDIR /app

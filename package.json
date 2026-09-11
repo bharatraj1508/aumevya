@@ -15,7 +15,8 @@
     "payload": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-webstorage\" payload",
     "generate:types": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-webstorage\" payload generate:types",
     "generate:importmap": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-webstorage\" payload generate:importmap",
-    "seed": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-webstorage\" tsx src/seed/seed.ts"
+    "seed": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-webstorage\" tsx src/seed/seed.ts",
+    "seed:courses": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-webstorage\" tsx src/seed/seed-courses.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.0",

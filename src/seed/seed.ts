@@ -700,6 +700,44 @@ const run = async () => {
         h('h3', 'Who it is for'),
         p('Complete beginners, and returning practitioners who want to rebuild a clean, injury-free foundation.'),
       ),
+      tabs: [
+        {
+          blockType: 'itineraryTab' as const,
+          label: 'Itinerary',
+          intro: 'A typical day on the residential immersion, from sunrise to lights-out.',
+          items: [
+            { heading: '6:00 AM · Wake & Warm-up', description: 'Herbal tea, then Ujjayi breath and gentle warm-ups to greet the day.' },
+            { heading: '7:00 AM · Morning Practice', description: 'Guided Hatha practice with detailed alignment for every posture.' },
+            { heading: '9:00 AM · Breakfast', description: 'A sattvic breakfast followed by rest and quiet time.' },
+            { heading: '11:00 AM · Theory Workshop', description: 'Philosophy and asana theory — the "why" behind the practice.' },
+            { heading: '1:00 PM · Lunch & Rest', description: 'Lunch and free time by the garden.' },
+            { heading: '4:30 PM · Restorative Session', description: 'Restorative practice and pranayama to unwind.' },
+            { heading: '6:30 PM · Dinner & Meditation', description: 'Dinner, followed by candle-lit meditation before rest.' },
+          ],
+        },
+        {
+          blockType: 'accommodationTab' as const,
+          label: 'Accommodation',
+          intro: 'Stay in our peaceful garden retreat — priced at the course base price, with optional upgrades.',
+          options: [
+            { name: 'Twin-Sharing Room', priceMode: 'base' as const, addOn: 0, image: gallery[0], description: 'Two single beds, shared en-suite bathroom.' },
+            { name: 'Private Room', priceMode: 'addon' as const, addOn: 3500, image: gallery[1], description: 'Your own room with en-suite bathroom and garden view.' },
+            { name: 'Garden Cottage', priceMode: 'addon' as const, addOn: 6000, image: gallery[2], description: 'A standalone cottage for complete quiet and privacy.' },
+          ],
+        },
+        {
+          blockType: 'contentTab' as const,
+          label: "What's Included",
+          content: doc(
+            ul(
+              ['All guided sessions and printable practice sheets'],
+              ['Three sattvic vegetarian meals a day'],
+              ['A yoga mat and props for the duration'],
+              ['Certificate of completion'],
+            ),
+          ),
+        },
+      ],
     },
     {
       name: 'Vinyasa Flow Mastery',
@@ -732,6 +770,33 @@ const run = async () => {
           ' — a genuine stepping-stone toward teacher training.',
         ),
       ),
+      tabs: [
+        {
+          blockType: 'contentTab' as const,
+          label: 'Curriculum',
+          content: doc(
+            h('h3', 'Twelve weeks, twelve flows'),
+            ol(
+              ['Weeks 1–3 · Sun salutations and building a rhythmic base'],
+              ['Weeks 4–6 · Standing sequences and hip openers'],
+              ['Weeks 7–9 · Transitions: chaturanga, jump-backs, arm balances'],
+              ['Weeks 10–12 · Peak-pose sequencing and leading your own class'],
+            ),
+          ),
+        },
+        {
+          blockType: 'contentTab' as const,
+          label: "What's Included",
+          content: doc(
+            ul(
+              ['12 full-length flow classes (20–75 minutes)'],
+              ['Downloadable sequencing templates'],
+              ['Lifetime access to all recordings'],
+              ['Private community group for feedback'],
+            ),
+          ),
+        },
+      ],
     },
     {
       name: 'Meditation & Mindfulness',
@@ -761,6 +826,32 @@ const run = async () => {
           ' with a one-line reflection. Miss a day? Just pick up where you left off — this is a practice, not a test.',
         ),
       ),
+      tabs: [
+        {
+          blockType: 'contentTab' as const,
+          label: 'Daily Schedule',
+          content: doc(
+            p('Ten minutes is all it takes. Do it whenever suits you — most people prefer first thing in the morning.'),
+            ul(
+              [b('Minute 0–2'), ' · Settling in and posture check'],
+              [b('Minute 2–8'), ' · Guided practice for the day'],
+              [b('Minute 8–10'), ' · Reflection and journalling prompt'],
+            ),
+          ),
+        },
+        {
+          blockType: 'contentTab' as const,
+          label: 'FAQ',
+          content: doc(
+            h('h3', 'Do I need any experience?'),
+            p('None at all. This course is designed for absolute beginners.'),
+            h('h3', 'What if I miss a day?'),
+            p('Simply resume where you left off. Consistency matters more than a perfect streak.'),
+            h('h3', 'Is it really free?'),
+            p('Yes — all 21 days of guided audio are free, forever.'),
+          ),
+        },
+      ],
     },
     {
       name: 'Pranayama & Breathwork',
@@ -791,6 +882,21 @@ const run = async () => {
           ' and when to ease off — because breathwork is powerful, and respect for it matters.',
         ),
       ),
+      tabs: [
+        {
+          blockType: 'contentTab' as const,
+          label: 'Curriculum',
+          content: doc(
+            h('h3', 'A progressive path'),
+            ul(
+              ['Module 1 · The mechanics of the breath and the nervous system'],
+              [b('Module 2'), ' · Nadi Shodhana and finding balance'],
+              [b('Module 3'), ' · Energising breaths — Kapalabhati and Bhastrika'],
+              [b('Module 4'), ' · Calming breaths and building a daily ritual'],
+            ),
+          ),
+        },
+      ],
     },
     {
       name: 'Ayurveda for Everyday Living',
@@ -821,6 +927,32 @@ const run = async () => {
           ' you can start this week and keep for life.',
         ),
       ),
+      tabs: [
+        {
+          blockType: 'contentTab' as const,
+          label: 'Meal Plan',
+          content: doc(
+            p('Sample seasonal day, adjusted to your dosha once you complete the quiz.'),
+            ul(
+              [b('Morning'), ' · Warm water with lemon, then spiced porridge'],
+              [b('Midday'), ' · The largest meal — kitchari, seasonal vegetables, ghee'],
+              [b('Evening'), ' · A light, warm soup, early and unhurried'],
+            ),
+          ),
+        },
+        {
+          blockType: 'contentTab' as const,
+          label: "What's Included",
+          content: doc(
+            ul(
+              ['A guided dosha-discovery quiz'],
+              ['Seasonal recipe booklet (PDF)'],
+              ['Daily-routine planner template'],
+              ['Lifetime access to all lessons'],
+            ),
+          ),
+        },
+      ],
     },
   ]
   for (const c of courses) {
