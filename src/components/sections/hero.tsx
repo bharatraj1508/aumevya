@@ -94,14 +94,6 @@ export function Hero({
   }, [])
   const glass = !scrolled && isCompact
 
-  // Mobile/tablet intro: the paint sprays on first, then (after the ~5s
-  // animation) the brush fades out and the background images fade in.
-  const [sprayDone, setSprayDone] = useState(false)
-  useEffect(() => {
-    const t = setTimeout(() => setSprayDone(true), 5000)
-    return () => clearTimeout(t)
-  }, [])
-
   // Adaptive copy contrast (mobile/tablet only): sample the luminance of the
   // active background image, fold in the white wash on top of it, and flip the
   // subheading + trust points to light text when the effective backdrop is dark.
@@ -111,9 +103,7 @@ export function Hero({
   // Background (--color-background) is white → luminance 1. Wash sits over the
   // photo at ~washOpacity strength where the copy lives.
   const effectiveLum = imgLum == null ? null : imgLum * (1 - washOpacity) + 1 * washOpacity
-  // Only adapt once the images are actually showing (after the spray intro);
-  // during the spray the copy sits on the plain background, so keep it dark.
-  const onDark = isCompact && sprayDone && effectiveLum != null && effectiveLum < 0.5
+  const onDark = isCompact && effectiveLum != null && effectiveLum < 0.5
 
   const [query, setQuery] = useState({ where: '', what: '', when: '' })
   const optionsFor = (key: 'where' | 'what' | 'when') =>
@@ -134,12 +124,12 @@ export function Hero({
           faded so the centered copy stays legible. Desktop: the parallax collage. */}
       {imageUrls.length > 0 && (
         <>
-          {/* Mobile/tablet slideshow — CMS-tunable opacity & interval */}
+          {/* Mobile & tablet only: the image slideshow (no spray paint here). */}
           <BackgroundSlideshow
             images={imageUrls}
             interval={intervalMs}
-            style={{ opacity: sprayDone ? imgOpacity : 0 }}
-            className="transition-opacity duration-700 xl:hidden"
+            style={{ opacity: imgOpacity }}
+            className="xl:hidden"
             onIndexChange={setActiveImage}
           />
           {/* Desktop parallax — always full strength (original design) */}
@@ -185,16 +175,13 @@ export function Hero({
           )}
 
           <div className="relative mt-6">
-            {/* Sprayed paint splatter behind the title (all breakpoints).
-                Color is CMS-controlled (Theme → hero brush, defaults to primary). */}
+            {/* Sprayed paint splatter behind the title — desktop/laptop only.
+                Mobile & tablet get the image slideshow instead, so this is never
+                rendered (or animated) there. Color is CMS-controlled (Theme →
+                hero brush, defaults to primary). */}
             <div
               aria-hidden
-              className={cn(
-                'pointer-events-none absolute -inset-x-[16%] -inset-y-[6%] transition-opacity duration-700',
-                // After the spray intro the paint clears on mobile/tablet to
-                // reveal the images; on desktop it stays.
-                sprayDone && 'opacity-0 xl:opacity-100',
-              )}
+              className="pointer-events-none absolute -inset-x-[16%] -inset-y-[6%] hidden xl:block"
             >
               <BrushBackdrop />
             </div>
