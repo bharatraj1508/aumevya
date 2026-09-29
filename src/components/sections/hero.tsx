@@ -1,15 +1,22 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion } from 'motion/react'
 import { ArrowRight, CalendarDays, Check, Compass, MapPin, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Eyebrow } from '@/components/site/eyebrow'
-import { ParallaxHeroImages } from '@/components/ui/parallax-hero-images'
 import { BackgroundSlideshow } from '@/components/ui/background-slideshow'
-import { BrushBackdrop } from '@/components/ui/brush-backdrop'
+
+// The parallax collage is a desktop-only decorative backdrop and pulls in extra
+// motion/transform code. Load it lazily so it stays out of the initial hero JS
+// (and off the critical path) — it fades in shortly after hydration.
+const ParallaxHeroImages = dynamic(
+  () => import('@/components/ui/parallax-hero-images').then((m) => m.ParallaxHeroImages),
+  { ssr: false },
+)
 import { mediaURL } from '@/lib/media'
 import { useImageLuminance } from '@/lib/use-image-luminance'
 import { cn } from '@/lib/utils'
@@ -59,7 +66,6 @@ export function Hero({
   locations = [],
   retreats = [],
 }: HeroProps) {
-  const reduce = useReducedMotion()
   const router = useRouter()
   const words = heading.split(' ')
   const imageUrls = images
@@ -175,28 +181,13 @@ export function Hero({
           )}
 
           <div className="relative mt-6">
-            {/* Sprayed paint splatter behind the title — desktop/laptop only.
-                Mobile & tablet get the image slideshow instead, so this is never
-                rendered (or animated) there. Color is CMS-controlled (Theme →
-                hero brush, defaults to primary). */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -inset-x-[16%] -inset-y-[6%] hidden xl:block"
-            >
-              <BrushBackdrop />
-            </div>
-
+            {/* Rendered without an entrance animation on purpose: this heading is
+                the LCP element, so it must paint on first (server) render rather
+                than starting at opacity:0 and waiting for hydration. */}
             <h1 className="relative text-4xl font-extrabold leading-[1.04] text-balance text-foreground [text-shadow:0_1px_0_rgba(255,255,255,0.7),0_3px_10px_rgba(0,0,0,0.14)] sm:text-6xl lg:text-7xl">
               {words.map((word, i) => (
                 <span key={i} className="inline-block pb-1 align-top">
-                  <motion.span
-                    className="inline-block"
-                    initial={reduce ? { opacity: 0 } : { opacity: 0, y: '0.4em' }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.1 + i * 0.06, ease: EASE }}
-                  >
-                    {word}&nbsp;
-                  </motion.span>
+                  {word}&nbsp;
                 </span>
               ))}
             </h1>

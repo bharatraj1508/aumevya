@@ -18,6 +18,15 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# The public site URL. This is a NEXT_PUBLIC_* var, so Next inlines it into the
+# bundle AND into the statically-prerendered robots.txt / sitemap.xml / OG image
+# at BUILD time — a runtime env var can't fix those. It must be present here or
+# the code falls back to http://localhost:3000. Render (and most platforms) pass
+# a dashboard env var of the same name into the build when you declare it as ARG.
+ARG NEXT_PUBLIC_SERVER_URL
+ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL
+
 # Placeholder env only for this build step so the Payload config loads. No DB
 # connection is made during `next build` (all frontend routes are force-dynamic),
 # and these values are not baked into any image layer.

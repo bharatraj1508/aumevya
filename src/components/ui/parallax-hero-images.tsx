@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useMemo, memo } from 'react'
+import Image from 'next/image'
 import { motion, useMotionValue, useSpring, useTransform, MotionValue } from 'motion/react'
 import { cn } from '@/lib/utils'
 
@@ -158,12 +159,14 @@ const ParallaxImage = memo(function ParallaxImage({
         ease: [0.25, 0.1, 0.25, 1],
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={src}
         alt=""
-        loading="lazy"
-        decoding="async"
+        width={320}
+        height={240}
+        // Decorative collage (desktop only), never the LCP element — lazy is fine.
+        // The rendered size caps at md:w-80 (320px), so serve for that.
+        sizes="(min-width: 768px) 320px, (min-width: 640px) 224px, 128px"
         className={cn(
           'aspect-4/3 h-20 w-32 rounded-lg object-cover shadow-sm ring-1 ring-black/10 sm:h-40 sm:w-56 md:h-52 md:w-80 dark:ring-white/10',
           imageClassName,

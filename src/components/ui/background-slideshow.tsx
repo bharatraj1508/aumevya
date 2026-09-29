@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/utils'
 
@@ -54,19 +55,26 @@ export function BackgroundSlideshow({
       )}
     >
       <AnimatePresence initial={false}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <motion.img
+        <motion.div
           key={index}
-          src={slides[index]}
-          alt=""
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0"
           style={{ transformOrigin: 'left center', backfaceVisibility: 'hidden' }}
           initial={reduce ? { opacity: 0 } : { rotateY: -105, opacity: 0 }}
           animate={reduce ? { opacity: 1 } : { rotateY: 0, opacity: 1 }}
           exit={reduce ? { opacity: 0 } : { rotateY: 0, opacity: 0 }}
           transition={{ duration: reduce ? 0.6 : 0.9, ease: EASE }}
-        />
+        >
+          <Image
+            src={slides[index]}
+            alt=""
+            fill
+            // The first slide is the mobile/tablet LCP element — preload it and
+            // hint the browser to fetch it early. Later slides load on demand.
+            priority={index === 0}
+            sizes="100vw"
+            className="object-cover"
+          />
+        </motion.div>
       </AnimatePresence>
     </div>
   )

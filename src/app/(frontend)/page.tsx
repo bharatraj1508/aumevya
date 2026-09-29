@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getDocs, getGlobal } from '@/lib/payload'
 import { Hero } from '@/components/sections/hero'
 import { ValueProps } from '@/components/sections/value-props'
@@ -7,6 +8,18 @@ import { GalleryShowcase } from '@/components/sections/gallery-showcase'
 import { TeamSection } from '@/components/sections/team-section'
 import { TestimonialsSection } from '@/components/sections/testimonials-section'
 import { CtaSection } from '@/components/sections/cta-section'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getGlobal('seo-defaults')
+  const siteName = seo?.siteName || 'Aumevya'
+  return {
+    // `absolute` bypasses the layout's "%s · Aumevya" template so the brand
+    // isn't repeated. Keyword-rich so the homepage ranks for its core intent.
+    title: { absolute: `${siteName} — Yoga Retreats to Unplug, De-stress & Recharge` },
+    alternates: { canonical: '/' },
+    openGraph: { url: '/' },
+  }
+}
 
 export default async function HomePage() {
   const [hero, about, cta, featured, allRetreats, testimonials, gallery, team] = await Promise.all([
