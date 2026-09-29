@@ -1283,10 +1283,6 @@ export interface Theme {
    * Secondary accent. Used for star ratings, small badges and the highlight in gradients.
    */
   accentColor: string;
-  /**
-   * Color of the painted brush stroke behind the hero title (desktop only). Leave empty to use the Primary color.
-   */
-  heroBrushColor?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1416,7 +1412,6 @@ export interface CtaSelect<T extends boolean = true> {
 export interface ThemeSelect<T extends boolean = true> {
   primaryColor?: T;
   accentColor?: T;
-  heroBrushColor?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

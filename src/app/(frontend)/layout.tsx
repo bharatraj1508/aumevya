@@ -32,6 +32,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const seo = await getGlobal('seo-defaults')
   const siteName = seo?.siteName || 'Aumevya'
   const ogImage = mediaURL(seo?.ogImage)
+  // SVG OG images render inconsistently across social platforms. Only honour the
+  // CMS image when it's a raster; otherwise fall back to the generated PNG in
+  // `opengraph-image.tsx` (Next's file convention supplies it automatically).
+  const rasterOg = ogImage && !/\.svg(?:\?|$)/i.test(ogImage) ? ogImage : null
   return {
     metadataBase: new URL(SERVER_URL),
     title: {
@@ -42,7 +46,12 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       siteName,
       type: 'website',
-      images: ogImage ? [{ url: ogImage }] : undefined,
+      url: SERVER_URL,
+      locale: 'en_US',
+      images: rasterOg ? [{ url: rasterOg }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
     },
   }
 }
@@ -60,14 +69,43 @@ export default async function FrontendLayout({ children }: { children: React.Rea
   // Cromix Orange if the global is empty.
   const primary = theme?.primaryColor || '#d64500'
   const accent = theme?.accentColor || '#f5a623'
-  // Hero brush stroke defaults to the primary color unless explicitly set.
-  const heroBrush = theme?.heroBrushColor || primary
   const themeVars = {
     '--color-primary': primary,
     '--color-ring': primary,
     '--color-accent': accent,
-    '--color-hero-brush': heroBrush,
   } as React.CSSProperties
+
+  // Structured data so Google can build the brand entity and (via WebSite +
+  // SearchAction) offer a sitelinks search box. Rendered server-side so it's in
+  // the crawled HTML. All URLs resolve against SERVER_URL — set
+  // NEXT_PUBLIC_SERVER_URL in production or these point at localhost.
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': `${SERVER_URL}/#organization`,
+        name: siteName,
+        url: SERVER_URL,
+        logo: `${SERVER_URL}/logo.png`,
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${SERVER_URL}/#website`,
+        name: siteName,
+        url: SERVER_URL,
+        publisher: { '@id': `${SERVER_URL}/#organization` },
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: `${SERVER_URL}/retreats?where={search_term_string}`,
+          },
+          'query-input': 'required name=search_term_string',
+        },
+      },
+    ],
+  }
 
   return (
     <html
@@ -76,6 +114,11 @@ export default async function FrontendLayout({ children }: { children: React.Rea
       style={themeVars}
     >
       <body>
+        <script
+          type="application/ld+json"
+          // Escape `<` so a value like "</script>" can't break out of the tag.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
+        />
         <SmoothScroll>
           <Header siteName={siteName} bookLabel="Book Now" />
           <main className="min-h-screen">{children}</main>
