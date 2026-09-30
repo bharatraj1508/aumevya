@@ -24,5 +24,20 @@ export const bookingSchema = z.object({
   accommodation: z.string().trim().max(120).optional().or(z.literal('')),
 })
 
+export const guidanceBookingSchema = z.object({
+  ...base,
+  // The guidance session being booked (its slug), when submitted from a
+  // specific session's page. Optional to keep the form reusable.
+  guidance: z.string().trim().max(120).optional().or(z.literal('')),
+  // Chosen open date, `YYYY-MM-DD`.
+  bookingDate: z
+    .string()
+    .trim()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Please pick a date'),
+  // Chosen slot title, e.g. "Morning".
+  slot: z.string().trim().min(1, 'Please pick a time slot').max(80),
+})
+
 export type ContactInput = z.infer<typeof contactSchema>
 export type BookingInput = z.infer<typeof bookingSchema>
+export type GuidanceBookingInput = z.infer<typeof guidanceBookingSchema>

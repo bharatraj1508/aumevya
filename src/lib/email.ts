@@ -40,19 +40,67 @@ export type InquiryEmail = {
 }
 
 /**
- * Sends the admin notification. Best-effort: returns false (never throws) when
- * SMTP is unconfigured or delivery fails, so the caller can record `notified`
- * without losing the saved inquiry.
+ * Shared admin-notification sender. Best-effort: returns false (never throws)
+ * when SMTP is unconfigured or delivery fails, so callers can record `notified`
+ * without losing the saved lead. All the SMTP plumbing lives here once; the
+ * public helpers below only compose the subject, heading and detail rows.
  */
-export async function sendInquiryEmail(inquiry: InquiryEmail): Promise<boolean> {
+async function sendAdminEmail(params: {
+  heading: string
+  badge: string
+  subject: string
+  intro: string
+  detailRows: [string, string][]
+  message?: string
+  replyTo: string
+  /** Where the notification is unavailable — for the "not configured" warning. */
+  fromEmail: string
+}): Promise<boolean> {
   const to = ADMIN_NOTIFY_EMAIL || SMTP_USER
   if (!configured || !to) {
     console.warn(
-      `[email] SMTP not configured — inquiry from ${inquiry.email} saved but not emailed.`,
+      `[email] SMTP not configured — message from ${params.fromEmail} saved but not emailed.`,
     )
     return false
   }
 
+  const html = renderEmail({
+    heading: params.heading,
+    badge: params.badge,
+    intro: params.intro,
+    detailRows: params.detailRows,
+    message: params.message,
+    replyTo: params.replyTo,
+  })
+  const textLines = [
+    params.heading,
+    '',
+    ...params.detailRows.map(([k, v]) => `${k}: ${v}`),
+    ...(params.message ? ['', `Message:`, params.message] : []),
+  ]
+
+  try {
+    await getTransport().sendMail({
+      from: fromAddress(),
+      to,
+      replyTo: params.replyTo,
+      subject: params.subject,
+      text: textLines.join('\n'),
+      html,
+    })
+    return true
+  } catch (err) {
+    console.error('[email] Failed to send admin notification:', err)
+    return false
+  }
+}
+
+/**
+ * Sends the admin notification for a contact/booking inquiry. Best-effort:
+ * returns false (never throws) so the caller can record `notified` without
+ * losing the saved inquiry.
+ */
+export async function sendInquiryEmail(inquiry: InquiryEmail): Promise<boolean> {
   const isBooking = inquiry.type === 'booking'
   const heading = isBooking ? 'New booking request' : 'New contact message'
   const subject = isBooking
@@ -82,29 +130,72 @@ export async function sendInquiryEmail(inquiry: InquiryEmail): Promise<boolean> 
     ] as [string, string | undefined][]
   ).filter((r): r is [string, string] => Boolean(r[1]))
 
-  const html = renderEmail({ heading, badge: isBooking ? 'Booking' : 'Contact', intro, detailRows, message: inquiry.message, replyTo: inquiry.email })
-
-  const textLines = [
+  return sendAdminEmail({
     heading,
-    '',
-    ...detailRows.map(([k, v]) => `${k}: ${v}`),
-    ...(inquiry.message ? ['', `Message:`, inquiry.message] : []),
-  ]
+    badge: isBooking ? 'Booking' : 'Contact',
+    subject,
+    intro,
+    detailRows,
+    message: inquiry.message,
+    replyTo: inquiry.email,
+    fromEmail: inquiry.email,
+  })
+}
 
-  try {
-    await getTransport().sendMail({
-      from: fromAddress(),
-      to,
-      replyTo: inquiry.email,
-      subject,
-      text: textLines.join('\n'),
-      html,
-    })
-    return true
-  } catch (err) {
-    console.error('[email] Failed to send inquiry notification:', err)
-    return false
-  }
+export type GuidanceBookingEmail = {
+  name: string
+  email: string
+  phone?: string
+  message?: string
+  /** Human-readable guidance session title. */
+  guidance?: string
+  /** Pretty booking date, e.g. "Mon, 04 Oct 2026". */
+  bookingDate?: string
+  /** Slot title, e.g. "Morning". */
+  slotTitle?: string
+  /** Slot time range, e.g. "10:00 AM – 12:00 PM". */
+  slotTime?: string
+}
+
+/**
+ * Sends the admin notification for a guidance booking. Best-effort: returns
+ * false (never throws) when SMTP is unconfigured or delivery fails, so the
+ * caller can record `notified` without losing the saved booking.
+ */
+export async function sendGuidanceBookingEmail(booking: GuidanceBookingEmail): Promise<boolean> {
+  const subject = `New guidance booking${
+    booking.guidance ? ` — ${booking.guidance}` : ''
+  } · ${booking.name}`
+  const intro = `<strong>${esc(booking.name)}</strong> just requested to book${
+    booking.guidance ? ` <strong>${esc(booking.guidance)}</strong>` : ' a guidance session'
+  }. Here are the details:`
+
+  const slotValue =
+    booking.slotTitle && booking.slotTime
+      ? `${booking.slotTitle} (${booking.slotTime})`
+      : booking.slotTitle || booking.slotTime
+
+  const detailRows = (
+    [
+      ['Name', booking.name],
+      ['Email', booking.email],
+      ['Phone', booking.phone],
+      ['Guidance', booking.guidance],
+      ['Date', booking.bookingDate],
+      ['Time slot', slotValue],
+    ] as [string, string | undefined][]
+  ).filter((r): r is [string, string] => Boolean(r[1]))
+
+  return sendAdminEmail({
+    heading: 'New guidance booking',
+    badge: 'Guidance',
+    subject,
+    intro,
+    detailRows,
+    message: booking.message,
+    replyTo: booking.email,
+    fromEmail: booking.email,
+  })
 }
 
 /** Minimal HTML escaping for values interpolated into the email markup. */

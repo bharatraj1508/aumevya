@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="900" viewBox="0 0 1920 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0.00" stop-color="#2b3140"/><stop offset="0.33" stop-color="#5a5f7b"/><stop offset="0.67" stop-color="#a98aa6"/><stop offset="1.00" stop-color="#e4c9d8"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f3d9ea" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#f3d9ea" stop-opacity="0"/>
+    </radialGradient>
+    
+<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope="0.05"/></feComponentTransfer><feComposite operator="over" in2="SourceGraphic"/></filter>
+  </defs>
+  <rect width="1920" height="900" fill="url(#bg)"/>
+  <circle cx="960" cy="378" r="450" fill="url(#sun)"/>
+  <circle cx="960" cy="378" r="99" fill="#f3d9ea" opacity="0.55"/>
+  <g opacity="0.5"><path d="M0 720 Q 480 594, 960 702 T 1920 684 V 900 H 0 Z" fill="#33304a" opacity="0.35"/>
+  <path d="M0 792 Q 576 702, 1152 774 T 1920 765 V 900 H 0 Z" fill="#33304a" opacity="0.55"/></g>
+  <rect width="1920" height="900" filter="url(#grain)" opacity="0.6"/>
+</svg>
