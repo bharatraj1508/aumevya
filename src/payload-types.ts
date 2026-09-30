@@ -76,6 +76,8 @@ export interface Config {
     videos: Video;
     inquiries: Inquiry;
     courses: Course;
+    guidance: Guidance;
+    'guidance-bookings': GuidanceBooking;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -92,6 +94,8 @@ export interface Config {
     videos: VideosSelect<false> | VideosSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     courses: CoursesSelect<false> | CoursesSelect<true>;
+    guidance: GuidanceSelect<false> | GuidanceSelect<true>;
+    'guidance-bookings': GuidanceBookingsSelect<false> | GuidanceBookingsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -109,6 +113,8 @@ export interface Config {
     cta: Cta;
     theme: Theme;
     'courses-page': CoursesPage;
+    'guidance-page': GuidancePage;
+    'guidance-booking-config': GuidanceBookingConfig;
   };
   globalsSelect: {
     hero: HeroSelect<false> | HeroSelect<true>;
@@ -118,6 +124,8 @@ export interface Config {
     cta: CtaSelect<false> | CtaSelect<true>;
     theme: ThemeSelect<false> | ThemeSelect<true>;
     'courses-page': CoursesPageSelect<false> | CoursesPageSelect<true>;
+    'guidance-page': GuidancePageSelect<false> | GuidancePageSelect<true>;
+    'guidance-booking-config': GuidanceBookingConfigSelect<false> | GuidanceBookingConfigSelect<true>;
   };
   locale: null;
   widgets: {
@@ -725,6 +733,119 @@ export interface Course {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guidance".
+ */
+export interface Guidance {
+  id: string;
+  title: string;
+  /**
+   * Cover image shown on the guidance card and detail hero.
+   */
+  image: string | Media;
+  /**
+   * Short one or two line description shown on the card.
+   */
+  summary: string;
+  /**
+   * Overview shown first on the detail page as the "Overview" section.
+   */
+  about?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Add tabs to customise the guidance page. Each tab has a title and a description. Drag to reorder.
+   */
+  tabs?:
+    | {
+        /**
+         * Tab name shown on the page, e.g. "What to expect".
+         */
+        title: string;
+        /**
+         * Formatted description shown under this tab.
+         */
+        content: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Auto-generated from the title if left blank.
+   */
+  slug?: string | null;
+  /**
+   * Lower numbers appear first.
+   */
+  order?: number | null;
+  /**
+   * Highlight this guidance on the list.
+   */
+  featured?: boolean | null;
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guidance-bookings".
+ */
+export interface GuidanceBooking {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  status: 'new' | 'contacted' | 'archived';
+  /**
+   * Guidance session the booking is for.
+   */
+  guidance?: (string | null) | Guidance;
+  /**
+   * Requested booking date.
+   */
+  bookingDate?: string | null;
+  /**
+   * Chosen slot, e.g. "Morning".
+   */
+  slotTitle?: string | null;
+  /**
+   * Slot time, e.g. "10:00 AM – 12:00 PM".
+   */
+  slotTime?: string | null;
+  message?: string | null;
+  /**
+   * Was the admin notification email sent successfully?
+   */
+  notified?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -782,6 +903,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'courses';
         value: string | Course;
+      } | null)
+    | ({
+        relationTo: 'guidance';
+        value: string | Guidance;
+      } | null)
+    | ({
+        relationTo: 'guidance-bookings';
+        value: string | GuidanceBooking;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1080,6 +1209,47 @@ export interface CoursesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guidance_select".
+ */
+export interface GuidanceSelect<T extends boolean = true> {
+  title?: T;
+  image?: T;
+  summary?: T;
+  about?: T;
+  tabs?:
+    | T
+    | {
+        title?: T;
+        content?: T;
+        id?: T;
+      };
+  slug?: T;
+  order?: T;
+  featured?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guidance-bookings_select".
+ */
+export interface GuidanceBookingsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  status?: T;
+  guidance?: T;
+  bookingDate?: T;
+  slotTitle?: T;
+  slotTime?: T;
+  message?: T;
+  notified?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -1313,6 +1483,85 @@ export interface CoursesPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guidance-page".
+ */
+export interface GuidancePage {
+  id: string;
+  /**
+   * Wide cover photo across the top of the Guidance page (like the Courses page).
+   */
+  coverImage?: (string | null) | Media;
+  /**
+   * Small text above the title.
+   */
+  eyebrow?: string | null;
+  /**
+   * The large title shown on the cover.
+   */
+  heading: string;
+  /**
+   * One or two supporting sentences shown under the title.
+   */
+  subheading?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guidance-booking-config".
+ */
+export interface GuidanceBookingConfig {
+  id: string;
+  /**
+   * The time slots users can book. Add a slot with a title and a start/end time. Drag to reorder.
+   */
+  slots?:
+    | {
+        /**
+         * e.g. "Morning".
+         */
+        title: string;
+        /**
+         * Start time.
+         */
+        startTime: string;
+        /**
+         * End time.
+         */
+        endTime: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Choose which calendar dates are open for booking.
+   */
+  availability: {
+    /**
+     * Which window of dates to open.
+     */
+    rangeType: 'month' | 'quarter' | 'custom';
+    /**
+     * First open date.
+     */
+    customStart?: string | null;
+    /**
+     * Last open date.
+     */
+    customEnd?: string | null;
+    /**
+     * Open Saturdays.
+     */
+    includeSaturdays?: boolean | null;
+    /**
+     * Open Sundays.
+     */
+    includeSundays?: boolean | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "hero_select".
  */
 export interface HeroSelect<T extends boolean = true> {
@@ -1425,6 +1674,45 @@ export interface CoursesPageSelect<T extends boolean = true> {
   eyebrow?: T;
   heading?: T;
   subheading?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guidance-page_select".
+ */
+export interface GuidancePageSelect<T extends boolean = true> {
+  coverImage?: T;
+  eyebrow?: T;
+  heading?: T;
+  subheading?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guidance-booking-config_select".
+ */
+export interface GuidanceBookingConfigSelect<T extends boolean = true> {
+  slots?:
+    | T
+    | {
+        title?: T;
+        startTime?: T;
+        endTime?: T;
+        id?: T;
+      };
+  availability?:
+    | T
+    | {
+        rangeType?: T;
+        customStart?: T;
+        customEnd?: T;
+        includeSaturdays?: T;
+        includeSundays?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

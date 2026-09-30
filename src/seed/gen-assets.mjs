@@ -90,6 +90,11 @@ const galleryPalettes = [
 ]
 galleryPalettes.forEach((p, i) => write(`gallery-${i + 1}.svg`, card(1000, 1000, p, '#ffffff', '')))
 
+// Guidance — cover + session cards
+write('guidance-cover.svg', scene(1920, 900, ['#2b3140', '#5a5f7b', '#a98aa6', '#e4c9d8'], '#f3d9ea', '#33304a'))
+write('guidance-oneonone.svg', card(1000, 750, ['#3a4a5f', '#6b84a6', '#c6d6e4'], '#eaf1f7', 'Mentorship'))
+write('guidance-lifepath.svg', card(1000, 750, ['#5a4b6b', '#9a7fb0', '#d8c6e4'], '#f4eef9', 'Life Path'))
+
 // Avatars
 write('avatar-1.svg', avatar('A', ['#6b7f63', '#c9c2a8']))
 write('avatar-2.svg', avatar('R', ['#c98a72', '#f0cdb6']))
