@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { cropField } from '../collections/fields/cropField'
 
 export const About: GlobalConfig = {
   slug: 'about',
@@ -7,6 +8,18 @@ export const About: GlobalConfig = {
     read: () => true,
   },
   fields: [
+    {
+      name: 'coverImage',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Wide cover photo across the top of the About page, with the title over it.',
+      },
+    },
+    cropField('coverImageCrop', {
+      imageField: 'coverImage',
+      placements: [{ key: 'cover', label: 'Page cover', aspect: 16 / 9 }],
+    }),
     {
       name: 'eyebrow',
       type: 'text',
@@ -27,6 +40,10 @@ export const About: GlobalConfig = {
       type: 'upload',
       relationTo: 'media',
     },
+    cropField('imageCrop', {
+      imageField: 'image',
+      placements: [{ key: 'portrait', label: 'About photo', aspect: 4 / 5 }],
+    }),
     {
       name: 'highlights',
       type: 'array',

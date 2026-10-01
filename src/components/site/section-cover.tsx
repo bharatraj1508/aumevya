@@ -1,10 +1,11 @@
-import type { CoursesPage } from '@/payload-types'
 import { Eyebrow } from '@/components/site/eyebrow'
+import { cropPosition, type CropMap } from '@/lib/crops'
 import { MediaImage } from '@/components/site/media-image'
 
-/** The four fields every section cover global exposes. */
+/** The fields every section cover exposes. */
 export type SectionCoverData = {
-  coverImage?: CoursesPage['coverImage']
+  coverImage?: unknown
+  coverImageCrop?: unknown
   eyebrow?: string | null
   heading: string
   subheading?: string | null
@@ -19,7 +20,14 @@ export type SectionCoverData = {
 export function SectionCover({ page }: { page: SectionCoverData }) {
   return (
     <section className="relative flex min-h-[24rem] items-end overflow-hidden pt-32 md:min-h-[32rem] md:pt-44">
-      <MediaImage media={page.coverImage} fill priority sizes="100vw" className="object-cover" />
+      <MediaImage
+        media={page.coverImage}
+        fill
+        priority
+        sizes="100vw"
+        objectPosition={cropPosition(page.coverImageCrop as CropMap, 'cover')}
+        className="object-cover"
+      />
       {/* Legibility scrim — darkest at the bottom-left where the title sits. */}
       <div
         aria-hidden

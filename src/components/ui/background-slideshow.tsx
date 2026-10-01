@@ -5,8 +5,11 @@ import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/utils'
 
+/** A slide: its URL and the admin-chosen object-position (framing). */
+export type Slide = { url: string; objectPosition?: string }
+
 export interface BackgroundSlideshowProps {
-  images: string[]
+  images: Slide[]
   className?: string
   style?: React.CSSProperties
   /** Milliseconds each image stays before turning to the next. */
@@ -30,7 +33,7 @@ export function BackgroundSlideshow({
   onIndexChange,
 }: BackgroundSlideshowProps) {
   const reduce = useReducedMotion()
-  const slides = images.filter(Boolean)
+  const slides = images.filter((s) => s?.url)
   const [index, setIndex] = useState(0)
 
   useEffect(() => {
@@ -65,13 +68,18 @@ export function BackgroundSlideshow({
           transition={{ duration: reduce ? 0.6 : 0.9, ease: EASE }}
         >
           <Image
-            src={slides[index]}
+            src={slides[index].url}
             alt=""
             fill
             // The first slide is the mobile/tablet LCP element — preload it and
             // hint the browser to fetch it early. Later slides load on demand.
             priority={index === 0}
             sizes="100vw"
+            style={
+              slides[index].objectPosition
+                ? { objectPosition: slides[index].objectPosition }
+                : undefined
+            }
             className="object-cover"
           />
         </motion.div>

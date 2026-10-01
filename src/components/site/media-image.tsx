@@ -9,15 +9,29 @@ type MediaImageProps = {
   priority?: boolean
   fill?: boolean
   alt?: string
+  /**
+   * CSS object-position (e.g. "30% 70%") for cover-fit crops. Lets callers pin
+   * which part of the photo stays visible; harmless for object-contain.
+   */
+  objectPosition?: string
 }
 
 /** Renders a Payload media relationship via next/image, with a graceful fallback. */
-export function MediaImage({ media, className, sizes, priority, fill, alt }: MediaImageProps) {
+export function MediaImage({
+  media,
+  className,
+  sizes,
+  priority,
+  fill,
+  alt,
+  objectPosition,
+}: MediaImageProps) {
   const url = mediaURL(media)
   if (!url) {
     return <div aria-hidden className={cn('bg-muted', className)} />
   }
   const altText = alt ?? mediaAlt(media)
+  const style = objectPosition ? { objectPosition } : undefined
 
   if (fill) {
     return (
@@ -28,6 +42,7 @@ export function MediaImage({ media, className, sizes, priority, fill, alt }: Med
         sizes={sizes ?? '100vw'}
         priority={priority}
         className={className}
+        style={style}
       />
     )
   }
@@ -42,6 +57,7 @@ export function MediaImage({ media, className, sizes, priority, fill, alt }: Med
       sizes={sizes}
       priority={priority}
       className={className}
+      style={style}
     />
   )
 }

@@ -1,5 +1,6 @@
 import { Star } from 'lucide-react'
 import type { Testimonial } from '@/payload-types'
+import { cropPosition, type CropMap } from '@/lib/crops'
 import { MediaImage } from './media-image'
 
 export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
@@ -16,7 +17,13 @@ export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
       </blockquote>
       <figcaption className="mt-6 flex items-center gap-3">
         <div className="relative size-11 overflow-hidden rounded-full bg-muted">
-          <MediaImage media={testimonial.avatar} fill sizes="44px" className="object-cover" />
+          <MediaImage
+            media={testimonial.avatar}
+            fill
+            sizes="44px"
+            objectPosition={cropPosition(testimonial.avatarCrop as CropMap, 'square')}
+            className="object-cover"
+          />
         </div>
         <div>
           <div className="font-medium text-foreground">{testimonial.name}</div>

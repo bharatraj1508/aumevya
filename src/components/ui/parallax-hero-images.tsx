@@ -4,8 +4,12 @@ import Image from 'next/image'
 import { motion, useMotionValue, useSpring, useTransform, MotionValue } from 'motion/react'
 import { cn } from '@/lib/utils'
 
+/** A hero image: its URL and the admin-chosen object-position (framing). */
+export type HeroSlide = { url: string; objectPosition?: string }
+
 type ImagePosition = {
   src: string
+  objectPosition?: string
   position:
     | 'top-left'
     | 'top-right'
@@ -54,7 +58,7 @@ const depthValuesByVariant: Record<DepthVariant, number[]> = {
 const SPRING_CONFIG = { damping: 25, stiffness: 120 }
 
 export interface ParallaxHeroImagesProps {
-  images: string[]
+  images: HeroSlide[]
   className?: string
   style?: React.CSSProperties
   imageClassName?: string
@@ -77,8 +81,9 @@ export const ParallaxHeroImages = ({
   const positions = useMemo(() => {
     const limitedImages = images.slice(0, 8)
     const depthValues = depthValuesByVariant[variant]
-    return limitedImages.map((src, index) => ({
-      src,
+    return limitedImages.map((img, index) => ({
+      src: img.url,
+      objectPosition: img.objectPosition,
       position: positionOrder[index],
       depth: depthValues[index],
       delay: index * 0.12,
@@ -106,6 +111,7 @@ export const ParallaxHeroImages = ({
         <ParallaxImage
           key={`${pos.src}-${index}`}
           src={pos.src}
+          objectPosition={pos.objectPosition}
           position={pos.position}
           depth={pos.depth}
           delay={pos.delay}
@@ -126,6 +132,7 @@ interface ParallaxImageProps extends ImagePosition {
 
 const ParallaxImage = memo(function ParallaxImage({
   src,
+  objectPosition,
   position,
   depth,
   delay,
@@ -167,6 +174,7 @@ const ParallaxImage = memo(function ParallaxImage({
         // Decorative collage (desktop only), never the LCP element — lazy is fine.
         // The rendered size caps at md:w-80 (320px), so serve for that.
         sizes="(min-width: 768px) 320px, (min-width: 640px) 224px, 128px"
+        style={objectPosition ? { objectPosition } : undefined}
         className={cn(
           'aspect-4/3 h-20 w-32 rounded-lg object-cover shadow-sm ring-1 ring-black/10 sm:h-40 sm:w-56 md:h-52 md:w-80 dark:ring-white/10',
           imageClassName,

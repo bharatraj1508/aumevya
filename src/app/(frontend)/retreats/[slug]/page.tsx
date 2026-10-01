@@ -106,7 +106,11 @@ export default async function RetreatDetailPage({
 
         {/* Gallery */}
         <div className="mt-6">
-          <Gallery images={retreat.images} title={retreat.title} />
+          <Gallery
+            images={retreat.images}
+            title={retreat.title}
+            crops={retreat.imageCrops as import('@/components/retreat/gallery').ImageCrops}
+          />
         </div>
       </div>
 

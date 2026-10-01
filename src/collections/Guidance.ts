@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { formatSlug } from '../lib/formatSlug'
+import { cropField } from './fields/cropField'
 
 export const Guidance: CollectionConfig = {
   slug: 'guidance',
@@ -21,6 +22,13 @@ export const Guidance: CollectionConfig = {
       required: true,
       admin: { description: 'Cover image shown on the guidance card and detail hero.' },
     },
+    cropField('imageCrops', {
+      imageField: 'image',
+      placements: [
+        { key: 'card', label: 'Guidance card', aspect: 16 / 10 },
+        { key: 'detail', label: 'Detail page header', aspect: 16 / 9 },
+      ],
+    }),
     {
       name: 'summary',
       type: 'textarea',

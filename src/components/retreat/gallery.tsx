@@ -4,10 +4,29 @@ import { useCallback, useEffect, useState } from 'react'
 import { ChevronLeft, ChevronRight, Grip, X } from 'lucide-react'
 import type { Retreat } from '@/payload-types'
 import { MediaImage } from '@/components/site/media-image'
+import { mediaId } from '@/lib/media'
 
 type Img = Retreat['images'][number]
 
-export function Gallery({ images, title }: { images: Img[]; title: string }) {
+/** Per-image crop positions keyed by media id, set by the admin collage editor. */
+export type ImageCrops = Record<string, { x: number; y: number }> | null | undefined
+
+/** CSS object-position for an image, defaulting to a centered crop. */
+const cropPosition = (img: Img, crops: ImageCrops): string => {
+  const id = mediaId(img)
+  const c = id && crops ? crops[id] : undefined
+  return c ? `${c.x}% ${c.y}%` : '50% 50%'
+}
+
+export function Gallery({
+  images,
+  title,
+  crops,
+}: {
+  images: Img[]
+  title: string
+  crops?: ImageCrops
+}) {
   const [open, setOpen] = useState(false)
   const [index, setIndex] = useState(0)
   const count = images.length
@@ -54,6 +73,7 @@ export function Gallery({ images, title }: { images: Img[]; title: string }) {
             fill
             priority
             sizes="(min-width: 768px) 50vw, 100vw"
+            objectPosition={cropPosition(images[0], crops)}
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </button>
@@ -72,6 +92,7 @@ export function Gallery({ images, title }: { images: Img[]; title: string }) {
                   media={img}
                   fill
                   sizes="25vw"
+                  objectPosition={cropPosition(img, crops)}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 {i === rest.length - 1 && count > 5 && (

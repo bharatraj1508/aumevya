@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import type { Config } from '@/payload-types'
 import { RichText } from '@/components/RichText'
+import { cropPosition, type CropMap } from '@/lib/crops'
 import { MediaImage } from '@/components/site/media-image'
 import { Reveal } from '@/components/motion/reveal'
 import { CountUp } from '@/components/motion/count-up'
@@ -23,6 +24,7 @@ export function AboutPreview({ about }: { about: About }) {
                   media={about?.image}
                   fill
                   sizes="(min-width: 768px) 45vw, 100vw"
+                  objectPosition={cropPosition(about?.imageCrop as CropMap, 'portrait')}
                   className="object-cover"
                 />
               </Parallax>

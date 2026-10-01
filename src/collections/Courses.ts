@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { formatSlug } from '../lib/formatSlug'
+import { cropField } from './fields/cropField'
 
 export const Courses: CollectionConfig = {
   slug: 'courses',
@@ -21,6 +22,13 @@ export const Courses: CollectionConfig = {
       required: true,
       admin: { description: 'Cover image shown on the course card.' },
     },
+    cropField('imageCrops', {
+      imageField: 'image',
+      placements: [
+        { key: 'card', label: 'Course card', aspect: 16 / 10 },
+        { key: 'detail', label: 'Detail page header', aspect: 16 / 9 },
+      ],
+    }),
     {
       name: 'summary',
       type: 'textarea',
@@ -153,6 +161,10 @@ export const Courses: CollectionConfig = {
                   required: true,
                   admin: { description: 'Photo for this card.' },
                 },
+                cropField('imageCrop', {
+                  imageField: 'image',
+                  placements: [{ key: 'card', label: 'Card photo', aspect: 4 / 3 }],
+                }),
                 {
                   name: 'description',
                   type: 'textarea',
@@ -201,6 +213,10 @@ export const Courses: CollectionConfig = {
                   required: true,
                   admin: { description: 'Photo for this option.' },
                 },
+                cropField('imageCrop', {
+                  imageField: 'image',
+                  placements: [{ key: 'card', label: 'Option photo', aspect: 4 / 3 }],
+                }),
                 {
                   name: 'description',
                   type: 'textarea',

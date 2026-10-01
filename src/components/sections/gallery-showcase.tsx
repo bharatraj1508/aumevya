@@ -1,4 +1,5 @@
 import type { Gallery } from '@/payload-types'
+import { cropPosition, type CropMap } from '@/lib/crops'
 import { MediaImage } from '@/components/site/media-image'
 import { SectionHeading } from '@/components/site/section-heading'
 import { StaggerGroup, StaggerItem } from '@/components/motion/reveal'
@@ -27,6 +28,7 @@ export function GalleryShowcase({ items }: { items: Gallery[] }) {
                         media={item.image}
                         fill
                         sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        objectPosition={cropPosition(item.imageCrop as CropMap, 'portrait')}
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                       {(item.caption || item.category) && (
