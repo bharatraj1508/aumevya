@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { cropField } from './fields/cropField'
 
 export const Gallery: CollectionConfig = {
   slug: 'gallery',
@@ -18,6 +19,10 @@ export const Gallery: CollectionConfig = {
       relationTo: 'media',
       required: true,
     },
+    cropField('imageCrop', {
+      imageField: 'image',
+      placements: [{ key: 'portrait', label: 'Gallery tile', aspect: 4 / 5 }],
+    }),
     {
       name: 'caption',
       type: 'text',

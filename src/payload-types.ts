@@ -210,6 +210,15 @@ export interface Retreat {
    * Photo gallery. The first image is used as the cover.
    */
   images: (string | Media)[];
+  imageCrops?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   /**
    * e.g. "Khajuraho, India".
    */
@@ -364,6 +373,24 @@ export interface Retreat {
      * Photo for the Private option.
      */
     privateImage?: (string | null) | Media;
+    sharedImageCrop?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    privateImageCrop?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
     /**
      * Shared is priced at the retreat base price unless you override it.
      */
@@ -435,6 +462,15 @@ export interface Testimonial {
   role?: string | null;
   quote: string;
   avatar?: (string | null) | Media;
+  avatarCrop?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   rating?: number | null;
   order?: number | null;
   published?: boolean | null;
@@ -458,6 +494,15 @@ export interface TeamMember {
    * A portrait photo. A 4:5 (portrait) crop looks best.
    */
   image?: (string | null) | Media;
+  imageCrop?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   /**
    * A short bio — one or two sentences.
    */
@@ -474,6 +519,15 @@ export interface TeamMember {
 export interface Gallery {
   id: string;
   image: string | Media;
+  imageCrop?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   caption?: string | null;
   category?: ('Studio' | 'Retreats' | 'Events' | 'Nature' | 'Community') | null;
   order?: number | null;
@@ -494,6 +548,15 @@ export interface Video {
   embedUrl?: string | null;
   file?: (string | null) | Media;
   thumbnail?: (string | null) | Media;
+  thumbnailCrop?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -540,6 +603,15 @@ export interface Course {
    * Cover image shown on the course card.
    */
   image: string | Media;
+  imageCrops?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   /**
    * Short one or two line excerpt shown on the card, before "Read more".
    */
@@ -649,6 +721,15 @@ export interface Course {
                    * Photo for this card.
                    */
                   image: string | Media;
+                  imageCrop?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   /**
                    * Optional short line under the name.
                    */
@@ -682,6 +763,15 @@ export interface Course {
                    * Photo for this option.
                    */
                   image: string | Media;
+                  imageCrop?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   /**
                    * Optional short line under the name.
                    */
@@ -742,6 +832,15 @@ export interface Guidance {
    * Cover image shown on the guidance card and detail hero.
    */
   image: string | Media;
+  imageCrops?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   /**
    * Short one or two line description shown on the card.
    */
@@ -1001,6 +1100,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface RetreatsSelect<T extends boolean = true> {
   title?: T;
   images?: T;
+  imageCrops?: T;
   location?: T;
   price?: T;
   fromDate?: T;
@@ -1033,6 +1133,8 @@ export interface RetreatsSelect<T extends boolean = true> {
     | {
         sharedImage?: T;
         privateImage?: T;
+        sharedImageCrop?: T;
+        privateImageCrop?: T;
         sharedPriceMode?: T;
         sharedPrice?: T;
         privateAddOn?: T;
@@ -1062,6 +1164,7 @@ export interface TestimonialsSelect<T extends boolean = true> {
   role?: T;
   quote?: T;
   avatar?: T;
+  avatarCrop?: T;
   rating?: T;
   order?: T;
   published?: T;
@@ -1076,6 +1179,7 @@ export interface TeamMembersSelect<T extends boolean = true> {
   name?: T;
   role?: T;
   image?: T;
+  imageCrop?: T;
   about?: T;
   order?: T;
   published?: T;
@@ -1088,6 +1192,7 @@ export interface TeamMembersSelect<T extends boolean = true> {
  */
 export interface GallerySelect<T extends boolean = true> {
   image?: T;
+  imageCrop?: T;
   caption?: T;
   category?: T;
   order?: T;
@@ -1104,6 +1209,7 @@ export interface VideosSelect<T extends boolean = true> {
   embedUrl?: T;
   file?: T;
   thumbnail?: T;
+  thumbnailCrop?: T;
   order?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1133,6 +1239,7 @@ export interface InquiriesSelect<T extends boolean = true> {
 export interface CoursesSelect<T extends boolean = true> {
   name?: T;
   image?: T;
+  imageCrops?: T;
   summary?: T;
   about?: T;
   tabs?:
@@ -1172,6 +1279,7 @@ export interface CoursesSelect<T extends boolean = true> {
                     name?: T;
                     price?: T;
                     image?: T;
+                    imageCrop?: T;
                     description?: T;
                     id?: T;
                   };
@@ -1188,6 +1296,7 @@ export interface CoursesSelect<T extends boolean = true> {
                 | {
                     name?: T;
                     image?: T;
+                    imageCrop?: T;
                     description?: T;
                     priceMode?: T;
                     addOn?: T;
@@ -1214,6 +1323,7 @@ export interface CoursesSelect<T extends boolean = true> {
 export interface GuidanceSelect<T extends boolean = true> {
   title?: T;
   image?: T;
+  imageCrops?: T;
   summary?: T;
   about?: T;
   tabs?:
@@ -1315,6 +1425,18 @@ export interface Hero {
    */
   heroImages?: (string | Media)[] | null;
   /**
+   * Set how each hero photo is framed on desktop (the small floating tile) and on tablet & mobile (the full-screen background).
+   */
+  heroImageCrops?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
    * Tablet & mobile only. How visible the background hero images are (0 = hidden, 100 = full strength).
    */
   imageOpacity?: number | null;
@@ -1335,6 +1457,19 @@ export interface Hero {
  */
 export interface About {
   id: string;
+  /**
+   * Wide cover photo across the top of the About page, with the title over it.
+   */
+  coverImage?: (string | null) | Media;
+  coverImageCrop?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   eyebrow?: string | null;
   heading: string;
   /**
@@ -1356,6 +1491,15 @@ export interface About {
     [k: string]: unknown;
   } | null;
   image?: (string | null) | Media;
+  imageCrop?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   /**
    * Short stat cards, e.g. "10+ Years" / "Experience".
    */
@@ -1466,6 +1610,15 @@ export interface CoursesPage {
    * Wide cover photo across the top of the Courses page (like a Facebook / Notion cover).
    */
   coverImage?: (string | null) | Media;
+  coverImageCrop?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   /**
    * Small text above the title.
    */
@@ -1491,6 +1644,15 @@ export interface GuidancePage {
    * Wide cover photo across the top of the Guidance page (like the Courses page).
    */
   coverImage?: (string | null) | Media;
+  coverImageCrop?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   /**
    * Small text above the title.
    */
@@ -1573,6 +1735,7 @@ export interface HeroSelect<T extends boolean = true> {
   secondaryCtaLabel?: T;
   secondaryCtaHref?: T;
   heroImages?: T;
+  heroImageCrops?: T;
   imageOpacity?: T;
   overlayOpacity?: T;
   slideInterval?: T;
@@ -1585,10 +1748,13 @@ export interface HeroSelect<T extends boolean = true> {
  * via the `definition` "about_select".
  */
 export interface AboutSelect<T extends boolean = true> {
+  coverImage?: T;
+  coverImageCrop?: T;
   eyebrow?: T;
   heading?: T;
   body?: T;
   image?: T;
+  imageCrop?: T;
   highlights?:
     | T
     | {
@@ -1671,6 +1837,7 @@ export interface ThemeSelect<T extends boolean = true> {
  */
 export interface CoursesPageSelect<T extends boolean = true> {
   coverImage?: T;
+  coverImageCrop?: T;
   eyebrow?: T;
   heading?: T;
   subheading?: T;
@@ -1684,6 +1851,7 @@ export interface CoursesPageSelect<T extends boolean = true> {
  */
 export interface GuidancePageSelect<T extends boolean = true> {
   coverImage?: T;
+  coverImageCrop?: T;
   eyebrow?: T;
   heading?: T;
   subheading?: T;

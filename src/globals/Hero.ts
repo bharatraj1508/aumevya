@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { cropField } from '../collections/fields/cropField'
 
 export const Hero: GlobalConfig = {
   slug: 'hero',
@@ -56,6 +57,22 @@ export const Hero: GlobalConfig = {
           'Exactly 6 images shown floating in the hero. Order matters — they fill the layout clockwise from the top-left.',
       },
     },
+    cropField(
+      'heroImageCrops',
+      {
+        imageField: 'heroImages',
+        multi: true,
+        placements: [
+          { key: 'desktop', label: 'Desktop (floating tile)', aspect: 4 / 3 },
+          { key: 'mobile', label: 'Tablet & mobile (full screen)', aspect: 9 / 16 },
+        ],
+      },
+      {
+        label: 'Hero image crops',
+        description:
+          'Set how each hero photo is framed on desktop (the small floating tile) and on tablet & mobile (the full-screen background).',
+      },
+    ),
     {
       type: 'collapsible',
       label: 'Appearance (tablet & mobile only)',

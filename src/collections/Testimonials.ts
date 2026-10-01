@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { cropField } from './fields/cropField'
 
 export const Testimonials: CollectionConfig = {
   slug: 'testimonials',
@@ -32,6 +33,10 @@ export const Testimonials: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
     },
+    cropField('avatarCrop', {
+      imageField: 'avatar',
+      placements: [{ key: 'square', label: 'Avatar', aspect: 1 }],
+    }),
     {
       name: 'rating',
       type: 'number',

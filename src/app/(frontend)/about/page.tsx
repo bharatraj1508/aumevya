@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { getDocs, getGlobal } from '@/lib/payload'
-import { PageHeader } from '@/components/site/page-header'
+import { SectionCover } from '@/components/site/section-cover'
 import { RichText } from '@/components/RichText'
+import { cropPosition, type CropMap } from '@/lib/crops'
 import { MediaImage } from '@/components/site/media-image'
 import { Reveal } from '@/components/motion/reveal'
 import { TeamSection } from '@/components/sections/team-section'
@@ -18,10 +19,15 @@ export default async function AboutPage() {
 
   return (
     <>
-      <PageHeader
-        eyebrow={about?.eyebrow || 'Our Story'}
-        title={about?.heading || 'About Aumevya'}
-        description="A calm, modern studio rooted in tradition — built to help you move, breathe and restore."
+      <SectionCover
+        page={{
+          coverImage: about?.coverImage,
+          coverImageCrop: about?.coverImageCrop,
+          eyebrow: about?.eyebrow || 'Our Story',
+          heading: about?.heading || 'About Aumevya',
+          subheading:
+            'A calm, modern studio rooted in tradition — built to help you move, breathe and restore.',
+        }}
       />
 
       <section className="py-20 md:py-28">
@@ -32,6 +38,7 @@ export default async function AboutPage() {
                 media={about?.image}
                 fill
                 sizes="(min-width: 768px) 45vw, 100vw"
+                objectPosition={cropPosition(about?.imageCrop as CropMap, 'portrait')}
                 className="object-cover"
               />
             </div>

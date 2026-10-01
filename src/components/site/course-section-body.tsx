@@ -60,6 +60,7 @@ export function CourseSectionBody({ section }: { section: CourseSection }) {
                   media={item.image}
                   fill
                   sizes="(max-width: 640px) 100vw, 400px"
+                  objectPosition={item.objectPosition}
                   className="object-cover"
                 />
               </div>
@@ -108,6 +109,7 @@ export function CourseSectionBody({ section }: { section: CourseSection }) {
                 media={item.image}
                 fill
                 sizes="(max-width: 640px) 100vw, 400px"
+                objectPosition={item.objectPosition}
                 className="object-cover"
               />
               {item.addOn === 0 && (

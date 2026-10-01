@@ -1,5 +1,6 @@
 import type { Course, Media } from '@/payload-types'
 import { formatPrice } from '@/lib/retreat'
+import { cropPosition, type CropMap } from '@/lib/crops'
 
 /** Card price label: "Free" when the price is 0, otherwise the ₹ amount. */
 export function priceLabel(price?: number | null): string {
@@ -29,6 +30,7 @@ export type CourseSection =
         name: string
         price?: number | null
         image: string | Media
+        objectPosition: string
         description?: string | null
       }[]
     }
@@ -40,6 +42,7 @@ export type CourseSection =
         id?: string | null
         name: string
         image: string | Media
+        objectPosition: string
         description?: string | null
         /** Full price for this option (base price, plus any add-on). */
         total: number
@@ -82,7 +85,19 @@ export function buildCourseSections(course: Course): CourseSection[] {
       }
     } else if (block.blockType === 'galleryTab') {
       if (block.items?.length) {
-        sections.push({ kind: 'gallery', label: block.label, intro: block.intro, items: block.items })
+        sections.push({
+          kind: 'gallery',
+          label: block.label,
+          intro: block.intro,
+          items: block.items.map((item) => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            image: item.image,
+            objectPosition: cropPosition(item.imageCrop as CropMap, 'card'),
+            description: item.description,
+          })),
+        })
       }
     } else if (block.blockType === 'accommodationTab') {
       if (block.options?.length) {
@@ -96,6 +111,7 @@ export function buildCourseSections(course: Course): CourseSection[] {
               id: opt.id,
               name: opt.name,
               image: opt.image,
+              objectPosition: cropPosition(opt.imageCrop as CropMap, 'card'),
               description: opt.description,
               addOn,
               total: course.price + addOn,

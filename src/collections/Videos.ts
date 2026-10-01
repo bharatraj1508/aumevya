@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { cropField } from './fields/cropField'
 
 export const Videos: CollectionConfig = {
   slug: 'videos',
@@ -48,6 +49,10 @@ export const Videos: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
     },
+    cropField('thumbnailCrop', {
+      imageField: 'thumbnail',
+      placements: [{ key: 'thumb', label: 'Thumbnail', aspect: 16 / 9 }],
+    }),
     {
       name: 'order',
       type: 'number',

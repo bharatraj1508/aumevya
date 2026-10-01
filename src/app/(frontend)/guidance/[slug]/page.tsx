@@ -7,6 +7,7 @@ import { getDocs, getGlobal } from '@/lib/payload'
 import { sectionId } from '@/lib/course'
 import { buildGuidanceSections, computeOpenDates, resolveSlots } from '@/lib/guidance'
 import { Eyebrow } from '@/components/site/eyebrow'
+import { cropPosition, type CropMap } from '@/lib/crops'
 import { MediaImage } from '@/components/site/media-image'
 import { Reveal } from '@/components/motion/reveal'
 import { CourseJourneyRail } from '@/components/site/course-journey-rail'
@@ -55,7 +56,14 @@ export default async function GuidanceDetailPage({
     <>
       {/* Hero — the cover image as a cinematic poster. */}
       <header className="relative flex min-h-[62vh] items-end overflow-hidden pt-28 md:min-h-[68vh] md:pt-32">
-        <MediaImage media={guidance.image} fill priority sizes="100vw" className="object-cover" />
+        <MediaImage
+          media={guidance.image}
+          fill
+          priority
+          sizes="100vw"
+          objectPosition={cropPosition(guidance.imageCrops as CropMap, 'detail')}
+          className="object-cover"
+        />
         <div
           aria-hidden
           className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/20"

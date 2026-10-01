@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { cropField } from './fields/cropField'
 
 export const TeamMembers: CollectionConfig = {
   slug: 'team-members',
@@ -29,6 +30,10 @@ export const TeamMembers: CollectionConfig = {
       relationTo: 'media',
       admin: { description: 'A portrait photo. A 4:5 (portrait) crop looks best.' },
     },
+    cropField('imageCrop', {
+      imageField: 'image',
+      placements: [{ key: 'portrait', label: 'Team photo', aspect: 4 / 5 }],
+    }),
     {
       name: 'about',
       type: 'textarea',

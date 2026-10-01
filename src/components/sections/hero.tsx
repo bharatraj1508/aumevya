@@ -17,7 +17,8 @@ const ParallaxHeroImages = dynamic(
   () => import('@/components/ui/parallax-hero-images').then((m) => m.ParallaxHeroImages),
   { ssr: false },
 )
-import { mediaURL } from '@/lib/media'
+import { mediaURL, mediaId } from '@/lib/media'
+import { cropPosition, type CropMap } from '@/lib/crops'
 import { useImageLuminance } from '@/lib/use-image-luminance'
 import { cn } from '@/lib/utils'
 
@@ -31,6 +32,8 @@ type HeroProps = {
   secondaryCtaHref?: string | null
   /** The 6 hero images picked in the CMS. */
   images?: unknown[]
+  /** Admin-set per-image crops ({ "<id>::desktop" | "<id>::mobile": {x,y} }). */
+  imageCrops?: CropMap
   /** Background image visibility, 0–100 (%). CMS-controlled. */
   imageOpacity?: number | null
   /** Strength of the white wash behind the copy, 0–100 (%). CMS-controlled. */
@@ -60,6 +63,7 @@ export function Hero({
   primaryCtaLabel,
   primaryCtaHref,
   images = [],
+  imageCrops,
   imageOpacity,
   overlayOpacity,
   slideInterval,
@@ -68,10 +72,22 @@ export function Hero({
 }: HeroProps) {
   const router = useRouter()
   const words = heading.split(' ')
-  const imageUrls = images
-    .map((m) => mediaURL(m))
-    .filter((u): u is string => Boolean(u))
+  // Keep each image's url alongside its id so we can resolve the admin's
+  // per-image desktop/mobile crops. The two hero renderers (desktop collage vs
+  // mobile slideshow) each take their own framing.
+  const slides = images
+    .map((m) => ({ url: mediaURL(m), id: mediaId(m) }))
+    .filter((s): s is { url: string; id: string | null } => Boolean(s.url))
     .slice(0, 6)
+  const imageUrls = slides.map((s) => s.url as string)
+  const desktopSlides = slides.map((s) => ({
+    url: s.url as string,
+    objectPosition: cropPosition(imageCrops, 'desktop', s.id),
+  }))
+  const mobileSlides = slides.map((s) => ({
+    url: s.url as string,
+    objectPosition: cropPosition(imageCrops, 'mobile', s.id),
+  }))
 
   // CMS-controlled appearance (percentages → 0–1, seconds → ms), with sensible fallbacks.
   const imgOpacity = (imageOpacity ?? 60) / 100
@@ -132,7 +148,7 @@ export function Hero({
         <>
           {/* Mobile & tablet only: the image slideshow (no spray paint here). */}
           <BackgroundSlideshow
-            images={imageUrls}
+            images={mobileSlides}
             interval={intervalMs}
             style={{ opacity: imgOpacity }}
             className="xl:hidden"
@@ -140,7 +156,7 @@ export function Hero({
           />
           {/* Desktop parallax — always full strength (original design) */}
           <ParallaxHeroImages
-            images={imageUrls}
+            images={desktopSlides}
             className="hidden xl:block"
             variant="edge-focus"
           />

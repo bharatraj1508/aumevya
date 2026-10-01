@@ -1,5 +1,6 @@
 import type { CollectionConfig, Field } from 'payload'
 import { formatSlug } from '../lib/formatSlug'
+import { cropField } from './fields/cropField'
 
 // A rich-text field configured for the marketing body copy (bold, italic,
 // headings, and both bullet + numbered lists — matching the BookRetreats look).
@@ -36,6 +37,18 @@ export const Retreats: CollectionConfig = {
               required: true,
               minRows: 1,
               admin: { description: 'Photo gallery. The first image is used as the cover.' },
+            },
+            {
+              // Per-image crop positions ({ [mediaId]: { x, y } } as object-position
+              // percentages), edited by the drag-to-reposition collage below. Kept
+              // per-retreat so the same photo can crop differently in each gallery.
+              name: 'imageCrops',
+              type: 'json',
+              admin: {
+                components: {
+                  Field: '/components/admin/RetreatGalleryCropper#RetreatGalleryCropper',
+                },
+              },
             },
             {
               type: 'row',
@@ -204,6 +217,14 @@ export const Retreats: CollectionConfig = {
                     },
                   ],
                 },
+                cropField('sharedImageCrop', {
+                  imageField: 'sharedImage',
+                  placements: [{ key: 'card', label: 'Shared photo', aspect: 4 / 3 }],
+                }),
+                cropField('privateImageCrop', {
+                  imageField: 'privateImage',
+                  placements: [{ key: 'card', label: 'Private photo', aspect: 4 / 3 }],
+                }),
                 {
                   name: 'sharedPriceMode',
                   type: 'radio',

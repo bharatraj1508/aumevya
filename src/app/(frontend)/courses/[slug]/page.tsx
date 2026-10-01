@@ -5,6 +5,7 @@ import { ArrowLeft, Star } from 'lucide-react'
 import type { Course } from '@/payload-types'
 import { getDocs, getGlobal } from '@/lib/payload'
 import { buildCourseSections, priceLabel, sectionId } from '@/lib/course'
+import { cropPosition, type CropMap } from '@/lib/crops'
 import { Eyebrow } from '@/components/site/eyebrow'
 import { MediaImage } from '@/components/site/media-image'
 import { Reveal } from '@/components/motion/reveal'
@@ -59,6 +60,7 @@ export default async function CourseDetailPage({
           id: it.id ?? `opt-${i}`,
           name: it.name,
           image: it.image,
+          objectPosition: it.objectPosition,
           description: it.description,
           total: it.total,
           addOn: it.addOn,
@@ -69,7 +71,14 @@ export default async function CourseDetailPage({
     <>
       {/* Hero — the cover image as a cinematic poster. */}
       <header className="relative flex min-h-[62vh] items-end overflow-hidden pt-28 md:min-h-[68vh] md:pt-32">
-        <MediaImage media={course.image} fill priority sizes="100vw" className="object-cover" />
+        <MediaImage
+          media={course.image}
+          fill
+          priority
+          sizes="100vw"
+          objectPosition={cropPosition(course.imageCrops as CropMap, 'detail')}
+          className="object-cover"
+        />
         <div
           aria-hidden
           className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/20"

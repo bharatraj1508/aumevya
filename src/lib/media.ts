@@ -20,6 +20,16 @@ export const mediaAlt = (m: unknown, fallback = ''): string => {
   return fallback
 }
 
+/** Resolve a media relationship to its document id (or null). */
+export const mediaId = (m: unknown): string | null => {
+  if (typeof m === 'string') return m
+  if (m && typeof m === 'object' && 'id' in m) {
+    const id = (m as Media).id
+    return typeof id === 'string' ? id : null
+  }
+  return null
+}
+
 export const mediaDimensions = (m: unknown): { width: number; height: number } => {
   if (m && typeof m === 'object') {
     const media = m as Media

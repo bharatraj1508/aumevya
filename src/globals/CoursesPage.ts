@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { cropField } from '../collections/fields/cropField'
 
 export const CoursesPage: GlobalConfig = {
   slug: 'courses-page',
@@ -15,6 +16,10 @@ export const CoursesPage: GlobalConfig = {
         description: 'Wide cover photo across the top of the Courses page (like a Facebook / Notion cover).',
       },
     },
+    cropField('coverImageCrop', {
+      imageField: 'coverImage',
+      placements: [{ key: 'cover', label: 'Page cover', aspect: 16 / 9 }],
+    }),
     {
       name: 'eyebrow',
       type: 'text',
