@@ -24,8 +24,8 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ImageCropper as ImageCropper_2cfae58b71bf4023f89b402862c4508c } from '../../../components/admin/crop/image-cropper'
-import { ColorPickerField as ColorPickerField_7ba94625f44f4529e0b43251f166e349 } from '../../../components/admin/ColorPickerField'
 import { TimePickerField as TimePickerField_552dadf8f90b6e3a20b04375187865dd } from '../../../components/admin/TimePickerField'
+import { ColorPickerField as ColorPickerField_7ba94625f44f4529e0b43251f166e349 } from '../../../components/admin/ColorPickerField'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -56,7 +56,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/components/admin/crop/image-cropper#ImageCropper": ImageCropper_2cfae58b71bf4023f89b402862c4508c,
-  "/components/admin/ColorPickerField#ColorPickerField": ColorPickerField_7ba94625f44f4529e0b43251f166e349,
   "/components/admin/TimePickerField#TimePickerField": TimePickerField_552dadf8f90b6e3a20b04375187865dd,
+  "/components/admin/ColorPickerField#ColorPickerField": ColorPickerField_7ba94625f44f4529e0b43251f166e349,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

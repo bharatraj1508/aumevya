@@ -101,16 +101,17 @@ export const Guidance: CollectionConfig = {
               type: 'number',
               required: true,
               min: 0,
-              admin: { width: '50%', description: 'Price in ₹. Enter 0 to show "Free".' },
+              admin: { width: '50%', description: 'Full price in ₹. Enter 0 to show "Free".' },
             },
             {
-              name: 'originalPrice',
+              name: 'discountPercent',
               type: 'number',
               min: 0,
+              max: 100,
               admin: {
                 width: '50%',
                 description:
-                  'Optional "was" price for a strike-through + "% OFF" tag. Leave blank for no discount.',
+                  'Optional % off — shows a strike-through original + discounted price. Leave blank for none.',
               },
             },
           ],

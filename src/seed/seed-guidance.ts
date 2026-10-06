@@ -165,8 +165,8 @@ const run = async () => {
         {
           name: 'Deep Dive',
           duration: 90,
-          price: 4800,
-          originalPrice: 6000,
+          price: 6000,
+          discountPercent: 20,
           badge: 'best-value' as const,
           features: [
             { text: 'Everything in Mentorship' },
@@ -219,8 +219,8 @@ const run = async () => {
         {
           name: 'Three-Session Journey',
           duration: 60,
-          price: 8400,
-          originalPrice: 9600,
+          price: 9600,
+          discountPercent: 15,
           badge: 'best-value' as const,
           tagline: 'Deeper change over time.',
           features: [

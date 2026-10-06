@@ -2,8 +2,9 @@
 
 import Link from 'next/link'
 import { Star } from 'lucide-react'
-import { priceLabel } from '@/lib/course'
+import { priceDisplay, priceDisplayWithAddOn } from '@/lib/retreat'
 import { Button } from '@/components/ui/button'
+import { PriceTag } from '@/components/site/price-tag'
 import { useCourseAccommodation } from '@/components/site/course-accommodation'
 
 /** Compact enroll panel — price, rating and the Book Now / Enroll action.
@@ -11,18 +12,26 @@ import { useCourseAccommodation } from '@/components/site/course-accommodation'
  * When the course has selectable accommodation, the price tracks the choice. */
 export function CourseEnrollCard({
   price,
+  discountPercent,
   ratings,
   bookNowLink,
   featured,
 }: {
   price: number
+  discountPercent?: number | null
   ratings: number
   bookNowLink?: string | null
   featured?: boolean | null
 }) {
   const acc = useCourseAccommodation()
   const hasOptions = Boolean(acc && acc.options.length > 0)
-  const displayPrice = hasOptions ? acc!.currentPrice : price
+  // Base price with its discount. With accommodation, show the selected total and
+  // strike the equivalent original total (base-only discount → no "% off" on the
+  // combined total to avoid implying the add-on is discounted too).
+  const base = priceDisplay(price, discountPercent)
+  const displayPrice = hasOptions ? acc!.currentPrice : base.price
+  // Course accommodation totals are always discountedBase + addOn, so this is safe.
+  const display = hasOptions ? priceDisplayWithAddOn(base, displayPrice - base.price) : base
   const selectedName = acc?.selected?.name
   const isFree = displayPrice <= 0
 
@@ -41,7 +50,7 @@ export function CourseEnrollCard({
           <span className="block text-[11px] uppercase tracking-wide text-muted-foreground">
             {hasOptions ? 'Total per person' : isFree ? 'Price' : 'from'}
           </span>
-          <span className="text-3xl font-bold text-foreground">{priceLabel(displayPrice)}</span>
+          <PriceTag display={display} size="lg" />
           {selectedName && (
             <span className="mt-0.5 block truncate text-xs text-muted-foreground">{selectedName}</span>
           )}

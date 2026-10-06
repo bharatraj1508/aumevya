@@ -1,14 +1,7 @@
 import type { CSSProperties } from 'react'
 import type { Course, Media } from '@/payload-types'
-import { formatPrice } from '@/lib/retreat'
+import { discountedPrice } from '@/lib/retreat'
 import { cropStyle, type CropMap } from '@/lib/crops'
-
-/** Card price label: "Free" when the price is 0, otherwise the ₹ amount. */
-export function priceLabel(price?: number | null): string {
-  if (price == null) return ''
-  if (price <= 0) return 'Free'
-  return formatPrice(price)
-}
 
 type RichTextDoc = Course['about']
 
@@ -108,6 +101,7 @@ export function buildCourseSections(course: Course): CourseSection[] {
           intro: block.intro,
           items: block.options.map((opt) => {
             const addOn = opt.priceMode === 'addon' ? (opt.addOn ?? 0) : 0
+            // Discount applies to the base price only; add-ons stay full.
             return {
               id: opt.id,
               name: opt.name,
@@ -115,7 +109,7 @@ export function buildCourseSections(course: Course): CourseSection[] {
               cropStyle: cropStyle(opt.imageCrop as CropMap, 'card'),
               description: opt.description,
               addOn,
-              total: course.price + addOn,
+              total: discountedPrice(course.price, course.discountPercent) + addOn,
             }
           }),
         })

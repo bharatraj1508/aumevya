@@ -1,10 +1,7 @@
 import type { Guidance, GuidanceBookingConfig } from '@/payload-types'
 import type { CourseSection } from '@/lib/course'
 import { hasRichText } from '@/lib/course'
-import { formatPrice } from '@/lib/retreat'
-
-/** Price label for a session: "Free" at 0, otherwise the ₹ amount. */
-const sessionPriceLabel = (price: number): string => (price <= 0 ? 'Free' : formatPrice(price))
+import { priceDisplay } from '@/lib/retreat'
 
 /** The three fixed slot categories, matching the Guidance `slots` group keys. */
 export type SlotCategory = 'morning' | 'afternoon' | 'evening'
@@ -107,22 +104,21 @@ export function slotTimesFor(guidance: Guidance, category: SlotCategory): string
   return resolveGuidanceSlots(guidance).find((c) => c.category === category)?.times.map((t) => t.raw) ?? []
 }
 
-/** Build the display-ready session packages from a guidance's `packages`. */
+/** Build the display-ready session packages from a guidance's `packages`. The
+ * stored `price` is the full price; `discountPercent` derives the effective one. */
 export function buildSessionPackages(guidance: Guidance): SessionPackage[] {
   return (guidance.packages ?? []).map((p, i) => {
-    const hasDiscount = typeof p.originalPrice === 'number' && p.originalPrice > p.price && p.price >= 0
+    const display = priceDisplay(p.price, p.discountPercent)
     return {
       id: p.id ?? `pkg-${i}`,
       name: p.name,
       durationMinutes: p.duration,
       durationLabel: `${p.duration} min`,
-      price: p.price,
-      priceLabel: sessionPriceLabel(p.price),
-      originalPrice: hasDiscount ? (p.originalPrice as number) : null,
-      originalPriceLabel: hasDiscount ? formatPrice(p.originalPrice as number) : null,
-      discountPercent: hasDiscount
-        ? Math.round((1 - p.price / (p.originalPrice as number)) * 100)
-        : null,
+      price: display.price,
+      priceLabel: display.priceLabel,
+      originalPrice: display.original,
+      originalPriceLabel: display.originalLabel,
+      discountPercent: display.discountPercent,
       badge: p.badge && p.badge !== 'none' ? p.badge : null,
       tagline: p.tagline?.trim() ? p.tagline : null,
       features: (p.features ?? []).map((f) => f.text).filter((t): t is string => Boolean(t?.trim())),

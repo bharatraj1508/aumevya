@@ -225,6 +225,10 @@ export interface Retreat {
    * Starting price per person (₹).
    */
   price: number;
+  /**
+   * Optional % off. Shows a strike-through original + discounted price.
+   */
+  discountPercent?: number | null;
   fromDate: string;
   toDate: string;
   /**
@@ -443,6 +447,14 @@ export interface Retreat {
    * Show on the landing page.
    */
   featured?: boolean | null;
+  /**
+   * Mark this retreat as including a gift — adds a gift treatment on the card & detail page.
+   */
+  includesGift?: boolean | null;
+  /**
+   * Optional: what the gift is, e.g. "Free welcome kit & mala". Shown on the detail page.
+   */
+  giftNote?: string | null;
   published?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -796,6 +808,10 @@ export interface Course {
    */
   price: number;
   /**
+   * Optional % off — strike-through original + discounted price.
+   */
+  discountPercent?: number | null;
+  /**
    * Out of 5.
    */
   ratings: number;
@@ -905,13 +921,13 @@ export interface Guidance {
          */
         duration: number;
         /**
-         * Price in ₹. Enter 0 to show "Free".
+         * Full price in ₹. Enter 0 to show "Free".
          */
         price: number;
         /**
-         * Optional "was" price for a strike-through + "% OFF" tag. Leave blank for no discount.
+         * Optional % off — shows a strike-through original + discounted price. Leave blank for none.
          */
-        originalPrice?: number | null;
+        discountPercent?: number | null;
         /**
          * Optional highlight badge on the card.
          */
@@ -1200,6 +1216,7 @@ export interface RetreatsSelect<T extends boolean = true> {
   imageCrops?: T;
   location?: T;
   price?: T;
+  discountPercent?: T;
   fromDate?: T;
   toDate?: T;
   ratings?: T;
@@ -1248,6 +1265,8 @@ export interface RetreatsSelect<T extends boolean = true> {
   slug?: T;
   order?: T;
   featured?: T;
+  includesGift?: T;
+  giftNote?: T;
   published?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1404,6 +1423,7 @@ export interface CoursesSelect<T extends boolean = true> {
             };
       };
   price?: T;
+  discountPercent?: T;
   ratings?: T;
   bookNowLink?: T;
   slug?: T;
@@ -1436,7 +1456,7 @@ export interface GuidanceSelect<T extends boolean = true> {
         name?: T;
         duration?: T;
         price?: T;
-        originalPrice?: T;
+        discountPercent?: T;
         badge?: T;
         tagline?: T;
         features?:

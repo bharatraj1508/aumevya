@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { MapPin, Moon, Star } from 'lucide-react'
+import { Gift, MapPin, Moon, Star } from 'lucide-react'
 import type { Retreat } from '@/payload-types'
 import { getDocs } from '@/lib/payload'
 import { accommodationOptions, durationLabel, hasAccommodation } from '@/lib/retreat'
@@ -102,6 +102,12 @@ export default async function RetreatDetailPage({
             <Moon className="size-4 text-primary" />
             {durationLabel(retreat.fromDate, retreat.toDate)}
           </span>
+          {retreat.includesGift && (
+            <span className="inline-flex items-center gap-1.5 font-semibold text-accent-foreground">
+              <Gift className="size-4 fill-accent text-accent" />
+              {retreat.giftNote?.trim() ? `Includes a gift — ${retreat.giftNote}` : 'Includes a gift'}
+            </span>
+          )}
         </div>
 
         {/* Gallery */}
@@ -226,10 +232,12 @@ export default async function RetreatDetailPage({
                 id={retreat.id}
                 title={retreat.title}
                 price={retreat.price}
+                discountPercent={retreat.discountPercent}
                 fromDate={retreat.fromDate}
                 toDate={retreat.toDate}
                 ratings={retreat.ratings}
                 reviewCount={reviews.length}
+                includesGift={Boolean(retreat.includesGift)}
               />
             </div>
           </aside>
