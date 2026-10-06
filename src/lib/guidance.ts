@@ -1,13 +1,50 @@
 import type { Guidance, GuidanceBookingConfig } from '@/payload-types'
 import type { CourseSection } from '@/lib/course'
 import { hasRichText } from '@/lib/course'
+import { formatPrice } from '@/lib/retreat'
 
-export type GuidanceSlot = {
-  title: string
-  startTime: string
-  endTime: string
-  /** Human label combining the two times, e.g. "10:00 AM – 12:00 PM". */
-  timeLabel: string
+/** Price label for a session: "Free" at 0, otherwise the ₹ amount. */
+const sessionPriceLabel = (price: number): string => (price <= 0 ? 'Free' : formatPrice(price))
+
+/** The three fixed slot categories, matching the Guidance `slots` group keys. */
+export type SlotCategory = 'morning' | 'afternoon' | 'evening'
+
+/** A single bookable start time: the raw "HH:MM" plus a friendly "9:00 AM". */
+export type SlotTime = { raw: string; label: string }
+
+/** One category's bookable start times, in display order. */
+export type GuidanceSlotCategory = {
+  category: SlotCategory
+  label: 'Morning' | 'Afternoon' | 'Evening'
+  times: SlotTime[]
+}
+
+/** A display-ready session package built from a Guidance `packages` row. */
+export type SessionPackage = {
+  /** Payload array-row id (stable React key + booking reference). */
+  id: string
+  name: string
+  durationMinutes: number
+  /** e.g. "30 min". */
+  durationLabel: string
+  price: number
+  /** Formatted current price, e.g. "₹2,500" or "Free". */
+  priceLabel: string
+  /** Raw "was" price when discounted, else null. */
+  originalPrice: number | null
+  /** Formatted strike-through price, or null when not discounted. */
+  originalPriceLabel: string | null
+  /** Whole-number percent off, or null when not discounted. */
+  discountPercent: number | null
+  badge: 'most-popular' | 'best-value' | null
+  tagline: string | null
+  features: string[]
+}
+
+const CATEGORY_LABELS: Record<SlotCategory, GuidanceSlotCategory['label']> = {
+  morning: 'Morning',
+  afternoon: 'Afternoon',
+  evening: 'Evening',
 }
 
 /** An open day the user can pick, grouped for display by month. */
@@ -47,16 +84,50 @@ export function formatTime(hhmm?: string | null): string {
   return `${hour12}:${String(m).padStart(2, '0')} ${period}`
 }
 
-/** Build the display-ready slot list from the booking config. */
-export function resolveSlots(config: GuidanceBookingConfig | null | undefined): GuidanceSlot[] {
-  return (config?.slots ?? [])
-    .filter((s) => s.title?.trim() && s.startTime && s.endTime)
-    .map((s) => ({
-      title: s.title,
-      startTime: s.startTime,
-      endTime: s.endTime,
-      timeLabel: `${formatTime(s.startTime)} – ${formatTime(s.endTime)}`,
-    }))
+/**
+ * Build the three fixed slot categories (Morning/Afternoon/Evening) for a
+ * guidance, each with its discrete start times sorted and formatted. Empty
+ * categories are still returned so the UI can decide whether to show them.
+ */
+export function resolveGuidanceSlots(guidance: Guidance): GuidanceSlotCategory[] {
+  const groups = guidance.slots
+  return (['morning', 'afternoon', 'evening'] as const).map((category) => {
+    const entries = groups?.[category] ?? []
+    const times = entries
+      .map((e) => e.time)
+      .filter((t): t is string => Boolean(t?.trim()))
+      .sort() // "HH:MM" sorts chronologically as text
+      .map((raw) => ({ raw, label: formatTime(raw) }))
+    return { category, label: CATEGORY_LABELS[category], times }
+  })
+}
+
+/** The flat set of valid "HH:MM" start times for one category of a guidance. */
+export function slotTimesFor(guidance: Guidance, category: SlotCategory): string[] {
+  return resolveGuidanceSlots(guidance).find((c) => c.category === category)?.times.map((t) => t.raw) ?? []
+}
+
+/** Build the display-ready session packages from a guidance's `packages`. */
+export function buildSessionPackages(guidance: Guidance): SessionPackage[] {
+  return (guidance.packages ?? []).map((p, i) => {
+    const hasDiscount = typeof p.originalPrice === 'number' && p.originalPrice > p.price && p.price >= 0
+    return {
+      id: p.id ?? `pkg-${i}`,
+      name: p.name,
+      durationMinutes: p.duration,
+      durationLabel: `${p.duration} min`,
+      price: p.price,
+      priceLabel: sessionPriceLabel(p.price),
+      originalPrice: hasDiscount ? (p.originalPrice as number) : null,
+      originalPriceLabel: hasDiscount ? formatPrice(p.originalPrice as number) : null,
+      discountPercent: hasDiscount
+        ? Math.round((1 - p.price / (p.originalPrice as number)) * 100)
+        : null,
+      badge: p.badge && p.badge !== 'none' ? p.badge : null,
+      tagline: p.tagline?.trim() ? p.tagline : null,
+      features: (p.features ?? []).map((f) => f.text).filter((t): t is string => Boolean(t?.trim())),
+    }
+  })
 }
 
 /** A UTC calendar date as `YYYY-MM-DD`, avoiding any timezone drift. */

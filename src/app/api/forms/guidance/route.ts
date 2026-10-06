@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { guidanceBookingSchema } from '@/lib/schemas'
 import { createGuidanceBooking } from '@/lib/guidance-bookings'
-import { getGlobal } from '@/lib/payload'
-import { computeOpenDates, resolveSlots } from '@/lib/guidance'
+import { getDocs, getGlobal } from '@/lib/payload'
+import { buildSessionPackages, computeOpenDates, formatTime, slotTimesFor } from '@/lib/guidance'
 import { rateLimit, sweepRateLimit } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
@@ -32,19 +32,37 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { company, name, email, phone, message, guidance, bookingDate, slot } = parsed.data
+  const { company, name, email, phone, message, guidance, bookingDate, packageId, slotCategory, slotTime } =
+    parsed.data
   if (company) return NextResponse.json({ ok: true }) // honeypot tripped
 
-  // Validate the chosen slot and date against the live booking config so a
-  // tampered request can't book a closed date or an unknown slot.
-  const config = await getGlobal('guidance-booking-config')
-  const matchedSlot = resolveSlots(config).find((s) => s.title === slot)
-  if (!matchedSlot) {
+  // Load the specific guidance so package + slot can be validated against it —
+  // a tampered request can't book an unknown package, time, or closed date.
+  const docs = await getDocs('guidance', {
+    where: { slug: { equals: guidance }, published: { equals: true } },
+    limit: 1,
+  })
+  const guidanceDoc = docs[0]
+  if (!guidanceDoc) {
+    return NextResponse.json({ error: 'Guidance session not found.' }, { status: 400 })
+  }
+
+  const matchedPackage = buildSessionPackages(guidanceDoc).find((p) => p.id === packageId)
+  if (!matchedPackage) {
+    return NextResponse.json(
+      { error: 'That session package is no longer available. Please pick another.' },
+      { status: 400 },
+    )
+  }
+
+  if (!slotTimesFor(guidanceDoc, slotCategory).includes(slotTime)) {
     return NextResponse.json(
       { error: 'That time slot is no longer available. Please pick another.' },
       { status: 400 },
     )
   }
+
+  const config = await getGlobal('guidance-booking-config')
   const isOpen = computeOpenDates(config).some((d) => d.value === bookingDate)
   if (!isOpen) {
     return NextResponse.json(
@@ -59,10 +77,15 @@ export async function POST(req: NextRequest) {
       email,
       phone: phone || undefined,
       message: message || undefined,
-      guidanceSlug: guidance || undefined,
+      guidanceSlug: guidance,
       bookingDate,
-      slotTitle: matchedSlot.title,
-      slotTime: matchedSlot.timeLabel,
+      packageName: matchedPackage.name,
+      packageDuration: matchedPackage.durationMinutes,
+      packagePrice: matchedPackage.price,
+      packageOriginalPrice: matchedPackage.originalPrice ?? undefined,
+      slotCategory,
+      slotTime,
+      slotTimeFormatted: formatTime(slotTime),
     })
     return NextResponse.json({ ok: true })
   } catch (err) {

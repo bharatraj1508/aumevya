@@ -196,8 +196,6 @@ export interface Media {
   filesize?: number | null;
   width?: number | null;
   height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -894,6 +892,91 @@ export interface Guidance {
       }[]
     | null;
   /**
+   * The session packages users choose from when booking this guidance. Add at least one. Drag to reorder — the order shown on the page.
+   */
+  packages?:
+    | {
+        /**
+         * e.g. "Discovery Call" or "Deep Dive".
+         */
+        name: string;
+        /**
+         * Session length in minutes, e.g. 30.
+         */
+        duration: number;
+        /**
+         * Price in ₹. Enter 0 to show "Free".
+         */
+        price: number;
+        /**
+         * Optional "was" price for a strike-through + "% OFF" tag. Leave blank for no discount.
+         */
+        originalPrice?: number | null;
+        /**
+         * Optional highlight badge on the card.
+         */
+        badge?: ('none' | 'most-popular' | 'best-value') | null;
+        /**
+         * Optional one-line tagline under the package name.
+         */
+        tagline?: string | null;
+        /**
+         * Bullet points shown on the package card.
+         */
+        features?:
+          | {
+              /**
+               * e.g. "Personalised next-step guidance".
+               */
+              text: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Discrete start times offered under each category. The session length comes from the chosen package, so just add start times here.
+   */
+  slots?: {
+    /**
+     * Start times for the morning category (e.g. 09:00, 09:30). Drag to reorder.
+     */
+    morning?:
+      | {
+          /**
+           * Start time (24h).
+           */
+          time: string;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Start times for the afternoon category (e.g. 09:00, 09:30). Drag to reorder.
+     */
+    afternoon?:
+      | {
+          /**
+           * Start time (24h).
+           */
+          time: string;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Start times for the evening category (e.g. 09:00, 09:30). Drag to reorder.
+     */
+    evening?:
+      | {
+          /**
+           * Start time (24h).
+           */
+          time: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  /**
    * Auto-generated from the title if left blank.
    */
   slug?: string | null;
@@ -924,15 +1007,31 @@ export interface GuidanceBooking {
    */
   guidance?: (string | null) | Guidance;
   /**
+   * Chosen session package at time of booking.
+   */
+  packageName?: string | null;
+  /**
+   * Session length (minutes).
+   */
+  packageDuration?: number | null;
+  /**
+   * Package price (₹) at time of booking.
+   */
+  packagePrice?: number | null;
+  /**
+   * Original/was price (₹), if discounted.
+   */
+  packageOriginalPrice?: number | null;
+  /**
    * Requested booking date.
    */
   bookingDate?: string | null;
   /**
-   * Chosen slot, e.g. "Morning".
+   * Slot category chosen.
    */
-  slotTitle?: string | null;
+  slotCategory?: ('morning' | 'afternoon' | 'evening') | null;
   /**
-   * Slot time, e.g. "10:00 AM – 12:00 PM".
+   * Chosen start time, e.g. "9:00 AM".
    */
   slotTime?: string | null;
   message?: string | null;
@@ -1090,8 +1189,6 @@ export interface MediaSelect<T extends boolean = true> {
   filesize?: T;
   width?: T;
   height?: T;
-  focalX?: T;
-  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1333,6 +1430,45 @@ export interface GuidanceSelect<T extends boolean = true> {
         content?: T;
         id?: T;
       };
+  packages?:
+    | T
+    | {
+        name?: T;
+        duration?: T;
+        price?: T;
+        originalPrice?: T;
+        badge?: T;
+        tagline?: T;
+        features?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  slots?:
+    | T
+    | {
+        morning?:
+          | T
+          | {
+              time?: T;
+              id?: T;
+            };
+        afternoon?:
+          | T
+          | {
+              time?: T;
+              id?: T;
+            };
+        evening?:
+          | T
+          | {
+              time?: T;
+              id?: T;
+            };
+      };
   slug?: T;
   order?: T;
   featured?: T;
@@ -1350,8 +1486,12 @@ export interface GuidanceBookingsSelect<T extends boolean = true> {
   phone?: T;
   status?: T;
   guidance?: T;
+  packageName?: T;
+  packageDuration?: T;
+  packagePrice?: T;
+  packageOriginalPrice?: T;
   bookingDate?: T;
-  slotTitle?: T;
+  slotCategory?: T;
   slotTime?: T;
   message?: T;
   notified?: T;
@@ -1675,26 +1815,6 @@ export interface GuidancePage {
 export interface GuidanceBookingConfig {
   id: string;
   /**
-   * The time slots users can book. Add a slot with a title and a start/end time. Drag to reorder.
-   */
-  slots?:
-    | {
-        /**
-         * e.g. "Morning".
-         */
-        title: string;
-        /**
-         * Start time.
-         */
-        startTime: string;
-        /**
-         * End time.
-         */
-        endTime: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
    * Choose which calendar dates are open for booking.
    */
   availability: {
@@ -1864,14 +1984,6 @@ export interface GuidancePageSelect<T extends boolean = true> {
  * via the `definition` "guidance-booking-config_select".
  */
 export interface GuidanceBookingConfigSelect<T extends boolean = true> {
-  slots?:
-    | T
-    | {
-        title?: T;
-        startTime?: T;
-        endTime?: T;
-        id?: T;
-      };
   availability?:
     | T
     | {

@@ -1,10 +1,10 @@
 /**
  * Idempotent, guidance-only seed — safe to run on production.
  *
- * Upserts the two guidance sessions by title, sets the Guidance Page cover and
- * the Guidance Booking config (three default slots + open-date rule). Nothing is
- * deleted, so running it repeatedly is safe. Media is reused by alt text and
- * only uploaded if missing.
+ * Upserts the two guidance sessions by title (each with its session packages and
+ * per-category time slots), sets the Guidance Page cover and the Guidance Booking
+ * open-date rule. Nothing is deleted, so running it repeatedly is safe. Media is
+ * reused by alt text and only uploaded if missing.
  *
  * Run locally:   npm run seed:guidance
  */
@@ -141,6 +141,45 @@ const run = async () => {
           ),
         },
       ],
+      packages: [
+        {
+          name: 'Discovery Call',
+          duration: 20,
+          price: 1200,
+          badge: 'none' as const,
+          tagline: 'A quick, focused first conversation.',
+          features: [{ text: 'Single question answered' }, { text: 'Clear next step to take' }],
+        },
+        {
+          name: 'Mentorship Session',
+          duration: 45,
+          price: 2800,
+          badge: 'most-popular' as const,
+          tagline: 'Our most-booked session.',
+          features: [
+            { text: 'Full practice assessment' },
+            { text: 'Hands-on alignment & breath work' },
+            { text: 'Personal home-practice plan' },
+          ],
+        },
+        {
+          name: 'Deep Dive',
+          duration: 90,
+          price: 4800,
+          originalPrice: 6000,
+          badge: 'best-value' as const,
+          features: [
+            { text: 'Everything in Mentorship' },
+            { text: 'Philosophy & lifestyle guidance' },
+            { text: '2-week follow-up check-in' },
+          ],
+        },
+      ],
+      slots: {
+        morning: [{ time: '09:00' }, { time: '09:30' }, { time: '10:00' }, { time: '10:30' }],
+        afternoon: [{ time: '13:00' }, { time: '14:00' }],
+        evening: [{ time: '18:00' }, { time: '18:30' }],
+      },
     },
     {
       title: 'Life Path & Purpose',
@@ -168,6 +207,34 @@ const run = async () => {
           ),
         },
       ],
+      packages: [
+        {
+          name: 'Single Session',
+          duration: 60,
+          price: 3200,
+          badge: 'none' as const,
+          tagline: 'One reflective conversation.',
+          features: [{ text: 'Guided self-reflection' }, { text: 'A grounded next step' }],
+        },
+        {
+          name: 'Three-Session Journey',
+          duration: 60,
+          price: 8400,
+          originalPrice: 9600,
+          badge: 'best-value' as const,
+          tagline: 'Deeper change over time.',
+          features: [
+            { text: 'Three 60-minute sessions' },
+            { text: 'Practices between sessions' },
+            { text: 'Ongoing email support' },
+          ],
+        },
+      ],
+      slots: {
+        morning: [{ time: '08:30' }, { time: '10:00' }],
+        afternoon: [{ time: '12:30' }, { time: '15:00' }],
+        evening: [{ time: '17:30' }, { time: '19:00' }],
+      },
     },
   ]
 
@@ -205,17 +272,12 @@ const run = async () => {
     },
   })
 
-  // Booking config — three default slots + open the next three months
-  // (weekdays + Saturdays). "Quarter" gives a healthy set of dates out of the
-  // box; admins can narrow it to this month or a custom range any time.
+  // Booking config — open the next three months (weekdays + Saturdays).
+  // "Quarter" gives a healthy set of dates out of the box; admins can narrow it
+  // to this month or a custom range any time. Time slots now live per-guidance.
   await payload.updateGlobal({
     slug: 'guidance-booking-config',
     data: {
-      slots: [
-        { title: 'Morning', startTime: '10:00', endTime: '12:00' },
-        { title: 'Afternoon', startTime: '14:00', endTime: '16:00' },
-        { title: 'Evening', startTime: '18:00', endTime: '20:00' },
-      ],
       availability: {
         rangeType: 'quarter',
         includeSaturdays: true,

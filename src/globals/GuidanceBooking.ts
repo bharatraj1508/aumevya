@@ -1,9 +1,10 @@
 import type { GlobalConfig } from 'payload'
 
 /**
- * Shared booking configuration for the "Book Guidance" form: the time slots on
- * offer and the rule that decides which calendar dates are open to users.
- * A single config drives every guidance session.
+ * Shared booking configuration for guidance sessions: the single rule that
+ * decides which calendar dates are open to users. Time slots now live
+ * per-guidance (grouped into morning/afternoon/evening) on the Guidance
+ * collection; this global only governs the open-date window.
  */
 export const GuidanceBooking: GlobalConfig = {
   slug: 'guidance-booking-config',
@@ -12,49 +13,6 @@ export const GuidanceBooking: GlobalConfig = {
     read: () => true,
   },
   fields: [
-    {
-      name: 'slots',
-      type: 'array',
-      minRows: 1,
-      labels: { singular: 'Slot', plural: 'Slots' },
-      admin: {
-        description:
-          'The time slots users can book. Add a slot with a title and a start/end time. Drag to reorder.',
-      },
-      fields: [
-        {
-          type: 'row',
-          fields: [
-            {
-              name: 'title',
-              type: 'text',
-              required: true,
-              admin: { width: '40%', description: 'e.g. "Morning".' },
-            },
-            {
-              name: 'startTime',
-              type: 'text',
-              required: true,
-              admin: {
-                width: '30%',
-                description: 'Start time.',
-                components: { Field: '/components/admin/TimePickerField#TimePickerField' },
-              },
-            },
-            {
-              name: 'endTime',
-              type: 'text',
-              required: true,
-              admin: {
-                width: '30%',
-                description: 'End time.',
-                components: { Field: '/components/admin/TimePickerField#TimePickerField' },
-              },
-            },
-          ],
-        },
-      ],
-    },
     {
       name: 'availability',
       type: 'group',

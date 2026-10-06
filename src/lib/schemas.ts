@@ -26,18 +26,31 @@ export const bookingSchema = z.object({
 
 export const guidanceBookingSchema = z.object({
   ...base,
-  // The guidance session being booked (its slug), when submitted from a
-  // specific session's page. Optional to keep the form reusable.
-  guidance: z.string().trim().max(120).optional().or(z.literal('')),
+  // The guidance session being booked (its slug). Required — the server loads
+  // it to validate the chosen package and slot against that guidance.
+  guidance: z.string().trim().min(1, 'Missing guidance session').max(120),
+  // Chosen package's stable id — server re-validates it belongs to the guidance.
+  // Matching by id (not name) avoids ambiguity if two packages share a name.
+  packageId: z.string().trim().min(1, 'Please choose a session package').max(120),
   // Chosen open date, `YYYY-MM-DD`.
   bookingDate: z
     .string()
     .trim()
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'Please pick a date'),
-  // Chosen slot title, e.g. "Morning".
-  slot: z.string().trim().min(1, 'Please pick a time slot').max(80),
+  // Chosen slot category and its discrete start time ("HH:MM", 24h).
+  slotCategory: z.enum(['morning', 'afternoon', 'evening']),
+  slotTime: z
+    .string()
+    .trim()
+    .regex(/^\d{2}:\d{2}$/, 'Please pick a time'),
 })
+
+// Just the contact fields — the inline booking stepper validates these at its
+// "Your details" step; package/date/slot live in the island's own state and are
+// assembled into the full guidanceBookingSchema payload at submit time.
+export const guidanceDetailsSchema = z.object({ ...base })
 
 export type ContactInput = z.infer<typeof contactSchema>
 export type BookingInput = z.infer<typeof bookingSchema>
+export type GuidanceDetailsInput = z.infer<typeof guidanceDetailsSchema>
 export type GuidanceBookingInput = z.infer<typeof guidanceBookingSchema>
