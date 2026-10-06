@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getDocs, getGlobal } from '@/lib/payload'
 import { SectionCover } from '@/components/site/section-cover'
 import { RichText } from '@/components/RichText'
-import { cropPosition, type CropMap } from '@/lib/crops'
+import { cropStyle, type CropMap } from '@/lib/crops'
 import { MediaImage } from '@/components/site/media-image'
 import { Reveal } from '@/components/motion/reveal'
 import { TeamSection } from '@/components/sections/team-section'
@@ -38,7 +38,7 @@ export default async function AboutPage() {
                 media={about?.image}
                 fill
                 sizes="(min-width: 768px) 45vw, 100vw"
-                objectPosition={cropPosition(about?.imageCrop as CropMap, 'portrait')}
+                cropStyle={cropStyle(about?.imageCrop as CropMap, 'portrait')}
                 className="object-cover"
               />
             </div>

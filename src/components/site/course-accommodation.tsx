@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useState, type CSSProperties, type ReactNode } from 'react'
 import { Check } from 'lucide-react'
 import type { Media } from '@/payload-types'
 import { formatPrice } from '@/lib/retreat'
@@ -11,7 +11,7 @@ export type CourseAccommodationOption = {
   id: string
   name: string
   image: string | Media
-  objectPosition?: string
+  cropStyle?: CSSProperties
   description?: string | null
   /** Full price for this option (base price + any add-on). */
   total: number
@@ -94,7 +94,7 @@ export function CourseAccommodationCards({ intro }: { intro?: string | null }) {
                   media={opt.image}
                   fill
                   sizes="(max-width: 640px) 100vw, 400px"
-                  objectPosition={opt.objectPosition}
+                  cropStyle={opt.cropStyle}
                   className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                 />
                 <span

@@ -1,5 +1,6 @@
+import type { CSSProperties } from 'react'
 import type { Retreat } from '@/payload-types'
-import { cropPosition, type CropMap } from '@/lib/crops'
+import { cropStyle, type CropMap } from '@/lib/crops'
 
 /** Number of nights between the from/to dates (min 0). */
 export function nights(from?: string | null, to?: string | null): number {
@@ -54,8 +55,8 @@ export type AccommodationOption = {
   label: string
   /** Payload media relationship (populated) or null. */
   image: NonNullable<Retreat['accommodation']>['sharedImage'] | null
-  /** Admin-chosen crop as a CSS object-position. */
-  objectPosition: string
+  /** Admin-chosen crop as a CSS style (position + any zoom/rotation). */
+  cropStyle: CSSProperties
   /** Full price per person for this option. */
   total: number
   /** Amount added on top of the base price (0 for Shared). */
@@ -83,7 +84,7 @@ export function accommodationOptions(
       id: 'shared',
       label: 'Shared',
       image: a?.sharedImage ?? null,
-      objectPosition: cropPosition(a?.sharedImageCrop as CropMap, 'card'),
+      cropStyle: cropStyle(a?.sharedImageCrop as CropMap, 'card'),
       total: shared,
       addOn: 0,
     },
@@ -91,7 +92,7 @@ export function accommodationOptions(
       id: 'private',
       label: 'Private',
       image: a?.privateImage ?? null,
-      objectPosition: cropPosition(a?.privateImageCrop as CropMap, 'card'),
+      cropStyle: cropStyle(a?.privateImageCrop as CropMap, 'card'),
       total: retreat.price + addOn,
       addOn,
     },

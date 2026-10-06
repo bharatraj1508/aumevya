@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react'
 import { FieldLabel, useField } from '@payloadcms/ui'
 import type { JSONFieldClientComponent } from 'payload'
 import type { Crop, CropMap, CropperConfig, Placement } from '@/lib/crops'
-import { clampPct, cropKey } from '@/lib/crops'
+import { cropKey, normalizeCrop } from '@/lib/crops'
 import { CropFrame } from './crop-frame'
 import { toMediaId, useMediaDocs } from './use-media-docs'
 
@@ -48,7 +48,7 @@ export const ImageCropper: JSONFieldClientComponent = ({ field, path }) => {
 
   const setCrop = useCallback(
     (key: string, crop: Crop) => {
-      setValue({ ...crops, [key]: { x: clampPct(crop.x), y: clampPct(crop.y) } })
+      setValue({ ...crops, [key]: normalizeCrop(crop) })
     },
     [crops, setValue],
   )

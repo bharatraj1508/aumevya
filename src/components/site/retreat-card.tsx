@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { CalendarDays, Heart, MapPin, Star } from 'lucide-react'
 import type { Retreat } from '@/payload-types'
 import { coverImage, dateRange, durationLabel, formatPrice } from '@/lib/retreat'
-import { toPosition, type CropMap } from '@/lib/crops'
+import { cropStyleFromCrop, type CropMap } from '@/lib/crops'
 import { mediaId } from '@/lib/media'
 import { MediaImage } from './media-image'
 
@@ -11,7 +11,7 @@ export function RetreatCard({ retreat }: { retreat: Retreat }) {
   const cover = coverImage(retreat)
   // Reuse the crop the admin set on the cover photo in the detail-page gallery.
   const crops = retreat.imageCrops as CropMap
-  const coverPos = toPosition(crops?.[mediaId(cover) ?? ''])
+  const coverStyle = cropStyleFromCrop(crops?.[mediaId(cover) ?? ''])
   return (
     <Link
       href={`/retreats/${retreat.slug}`}
@@ -23,7 +23,7 @@ export function RetreatCard({ retreat }: { retreat: Retreat }) {
           media={cover}
           fill
           sizes="(min-width: 768px) 33vw, 100vw"
-          objectPosition={coverPos}
+          cropStyle={coverStyle}
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {retreat.featured && (

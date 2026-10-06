@@ -1,22 +1,21 @@
 'use client'
 
+import type { CSSProperties } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { ChevronLeft, ChevronRight, Grip, X } from 'lucide-react'
 import type { Retreat } from '@/payload-types'
 import { MediaImage } from '@/components/site/media-image'
+import { cropStyleFromCrop, type CropMap } from '@/lib/crops'
 import { mediaId } from '@/lib/media'
 
 type Img = Retreat['images'][number]
 
-/** Per-image crop positions keyed by media id, set by the admin collage editor. */
-export type ImageCrops = Record<string, { x: number; y: number }> | null | undefined
+/** Per-image crops keyed by media id, set by the admin gallery editor. */
+export type ImageCrops = CropMap
 
-/** CSS object-position for an image, defaulting to a centered crop. */
-const cropPosition = (img: Img, crops: ImageCrops): string => {
-  const id = mediaId(img)
-  const c = id && crops ? crops[id] : undefined
-  return c ? `${c.x}% ${c.y}%` : '50% 50%'
-}
+/** Crop style (position + any zoom/rotation) for an image, centered by default. */
+const cropStyleForImg = (img: Img, crops: ImageCrops): CSSProperties =>
+  cropStyleFromCrop(crops?.[mediaId(img) ?? ''])
 
 export function Gallery({
   images,
@@ -73,7 +72,7 @@ export function Gallery({
             fill
             priority
             sizes="(min-width: 768px) 50vw, 100vw"
-            objectPosition={cropPosition(images[0], crops)}
+            cropStyle={cropStyleForImg(images[0], crops)}
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </button>
@@ -92,7 +91,7 @@ export function Gallery({
                   media={img}
                   fill
                   sizes="25vw"
-                  objectPosition={cropPosition(img, crops)}
+                  cropStyle={cropStyleForImg(img, crops)}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 {i === rest.length - 1 && count > 5 && (

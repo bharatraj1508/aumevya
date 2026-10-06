@@ -7,7 +7,7 @@ import { getDocs, getGlobal } from '@/lib/payload'
 import { sectionId } from '@/lib/course'
 import { buildGuidanceSections, computeOpenDates, resolveSlots } from '@/lib/guidance'
 import { Eyebrow } from '@/components/site/eyebrow'
-import { cropPosition, type CropMap } from '@/lib/crops'
+import { cropStyle, type CropMap } from '@/lib/crops'
 import { MediaImage } from '@/components/site/media-image'
 import { Reveal } from '@/components/motion/reveal'
 import { CourseJourneyRail } from '@/components/site/course-journey-rail'
@@ -61,7 +61,7 @@ export default async function GuidanceDetailPage({
           fill
           priority
           sizes="100vw"
-          objectPosition={cropPosition(guidance.imageCrops as CropMap, 'detail')}
+          cropStyle={cropStyle(guidance.imageCrops as CropMap, 'detail')}
           className="object-cover"
         />
         <div

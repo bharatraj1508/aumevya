@@ -5,8 +5,8 @@ import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/utils'
 
-/** A slide: its URL and the admin-chosen object-position (framing). */
-export type Slide = { url: string; objectPosition?: string }
+/** A slide: its URL and the admin-chosen crop style (framing + any zoom/rotation). */
+export type Slide = { url: string; cropStyle?: React.CSSProperties }
 
 export interface BackgroundSlideshowProps {
   images: Slide[]
@@ -75,11 +75,7 @@ export function BackgroundSlideshow({
             // hint the browser to fetch it early. Later slides load on demand.
             priority={index === 0}
             sizes="100vw"
-            style={
-              slides[index].objectPosition
-                ? { objectPosition: slides[index].objectPosition }
-                : undefined
-            }
+            style={slides[index].cropStyle}
             className="object-cover"
           />
         </motion.div>

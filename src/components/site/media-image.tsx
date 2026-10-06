@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import Image from 'next/image'
 import { mediaAlt, mediaDimensions, mediaURL } from '@/lib/media'
 import { cn } from '@/lib/utils'
@@ -10,10 +11,11 @@ type MediaImageProps = {
   fill?: boolean
   alt?: string
   /**
-   * CSS object-position (e.g. "30% 70%") for cover-fit crops. Lets callers pin
-   * which part of the photo stays visible; harmless for object-contain.
+   * Full crop style (object-position plus an optional zoom/rotation transform)
+   * from `cropStyle()`. The container must be `overflow: hidden` so the
+   * transform's overflow is clipped. Harmless for object-contain.
    */
-  objectPosition?: string
+  cropStyle?: CSSProperties
 }
 
 /** Renders a Payload media relationship via next/image, with a graceful fallback. */
@@ -24,14 +26,14 @@ export function MediaImage({
   priority,
   fill,
   alt,
-  objectPosition,
+  cropStyle,
 }: MediaImageProps) {
   const url = mediaURL(media)
   if (!url) {
     return <div aria-hidden className={cn('bg-muted', className)} />
   }
   const altText = alt ?? mediaAlt(media)
-  const style = objectPosition ? { objectPosition } : undefined
+  const style: CSSProperties | undefined = cropStyle
 
   if (fill) {
     return (

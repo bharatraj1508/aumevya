@@ -1,5 +1,5 @@
 import { Eyebrow } from '@/components/site/eyebrow'
-import { cropPosition, type CropMap } from '@/lib/crops'
+import { cropStyle, type CropMap } from '@/lib/crops'
 import { MediaImage } from '@/components/site/media-image'
 
 /** The fields every section cover exposes. */
@@ -25,7 +25,7 @@ export function SectionCover({ page }: { page: SectionCoverData }) {
         fill
         priority
         sizes="100vw"
-        objectPosition={cropPosition(page.coverImageCrop as CropMap, 'cover')}
+        cropStyle={cropStyle(page.coverImageCrop as CropMap, 'cover')}
         className="object-cover"
       />
       {/* Legibility scrim — darkest at the bottom-left where the title sits. */}

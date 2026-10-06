@@ -5,7 +5,7 @@ import { ArrowLeft, Star } from 'lucide-react'
 import type { Course } from '@/payload-types'
 import { getDocs, getGlobal } from '@/lib/payload'
 import { buildCourseSections, priceLabel, sectionId } from '@/lib/course'
-import { cropPosition, type CropMap } from '@/lib/crops'
+import { cropStyle, type CropMap } from '@/lib/crops'
 import { Eyebrow } from '@/components/site/eyebrow'
 import { MediaImage } from '@/components/site/media-image'
 import { Reveal } from '@/components/motion/reveal'
@@ -60,7 +60,7 @@ export default async function CourseDetailPage({
           id: it.id ?? `opt-${i}`,
           name: it.name,
           image: it.image,
-          objectPosition: it.objectPosition,
+          cropStyle: it.cropStyle,
           description: it.description,
           total: it.total,
           addOn: it.addOn,
@@ -76,7 +76,7 @@ export default async function CourseDetailPage({
           fill
           priority
           sizes="100vw"
-          objectPosition={cropPosition(course.imageCrops as CropMap, 'detail')}
+          cropStyle={cropStyle(course.imageCrops as CropMap, 'detail')}
           className="object-cover"
         />
         <div

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { ArrowRight, Star } from 'lucide-react'
 import type { Course } from '@/payload-types'
 import { priceLabel } from '@/lib/course'
-import { cropPosition, type CropMap } from '@/lib/crops'
+import { cropStyle, type CropMap } from '@/lib/crops'
 import { MediaImage } from '@/components/site/media-image'
 
 /** Course grid card. Links through to the course's own detail page. */
@@ -19,7 +19,7 @@ export function CourseCard({ course }: { course: Course }) {
           media={course.image}
           fill
           sizes="(min-width: 1024px) 32rem, 100vw"
-          objectPosition={cropPosition(course.imageCrops as CropMap, 'card')}
+          cropStyle={cropStyle(course.imageCrops as CropMap, 'card')}
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {course.featured && (

@@ -18,7 +18,7 @@ const ParallaxHeroImages = dynamic(
   { ssr: false },
 )
 import { mediaURL, mediaId } from '@/lib/media'
-import { cropPosition, type CropMap } from '@/lib/crops'
+import { cropStyle, type CropMap } from '@/lib/crops'
 import { useImageLuminance } from '@/lib/use-image-luminance'
 import { cn } from '@/lib/utils'
 
@@ -82,11 +82,11 @@ export function Hero({
   const imageUrls = slides.map((s) => s.url as string)
   const desktopSlides = slides.map((s) => ({
     url: s.url as string,
-    objectPosition: cropPosition(imageCrops, 'desktop', s.id),
+    cropStyle: cropStyle(imageCrops, 'desktop', s.id),
   }))
   const mobileSlides = slides.map((s) => ({
     url: s.url as string,
-    objectPosition: cropPosition(imageCrops, 'mobile', s.id),
+    cropStyle: cropStyle(imageCrops, 'mobile', s.id),
   }))
 
   // CMS-controlled appearance (percentages → 0–1, seconds → ms), with sensible fallbacks.
