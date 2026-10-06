@@ -57,14 +57,24 @@ export const Retreats: CollectionConfig = {
                   name: 'location',
                   type: 'text',
                   required: true,
-                  admin: { width: '50%', description: 'e.g. "Khajuraho, India".' },
+                  admin: { width: '40%', description: 'e.g. "Khajuraho, India".' },
                 },
                 {
                   name: 'price',
                   type: 'number',
                   required: true,
                   min: 0,
-                  admin: { width: '50%', description: 'Starting price per person (₹).' },
+                  admin: { width: '35%', description: 'Starting price per person (₹).' },
+                },
+                {
+                  name: 'discountPercent',
+                  type: 'number',
+                  min: 0,
+                  max: 100,
+                  admin: {
+                    width: '25%',
+                    description: 'Optional % off. Shows a strike-through original + discounted price.',
+                  },
                 },
               ],
             },
@@ -322,6 +332,24 @@ export const Retreats: CollectionConfig = {
       type: 'checkbox',
       defaultValue: false,
       admin: { position: 'sidebar', description: 'Show on the landing page.' },
+    },
+    {
+      name: 'includesGift',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description: 'Mark this retreat as including a gift — adds a gift treatment on the card & detail page.',
+      },
+    },
+    {
+      name: 'giftNote',
+      type: 'text',
+      admin: {
+        position: 'sidebar',
+        description: 'Optional: what the gift is, e.g. "Free welcome kit & mala". Shown on the detail page.',
+        condition: (data) => Boolean(data?.includesGift),
+      },
     },
     {
       name: 'published',

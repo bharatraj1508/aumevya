@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import { ArrowRight, Star } from 'lucide-react'
 import type { Course } from '@/payload-types'
-import { priceLabel } from '@/lib/course'
-import { cropPosition, type CropMap } from '@/lib/crops'
+import { priceDisplay } from '@/lib/retreat'
+import { cropStyle, type CropMap } from '@/lib/crops'
 import { MediaImage } from '@/components/site/media-image'
+import { PriceTag } from '@/components/site/price-tag'
 
 /** Course grid card. Links through to the course's own detail page. */
 export function CourseCard({ course }: { course: Course }) {
@@ -19,7 +20,7 @@ export function CourseCard({ course }: { course: Course }) {
           media={course.image}
           fill
           sizes="(min-width: 1024px) 32rem, 100vw"
-          objectPosition={cropPosition(course.imageCrops as CropMap, 'card')}
+          cropStyle={cropStyle(course.imageCrops as CropMap, 'card')}
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {course.featured && (
@@ -47,7 +48,7 @@ export function CourseCard({ course }: { course: Course }) {
             <span className="block text-[11px] uppercase tracking-wide text-muted-foreground">
               from
             </span>
-            <span className="text-xl font-bold text-foreground">{priceLabel(course.price)}</span>
+            <PriceTag display={priceDisplay(course.price, course.discountPercent)} />
           </span>
           <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
             View course

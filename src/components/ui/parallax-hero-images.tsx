@@ -4,12 +4,12 @@ import Image from 'next/image'
 import { motion, useMotionValue, useSpring, useTransform, MotionValue } from 'motion/react'
 import { cn } from '@/lib/utils'
 
-/** A hero image: its URL and the admin-chosen object-position (framing). */
-export type HeroSlide = { url: string; objectPosition?: string }
+/** A hero image: its URL and the admin-chosen crop style (framing + any zoom/rotation). */
+export type HeroSlide = { url: string; cropStyle?: React.CSSProperties }
 
 type ImagePosition = {
   src: string
-  objectPosition?: string
+  cropStyle?: React.CSSProperties
   position:
     | 'top-left'
     | 'top-right'
@@ -83,7 +83,7 @@ export const ParallaxHeroImages = ({
     const depthValues = depthValuesByVariant[variant]
     return limitedImages.map((img, index) => ({
       src: img.url,
-      objectPosition: img.objectPosition,
+      cropStyle: img.cropStyle,
       position: positionOrder[index],
       depth: depthValues[index],
       delay: index * 0.12,
@@ -111,7 +111,7 @@ export const ParallaxHeroImages = ({
         <ParallaxImage
           key={`${pos.src}-${index}`}
           src={pos.src}
-          objectPosition={pos.objectPosition}
+          cropStyle={pos.cropStyle}
           position={pos.position}
           depth={pos.depth}
           delay={pos.delay}
@@ -132,7 +132,7 @@ interface ParallaxImageProps extends ImagePosition {
 
 const ParallaxImage = memo(function ParallaxImage({
   src,
-  objectPosition,
+  cropStyle,
   position,
   depth,
   delay,
@@ -149,7 +149,7 @@ const ParallaxImage = memo(function ParallaxImage({
 
   return (
     <motion.div
-      className="absolute"
+      className="absolute overflow-hidden rounded-lg"
       style={{
         top: posStyle.top,
         left: posStyle.left,
@@ -174,7 +174,7 @@ const ParallaxImage = memo(function ParallaxImage({
         // Decorative collage (desktop only), never the LCP element — lazy is fine.
         // The rendered size caps at md:w-80 (320px), so serve for that.
         sizes="(min-width: 768px) 320px, (min-width: 640px) 224px, 128px"
-        style={objectPosition ? { objectPosition } : undefined}
+        style={cropStyle}
         className={cn(
           'aspect-4/3 h-20 w-32 rounded-lg object-cover shadow-sm ring-1 ring-black/10 sm:h-40 sm:w-56 md:h-52 md:w-80 dark:ring-white/10',
           imageClassName,

@@ -78,7 +78,7 @@ export function AccommodationCards() {
                 media={opt.image}
                 fill
                 sizes="(max-width: 640px) 100vw, 320px"
-                objectPosition={opt.objectPosition}
+                cropStyle={opt.cropStyle}
                 className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
               />
               <span

@@ -8,14 +8,21 @@ export type GuidanceBookingInput = {
   email: string
   phone?: string
   message?: string
-  /** Guidance session slug, when booked from a specific session's page. */
-  guidanceSlug?: string
+  /** Guidance session slug being booked. */
+  guidanceSlug: string
   /** Chosen open date, `YYYY-MM-DD`. */
   bookingDate: string
-  /** Chosen slot title, e.g. "Morning". */
-  slotTitle: string
-  /** Slot time range, e.g. "10:00 AM – 12:00 PM". */
-  slotTime?: string
+  /** Chosen session package. */
+  packageName: string
+  packageDuration: number
+  packagePrice: number
+  packageOriginalPrice?: number
+  /** Chosen slot category and start time. */
+  slotCategory: 'morning' | 'afternoon' | 'evening'
+  /** Raw "HH:MM" start time (validated upstream). */
+  slotTime: string
+  /** Friendly start time stored on the record, e.g. "9:00 AM". */
+  slotTimeFormatted: string
 }
 
 /**
@@ -59,9 +66,13 @@ export async function createGuidanceBooking(
       phone: input.phone || undefined,
       message: input.message || undefined,
       guidance: guidanceId,
+      packageName: input.packageName,
+      packageDuration: input.packageDuration,
+      packagePrice: input.packagePrice,
+      packageOriginalPrice: input.packageOriginalPrice,
       bookingDate: input.bookingDate,
-      slotTitle: input.slotTitle,
-      slotTime: input.slotTime || undefined,
+      slotCategory: input.slotCategory,
+      slotTime: input.slotTimeFormatted,
       notified: false,
     },
   })
@@ -72,9 +83,12 @@ export async function createGuidanceBooking(
     phone: input.phone,
     message: input.message,
     guidance: guidanceTitle,
+    packageName: input.packageName,
+    packageDuration: input.packageDuration,
+    packagePrice: input.packagePrice,
     bookingDate: formatBookingDate(input.bookingDate),
-    slotTitle: input.slotTitle,
-    slotTime: input.slotTime,
+    slotCategory: input.slotCategory,
+    slotTime: input.slotTimeFormatted,
   })
   if (sent) {
     try {

@@ -4,29 +4,50 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useLenis } from 'lenis/react'
 import Link from 'next/link'
-import { BadgeCheck, CalendarDays, ShieldCheck, Star, X } from 'lucide-react'
+import { BadgeCheck, CalendarDays, Gift, ShieldCheck, Star, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BookingForm } from '@/components/forms/booking-form'
-import { dateRange, durationLabel, formatPrice } from '@/lib/retreat'
+import { dateRange, durationLabel, formatPrice, priceDisplay, priceDisplayWithAddOn } from '@/lib/retreat'
 import { useAccommodation } from '@/components/retreat/accommodation'
 
 type Props = {
   id: string
   title: string
   price: number
+  discountPercent?: number | null
   fromDate: string
   toDate: string
   ratings: number
   reviewCount: number
+  includesGift?: boolean
 }
 
-export function BookingCard({ id, title, price, fromDate, toDate, ratings, reviewCount }: Props) {
+export function BookingCard({
+  id,
+  title,
+  price,
+  discountPercent,
+  fromDate,
+  toDate,
+  ratings,
+  reviewCount,
+  includesGift,
+}: Props) {
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const lenis = useLenis()
   const accommodation = useAccommodation()
   const selected = accommodation?.selected ?? null
-  const displayPrice = accommodation?.finalPrice ?? price
+  // Discount applies to the base; accommodation finalPrice already carries it.
+  const base = priceDisplay(price, discountPercent)
+  const displayPrice = accommodation?.finalPrice ?? base.price
+  // Only strike through an original when the selected total is actually derived
+  // from the discounted base + its add-on. A custom Shared price is an explicit
+  // override with no meaningful "original", so it shows no strike.
+  const derived = displayPrice === base.price + (selected?.addOn ?? 0)
+  const priced = derived
+    ? priceDisplayWithAddOn(base, selected?.addOn ?? 0)
+    : { price: displayPrice, priceLabel: formatPrice(displayPrice), original: null, originalLabel: null, discountPercent: null }
 
   useEffect(() => setMounted(true), [])
 
@@ -55,8 +76,18 @@ export function BookingCard({ id, title, price, fromDate, toDate, ratings, revie
             <span className="block text-xs uppercase tracking-wide text-muted-foreground">
               {selected ? `${selected.label} · from` : 'from'}
             </span>
-            <span className="text-3xl font-bold leading-none">{formatPrice(displayPrice)}</span>
+            {priced.originalLabel && (
+              <span className="mr-2 text-base text-muted-foreground line-through">
+                {priced.originalLabel}
+              </span>
+            )}
+            <span className="text-3xl font-bold leading-none">{priced.priceLabel}</span>
             <span className="text-sm text-muted-foreground"> / person</span>
+            {priced.discountPercent != null && (
+              <span className="ml-2 text-xs font-semibold text-primary">
+                {priced.discountPercent}% OFF
+              </span>
+            )}
             {selected && selected.addOn > 0 && (
               <span className="mt-1 block text-xs text-muted-foreground">
                 Includes +{formatPrice(selected.addOn)} accommodation add-on
@@ -89,6 +120,11 @@ export function BookingCard({ id, title, price, fromDate, toDate, ratings, revie
         </Button>
 
         <ul className="mt-5 space-y-2.5 text-sm text-muted-foreground">
+          {includesGift && (
+            <li className="flex items-center gap-2 font-medium text-accent-foreground">
+              <Gift className="size-4 text-accent" /> Includes a gift
+            </li>
+          )}
           <li className="flex items-center gap-2">
             <ShieldCheck className="size-4 text-primary" /> Free cancellation available
           </li>

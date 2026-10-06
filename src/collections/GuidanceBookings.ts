@@ -17,7 +17,16 @@ export const GuidanceBookings: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'email', 'bookingDate', 'slotTitle', 'status', 'createdAt'],
+    defaultColumns: [
+      'name',
+      'email',
+      'packageName',
+      'bookingDate',
+      'slotCategory',
+      'slotTime',
+      'status',
+      'createdAt',
+    ],
     group: 'Submissions',
   },
   defaultSort: '-createdAt',
@@ -57,6 +66,31 @@ export const GuidanceBookings: CollectionConfig = {
       type: 'row',
       fields: [
         {
+          name: 'packageName',
+          type: 'text',
+          admin: { width: '40%', description: 'Chosen session package at time of booking.' },
+        },
+        {
+          name: 'packageDuration',
+          type: 'number',
+          admin: { width: '20%', description: 'Session length (minutes).' },
+        },
+        {
+          name: 'packagePrice',
+          type: 'number',
+          admin: { width: '20%', description: 'Package price (₹) at time of booking.' },
+        },
+        {
+          name: 'packageOriginalPrice',
+          type: 'number',
+          admin: { width: '20%', description: 'Original/was price (₹), if discounted.' },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
           name: 'bookingDate',
           type: 'date',
           admin: {
@@ -66,14 +100,19 @@ export const GuidanceBookings: CollectionConfig = {
           },
         },
         {
-          name: 'slotTitle',
-          type: 'text',
-          admin: { width: '25%', description: 'Chosen slot, e.g. "Morning".' },
+          name: 'slotCategory',
+          type: 'select',
+          options: [
+            { label: 'Morning', value: 'morning' },
+            { label: 'Afternoon', value: 'afternoon' },
+            { label: 'Evening', value: 'evening' },
+          ],
+          admin: { width: '25%', description: 'Slot category chosen.' },
         },
         {
           name: 'slotTime',
           type: 'text',
-          admin: { width: '25%', description: 'Slot time, e.g. "10:00 AM – 12:00 PM".' },
+          admin: { width: '25%', description: 'Chosen start time, e.g. "9:00 AM".' },
         },
       ],
     },

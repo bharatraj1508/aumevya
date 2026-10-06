@@ -1,5 +1,6 @@
 import 'server-only'
 import nodemailer from 'nodemailer'
+import { formatPrice } from '@/lib/retreat'
 
 const {
   SMTP_HOST,
@@ -149,11 +150,15 @@ export type GuidanceBookingEmail = {
   message?: string
   /** Human-readable guidance session title. */
   guidance?: string
+  /** Chosen session package. */
+  packageName?: string
+  packageDuration?: number
+  packagePrice?: number
   /** Pretty booking date, e.g. "Mon, 04 Oct 2026". */
   bookingDate?: string
-  /** Slot title, e.g. "Morning". */
-  slotTitle?: string
-  /** Slot time range, e.g. "10:00 AM – 12:00 PM". */
+  /** Slot category, e.g. "morning". */
+  slotCategory?: string
+  /** Chosen start time, e.g. "9:00 AM". */
   slotTime?: string
 }
 
@@ -170,10 +175,15 @@ export async function sendGuidanceBookingEmail(booking: GuidanceBookingEmail): P
     booking.guidance ? ` <strong>${esc(booking.guidance)}</strong>` : ' a guidance session'
   }. Here are the details:`
 
+  const capitalise = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+  const packageValue =
+    booking.packageName && booking.packageDuration
+      ? `${booking.packageName} — ${booking.packageDuration} min`
+      : booking.packageName
   const slotValue =
-    booking.slotTitle && booking.slotTime
-      ? `${booking.slotTitle} (${booking.slotTime})`
-      : booking.slotTitle || booking.slotTime
+    booking.slotCategory && booking.slotTime
+      ? `${capitalise(booking.slotCategory)} — ${booking.slotTime}`
+      : booking.slotTime
 
   const detailRows = (
     [
@@ -181,8 +191,10 @@ export async function sendGuidanceBookingEmail(booking: GuidanceBookingEmail): P
       ['Email', booking.email],
       ['Phone', booking.phone],
       ['Guidance', booking.guidance],
+      ['Package', packageValue],
+      ['Price', booking.packagePrice != null ? formatPrice(booking.packagePrice) : undefined],
       ['Date', booking.bookingDate],
-      ['Time slot', slotValue],
+      ['Time', slotValue],
     ] as [string, string | undefined][]
   ).filter((r): r is [string, string] => Boolean(r[1]))
 

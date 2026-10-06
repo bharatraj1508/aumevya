@@ -4,8 +4,9 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft, Star } from 'lucide-react'
 import type { Course } from '@/payload-types'
 import { getDocs, getGlobal } from '@/lib/payload'
-import { buildCourseSections, priceLabel, sectionId } from '@/lib/course'
-import { cropPosition, type CropMap } from '@/lib/crops'
+import { buildCourseSections, sectionId } from '@/lib/course'
+import { discountedPrice, priceDisplay } from '@/lib/retreat'
+import { cropStyle, type CropMap } from '@/lib/crops'
 import { Eyebrow } from '@/components/site/eyebrow'
 import { MediaImage } from '@/components/site/media-image'
 import { Reveal } from '@/components/motion/reveal'
@@ -60,7 +61,7 @@ export default async function CourseDetailPage({
           id: it.id ?? `opt-${i}`,
           name: it.name,
           image: it.image,
-          objectPosition: it.objectPosition,
+          cropStyle: it.cropStyle,
           description: it.description,
           total: it.total,
           addOn: it.addOn,
@@ -76,7 +77,7 @@ export default async function CourseDetailPage({
           fill
           priority
           sizes="100vw"
-          objectPosition={cropPosition(course.imageCrops as CropMap, 'detail')}
+          cropStyle={cropStyle(course.imageCrops as CropMap, 'detail')}
           className="object-cover"
         />
         <div
@@ -104,7 +105,22 @@ export default async function CourseDetailPage({
               {course.ratings.toFixed(1)}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 font-semibold backdrop-blur">
-              {course.price <= 0 ? 'Free' : `from ${priceLabel(course.price)}`}
+              {(() => {
+                const p = priceDisplay(course.price, course.discountPercent)
+                if (p.price <= 0) return 'Free'
+                return (
+                  <span className="inline-flex items-baseline gap-1.5">
+                    from
+                    {p.originalLabel && (
+                      <span className="text-white/60 line-through">{p.originalLabel}</span>
+                    )}
+                    {p.priceLabel}
+                    {p.discountPercent != null && (
+                      <span className="text-accent">· {p.discountPercent}% OFF</span>
+                    )}
+                  </span>
+                )
+              })()}
             </span>
             {railItems.length > 0 && (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 font-semibold backdrop-blur">
@@ -116,13 +132,14 @@ export default async function CourseDetailPage({
       </header>
 
       <div className="container-page py-12 md:py-16">
-        <CourseAccommodationProvider basePrice={course.price} options={accOptions}>
+        <CourseAccommodationProvider basePrice={discountedPrice(course.price, course.discountPercent)} options={accOptions}>
           <div className="grid gap-10 lg:grid-cols-[17rem_1fr] lg:gap-16">
             {/* Left — sticky enroll + journey rail */}
             <aside className="hidden lg:block">
               <div className="sticky top-28 space-y-8">
                 <CourseEnrollCard
                   price={course.price}
+                  discountPercent={course.discountPercent}
                   ratings={course.ratings}
                   bookNowLink={course.bookNowLink}
                   featured={course.featured}
@@ -137,6 +154,7 @@ export default async function CourseDetailPage({
               <div className="mb-10 lg:hidden">
                 <CourseEnrollCard
                   price={course.price}
+                  discountPercent={course.discountPercent}
                   ratings={course.ratings}
                   bookNowLink={course.bookNowLink}
                   featured={course.featured}

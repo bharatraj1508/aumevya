@@ -256,7 +256,17 @@ export const Courses: CollectionConfig = {
           type: 'number',
           required: true,
           min: 0,
-          admin: { width: '50%', description: 'Price per person (₹). Enter 0 to show "Free".' },
+          admin: { width: '34%', description: 'Price per person (₹). Enter 0 to show "Free".' },
+        },
+        {
+          name: 'discountPercent',
+          type: 'number',
+          min: 0,
+          max: 100,
+          admin: {
+            width: '33%',
+            description: 'Optional % off — strike-through original + discounted price.',
+          },
         },
         {
           name: 'ratings',
@@ -264,7 +274,7 @@ export const Courses: CollectionConfig = {
           required: true,
           min: 0,
           max: 5,
-          admin: { width: '50%', step: 0.1, description: 'Out of 5.' },
+          admin: { width: '33%', step: 0.1, description: 'Out of 5.' },
         },
       ],
     },

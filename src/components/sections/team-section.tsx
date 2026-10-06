@@ -1,6 +1,6 @@
 import type { TeamMember } from '@/payload-types'
 import { SectionHeading } from '@/components/site/section-heading'
-import { cropPosition, type CropMap } from '@/lib/crops'
+import { cropStyle, type CropMap } from '@/lib/crops'
 import { MediaImage } from '@/components/site/media-image'
 import { StaggerGroup, StaggerItem } from '@/components/motion/reveal'
 
@@ -46,7 +46,7 @@ export function TeamSection({
                     media={m.image}
                     fill
                     sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-                    objectPosition={cropPosition(m.imageCrop as CropMap, 'portrait')}
+                    cropStyle={cropStyle(m.imageCrop as CropMap, 'portrait')}
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                   {/* Gradient veil anchoring the name over the image */}
