@@ -1,6 +1,7 @@
 import 'server-only'
 import { getPayloadClient } from './payload'
-import { sendGuidanceBookingEmail } from './email'
+import { sendGuidanceBookingEmail, type GuidanceBookingEmail } from './email'
+import { sendGuidanceBookingWhatsApp } from './whatsapp'
 import { formatBookingDate } from './guidance'
 
 export type GuidanceBookingInput = {
@@ -77,7 +78,7 @@ export async function createGuidanceBooking(
     },
   })
 
-  const sent = await sendGuidanceBookingEmail({
+  const notification: GuidanceBookingEmail = {
     name: input.name,
     email: input.email,
     phone: input.phone,
@@ -89,7 +90,11 @@ export async function createGuidanceBooking(
     bookingDate: formatBookingDate(input.bookingDate),
     slotCategory: input.slotCategory,
     slotTime: input.slotTimeFormatted,
-  })
+  }
+  const [sent] = await Promise.all([
+    sendGuidanceBookingEmail(notification),
+    sendGuidanceBookingWhatsApp(notification),
+  ])
   if (sent) {
     try {
       await payload.update({
