@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { bookingSchema } from '@/lib/schemas'
 import { createInquiry } from '@/lib/inquiries'
+import { getPayloadClient } from '@/lib/payload'
 import { rateLimit, sweepRateLimit } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
@@ -30,12 +31,36 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { company, phone, message, name, email, service, preferredDate, accommodation } = parsed.data
+  const { company, phone, message, name, email, service, preferredDate, accommodation } =
+    parsed.data
   if (company) return NextResponse.json({ ok: true }) // honeypot tripped
 
   try {
+    // Resolve the retreat up front (uncached): a page rendered before a retreat
+    // was deleted or unpublished would otherwise save a booking pointing at
+    // nothing and notify everyone with a raw id as the retreat name.
+    let serviceTitle: string | undefined
+    if (service) {
+      const payload = await getPayloadClient()
+      const { docs } = await payload.find({
+        collection: 'retreats',
+        where: { id: { equals: service }, published: { equals: true } },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+      })
+      if (!docs[0]) {
+        return NextResponse.json(
+          { error: 'This retreat is no longer available. Please refresh the page and try again.' },
+          { status: 400 },
+        )
+      }
+      serviceTitle = docs[0].title
+    }
+
     await createInquiry({
       type: 'booking',
+      serviceTitle,
       name,
       email,
       phone: phone || undefined,
