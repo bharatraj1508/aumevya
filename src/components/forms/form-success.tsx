@@ -1,6 +1,15 @@
+import type { ReactNode } from 'react'
 import { Check } from 'lucide-react'
 
-export function FormSuccess({ title, message }: { title: string; message: string }) {
+export function FormSuccess({
+  title,
+  message,
+  action,
+}: {
+  title: string
+  message: string
+  action?: ReactNode
+}) {
   return (
     <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-10 text-center shadow-sm">
       <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -8,6 +17,7 @@ export function FormSuccess({ title, message }: { title: string; message: string
       </div>
       <h3 className="mt-4 text-xl">{title}</h3>
       <p className="mt-2 max-w-sm text-muted-foreground">{message}</p>
+      {action && <div className="mt-6">{action}</div>}
     </div>
   )
 }

@@ -6,6 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { LoaderCircle, Send } from 'lucide-react'
 import { guidanceDetailsSchema, type GuidanceDetailsInput } from '@/lib/schemas'
 import type { GuidanceSlotCategory, OpenDate, SessionPackage, SlotCategory } from '@/lib/guidance'
+import { formatBookingDate, formatTime } from '@/lib/guidance'
+import { bookingMessage } from '@/lib/whatsapp-link'
 import { Field, HoneypotField } from '@/components/forms/field'
 import { FormSuccess } from '@/components/forms/form-success'
 import { GuidanceDatePicker } from '@/components/forms/guidance-date-picker'
@@ -15,6 +17,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { SessionPackageList } from './session-package-list'
 import { SelectedPackageBar, SlotGrid, StepIndicator } from './booking-stepper'
+import { WhatsAppButton, openWhatsApp, useWhatsAppLink } from './whatsapp'
 
 type Step = 1 | 2 | 3 | 4
 
@@ -25,11 +28,13 @@ type Step = 1 | 2 | 3 | 4
  */
 export function SessionBooking({
   guidanceSlug,
+  guidanceTitle,
   packages,
   slotCategories,
   openDates,
 }: {
   guidanceSlug: string
+  guidanceTitle: string
   packages: SessionPackage[]
   slotCategories: GuidanceSlotCategory[]
   openDates: OpenDate[]
@@ -49,6 +54,8 @@ export function SessionBooking({
     defaultValues: { name: '', email: '', phone: '', message: '', company: '' },
   })
   const { submit, status, error } = useInquirySubmit('/api/forms/guidance')
+  const waLink = useWhatsAppLink()
+  const [waHref, setWaHref] = useState<string | null>(null)
 
   const selectedPackage = packages.find((p) => p.id === selectedId) ?? null
   const hasOpenDates = openDates.length > 0
@@ -67,13 +74,30 @@ export function SessionBooking({
     return (
       <FormSuccess
         title="Booking requested"
-        message="Thank you — we'll confirm your session shortly by email."
+        message="Thank you — send your booking to us on WhatsApp and we'll reply with payment details."
+        action={waHref && <WhatsAppButton href={waHref} />}
       />
     )
   }
 
   const onSubmit = handleSubmit(async (data) => {
     if (!selectedPackage || !slotCategory || !slotTime) return
+    const href = waLink(
+      bookingMessage([
+        ['Session', guidanceTitle],
+        [
+          'Package',
+          `${selectedPackage.name} (${selectedPackage.durationLabel}, ${selectedPackage.priceLabel})`,
+        ],
+        ['Date', formatBookingDate(bookingDate)],
+        ['Time', formatTime(slotTime)],
+        ['Name', data.name],
+        ['Phone', data.phone],
+        ['Email', data.email],
+        ['Note', data.message],
+      ]),
+    )
+    setWaHref(href)
     const ok = await submit({
       ...data,
       guidance: guidanceSlug,
@@ -82,7 +106,10 @@ export function SessionBooking({
       slotCategory,
       slotTime,
     })
-    if (ok) setStep(4)
+    if (ok) {
+      setStep(4)
+      openWhatsApp(href)
+    }
   })
 
   // Step 1 — choose a session package.

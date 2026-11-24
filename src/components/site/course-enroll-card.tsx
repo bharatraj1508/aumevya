@@ -2,21 +2,29 @@
 
 import Link from 'next/link'
 import { Star } from 'lucide-react'
-import { priceDisplay, priceDisplayWithAddOn } from '@/lib/retreat'
+import { formatPrice, priceDisplay, priceDisplayWithAddOn } from '@/lib/retreat'
+import { bookingMessage } from '@/lib/whatsapp-link'
 import { Button } from '@/components/ui/button'
 import { PriceTag } from '@/components/site/price-tag'
 import { useCourseAccommodation } from '@/components/site/course-accommodation'
+import { useWhatsAppLink } from '@/components/site/whatsapp'
+
+const WHATSAPP_URL = /^https?:\/\/(wa\.me|api\.whatsapp\.com)\//
 
 /** Compact enroll panel — price, rating and the Book Now / Enroll action.
  * Lives in the sticky journey rail on desktop and above the content on mobile.
- * When the course has selectable accommodation, the price tracks the choice. */
+ * When the course has selectable accommodation, the price tracks the choice.
+ * Enroll opens WhatsApp with the course details unless `bookNowLink` points to
+ * an external non-WhatsApp URL (a wa.me link still gets the detailed message). */
 export function CourseEnrollCard({
+  courseName,
   price,
   discountPercent,
   ratings,
   bookNowLink,
   featured,
 }: {
+  courseName: string
   price: number
   discountPercent?: number | null
   ratings: number
@@ -35,8 +43,21 @@ export function CourseEnrollCard({
   const selectedName = acc?.selected?.name
   const isFree = displayPrice <= 0
 
-  const href = bookNowLink?.trim() || '/contact'
-  const isExternal = /^https?:\/\//.test(href)
+  const waLink = useWhatsAppLink()
+  const externalLink = bookNowLink?.trim()
+  const href =
+    externalLink && /^https?:\/\//.test(externalLink) && !WHATSAPP_URL.test(externalLink)
+      ? externalLink
+      : waLink(
+          bookingMessage(
+            [
+              ['Course', courseName],
+              ['Accommodation', selectedName],
+              ['Price', isFree ? 'Free' : formatPrice(displayPrice)],
+            ],
+            isFree ? 'Namaste, please book my seat.' : undefined,
+          ),
+        )
 
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
@@ -62,13 +83,9 @@ export function CourseEnrollCard({
       </div>
 
       <Button asChild className="mt-5 h-11 w-full rounded-full text-base">
-        {isExternal ? (
-          <a href={href} target="_blank" rel="noopener noreferrer">
-            {isFree ? 'Start learning' : 'Enroll now'}
-          </a>
-        ) : (
-          <Link href={href}>{isFree ? 'Start learning' : 'Enroll now'}</Link>
-        )}
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {isFree ? 'Start learning' : 'Enroll now'}
+        </a>
       </Button>
 
       <p className="mt-3 text-center text-xs text-muted-foreground">

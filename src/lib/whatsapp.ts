@@ -1,5 +1,6 @@
 import 'server-only'
 import { formatPrice } from '@/lib/retreat'
+import { toWaNumber } from '@/lib/whatsapp-link'
 import type { GuidanceBookingEmail, InquiryEmail } from './email'
 
 const {
@@ -39,14 +40,7 @@ const TBC = 'To be confirmed'
  * valid number, so callers skip the send instead of hitting the API.
  */
 export function toWhatsAppNumber(raw: string | undefined): string | null {
-  if (!raw) return null
-  let digits = raw.replace(/\D/g, '')
-  if (raw.trim().startsWith('00')) digits = digits.slice(2)
-  else if (!raw.trim().startsWith('+')) {
-    digits = digits.replace(/^0+/, '')
-    if (digits.length === 10) digits = WHATSAPP_DEFAULT_COUNTRY_CODE + digits
-  }
-  return digits.length >= 8 && digits.length <= 15 ? digits : null
+  return toWaNumber(raw, WHATSAPP_DEFAULT_COUNTRY_CODE)
 }
 
 /**

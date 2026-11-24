@@ -1,11 +1,13 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LoaderCircle, Send } from 'lucide-react'
 import { bookingSchema, type BookingInput } from '@/lib/schemas'
 import { formatPrice } from '@/lib/retreat'
+import { bookingMessage } from '@/lib/whatsapp-link'
+import { WhatsAppButton, openWhatsApp, useWhatsAppLink } from '@/components/site/whatsapp'
 import { Field, HoneypotField } from './field'
 import { FormSuccess, selectClass } from './form-success'
 import { useInquirySubmit } from './use-inquiry-submit'
@@ -54,18 +56,37 @@ export function BookingForm({
   }, [accommodationSummary, setValue])
   const lockedTitle = services.find((s) => s.id === defaultServiceId)?.title
   const { submit, status, error } = useInquirySubmit('/api/forms/booking')
+  const waLink = useWhatsAppLink()
+  const [waHref, setWaHref] = useState<string | null>(null)
 
   if (status === 'success') {
     return (
       <FormSuccess
         title="Request received"
-        message="Thank you — we'll be in touch shortly to confirm your retreat."
+        message="Thank you — send your booking to us on WhatsApp and we'll reply with payment details."
+        action={waHref && <WhatsAppButton href={waHref} />}
       />
     )
   }
 
+  const onSubmit = handleSubmit(async (data) => {
+    const href = waLink(
+      bookingMessage([
+        ['Retreat', services.find((s) => s.id === data.service)?.title],
+        ['Accommodation', data.accommodation],
+        ['Preferred dates', data.preferredDate],
+        ['Name', data.name],
+        ['Phone', data.phone],
+        ['Email', data.email],
+        ['Note', data.message],
+      ]),
+    )
+    setWaHref(href)
+    if (await submit(data)) openWhatsApp(href)
+  })
+
   return (
-    <form onSubmit={handleSubmit(async (data) => void (await submit(data)))} className="space-y-5" noValidate>
+    <form onSubmit={onSubmit} className="space-y-5" noValidate>
       <HoneypotField register={register('company')} />
       {accommodationSummary && <input type="hidden" {...register('accommodation')} />}
       {accommodationSummary && (

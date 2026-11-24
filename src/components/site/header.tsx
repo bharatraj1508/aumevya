@@ -9,11 +9,19 @@ import { AnimatePresence, motion } from 'motion/react'
 import { NAV_LINKS } from './nav'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { BOOKING_GREETING } from '@/lib/whatsapp-link'
+import { useWhatsAppLink } from './whatsapp'
 
 export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: string }) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const bookHref = useWhatsAppLink()(BOOKING_GREETING)
+  const bookLink = (
+    <a href={bookHref} target="_blank" rel="noopener noreferrer">
+      {bookLabel}
+    </a>
+  )
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -73,7 +81,7 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
 
         <div className="hidden xl:block">
           <Button asChild size="sm">
-            <Link href="/contact">{bookLabel}</Link>
+            {bookLink}
           </Button>
         </div>
 
@@ -106,7 +114,7 @@ export function Header({ siteName, bookLabel }: { siteName: string; bookLabel: s
                 </Link>
               ))}
               <Button asChild className="mt-2 w-full">
-                <Link href="/contact">{bookLabel}</Link>
+                {bookLink}
               </Button>
             </nav>
           </motion.div>

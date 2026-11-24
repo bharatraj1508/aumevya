@@ -816,7 +816,7 @@ export interface Course {
    */
   ratings: number;
   /**
-   * Where the Book Now button goes (full URL or path). Defaults to /contact if blank.
+   * Optional external URL (https://…) for the Enroll button, e.g. a payment page. If blank (or a WhatsApp link), Enroll opens WhatsApp with the course details.
    */
   bookNowLink?: string | null;
   /**

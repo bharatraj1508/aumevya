@@ -180,7 +180,7 @@ const run = async () => {
     data: {
       email: 'hello@aumevya.com',
       phone: '+91 98765 43210',
-      whatsapp: '+91 98765 43210',
+      whatsapp: '+91 95929 06466',
       address: 'Aumevya Yoga Studio\n2nd Floor, Green Meadows\nBengaluru, Karnataka 560001',
       mapEmbedUrl: '',
       hours: [
