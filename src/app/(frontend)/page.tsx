@@ -52,7 +52,6 @@ export default async function HomePage() {
         images={hero?.heroImages ?? []}
         imageCrops={hero?.heroImageCrops as import('@/lib/crops').CropMap}
         imageOpacity={hero?.imageOpacity}
-        overlayOpacity={hero?.overlayOpacity}
         slideInterval={hero?.slideInterval}
         locations={locations}
         retreats={retreatNames}
