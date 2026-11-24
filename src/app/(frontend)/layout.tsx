@@ -17,7 +17,9 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 })
 import { SmoothScroll } from '@/components/motion/smooth-scroll'
+import { WhatsAppProvider } from '@/components/site/whatsapp'
 import { Header } from '@/components/site/header'
+import { SocialDock } from '@/components/site/social-dock'
 import { Footer } from '@/components/site/footer'
 import { getGlobal, mediaURL } from '@/lib/payload'
 
@@ -120,9 +122,12 @@ export default async function FrontendLayout({ children }: { children: React.Rea
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
         />
         <SmoothScroll>
-          <Header siteName={siteName} bookLabel="Book Now" />
-          <main className="min-h-screen">{children}</main>
-          <Footer siteName={siteName} contact={contact} />
+          <WhatsAppProvider number={contact?.whatsapp}>
+            <Header siteName={siteName} bookLabel="Book Now" />
+            <main className="min-h-screen">{children}</main>
+            <Footer siteName={siteName} contact={contact} />
+            <SocialDock socials={contact?.socials} />
+          </WhatsAppProvider>
         </SmoothScroll>
       </body>
     </html>

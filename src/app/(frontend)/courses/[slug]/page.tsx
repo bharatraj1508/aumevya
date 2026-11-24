@@ -138,6 +138,7 @@ export default async function CourseDetailPage({
             <aside className="hidden lg:block">
               <div className="sticky top-28 space-y-8">
                 <CourseEnrollCard
+                  courseName={course.name}
                   price={course.price}
                   discountPercent={course.discountPercent}
                   ratings={course.ratings}
@@ -153,6 +154,7 @@ export default async function CourseDetailPage({
               {/* Mobile enroll card */}
               <div className="mb-10 lg:hidden">
                 <CourseEnrollCard
+                  courseName={course.name}
                   price={course.price}
                   discountPercent={course.discountPercent}
                   ratings={course.ratings}

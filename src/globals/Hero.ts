@@ -90,19 +90,7 @@ export const Hero: GlobalConfig = {
           max: 100,
           admin: {
             description:
-              'Tablet & mobile only. How visible the background hero images are (0 = hidden, 100 = full strength).',
-          },
-        },
-        {
-          name: 'overlayOpacity',
-          type: 'number',
-          label: 'Copy backdrop opacity (%)',
-          defaultValue: 100,
-          min: 0,
-          max: 100,
-          admin: {
-            description:
-              'Tablet & mobile only. Strength of the soft white wash behind the title & subtitle that keeps them legible.',
+              'Tablet & mobile only. How visible the photo at the top of the hero is (0 = hidden, 100 = full strength).',
           },
         },
         {

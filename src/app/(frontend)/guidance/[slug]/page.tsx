@@ -115,6 +115,7 @@ export default async function GuidanceDetailPage({
 
             <SessionBooking
               guidanceSlug={slug}
+              guidanceTitle={guidance.title}
               packages={packages}
               slotCategories={slotCategories}
               openDates={openDates}

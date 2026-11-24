@@ -816,7 +816,7 @@ export interface Course {
    */
   ratings: number;
   /**
-   * Where the Book Now button goes (full URL or path). Defaults to /contact if blank.
+   * Optional external URL (https://…) for the Enroll button, e.g. a payment page. If blank (or a WhatsApp link), Enroll opens WhatsApp with the course details.
    */
   bookNowLink?: string | null;
   /**
@@ -1597,13 +1597,9 @@ export interface Hero {
     | boolean
     | null;
   /**
-   * Tablet & mobile only. How visible the background hero images are (0 = hidden, 100 = full strength).
+   * Tablet & mobile only. How visible the photo at the top of the hero is (0 = hidden, 100 = full strength).
    */
   imageOpacity?: number | null;
-  /**
-   * Tablet & mobile only. Strength of the soft white wash behind the title & subtitle that keeps them legible.
-   */
-  overlayOpacity?: number | null;
   /**
    * Tablet & mobile only. How long each background image shows before turning to the next.
    */
@@ -1877,7 +1873,6 @@ export interface HeroSelect<T extends boolean = true> {
   heroImages?: T;
   heroImageCrops?: T;
   imageOpacity?: T;
-  overlayOpacity?: T;
   slideInterval?: T;
   updatedAt?: T;
   createdAt?: T;

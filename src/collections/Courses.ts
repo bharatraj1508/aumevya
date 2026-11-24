@@ -282,7 +282,7 @@ export const Courses: CollectionConfig = {
       name: 'bookNowLink',
       type: 'text',
       admin: {
-        description: 'Where the Book Now button goes (full URL or path). Defaults to /contact if blank.',
+        description: 'Optional external URL (https://…) for the Enroll button, e.g. a payment page. If blank (or a WhatsApp link), Enroll opens WhatsApp with the course details.',
       },
     },
     {
